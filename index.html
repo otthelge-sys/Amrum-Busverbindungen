@@ -7,6 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Amrum Bus"/>
 <link rel="apple-touch-icon" id="appicon" href=""/>
+<link rel="manifest" id="manifest" href=""/>
 <title>Amrum Bus</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -348,55 +349,42 @@ function render(){
   `).join("");
 }
 
-function setNow(){// Icon als Canvas generieren und als PNG einbinden
+function setNow(){// Icon + Manifest dynamisch generieren
 (function(){
   const c=document.createElement('canvas');
   c.width=1024;c.height=1024;
   const ctx=c.getContext('2d');
-  const r=220;
-  // Abgerundetes Rechteck
   function roundRect(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
-  // Clip
-  roundRect(0,0,1024,1024,r);ctx.clip();
-  // Blau
+  function rr(x,y,w,h,r){roundRect(x,y,w,h,r);ctx.fill();}
+  roundRect(0,0,1024,1024,220);ctx.clip();
   ctx.fillStyle='#003F8A';ctx.fillRect(0,0,1024,1024);
-  // Rot
   ctx.fillStyle='#CC0000';ctx.fillRect(0,0,1024,682);
-  // Gelb
   ctx.fillStyle='#F5D800';ctx.fillRect(0,0,1024,341);
-  // AMRUM
   ctx.fillStyle='white';ctx.font='900 80px Arial Black,sans-serif';ctx.textAlign='center';ctx.globalAlpha=0.9;
   ctx.fillText('AMRUM',512,110);ctx.globalAlpha=1;
-  // Reifen
-  ctx.fillStyle='#111';
-  function rr(x,y,w,h,r){roundRect(x,y,w,h,r);ctx.fill();}
-  rr(280,700,120,100,12);rr(624,700,120,100,12);
-  // Dachbalken
+  ctx.fillStyle='#111';rr(280,700,120,100,12);rr(624,700,120,100,12);
   ctx.fillStyle='#f0f4f8';rr(182,230,660,95,36);ctx.fillRect(182,285,660,40);
-  ctx.fillStyle='#CC0000';ctx.font='900 44px Arial Black,sans-serif';ctx.textAlign='center';
+  ctx.fillStyle='#CC0000';ctx.font='900 44px Arial Black,sans-serif';
   ctx.fillText('LEUCHTTURM',512,292);
-  // Karosserie
   ctx.fillStyle='white';rr(162,320,700,430,36);
-  // Scheibe
   ctx.fillStyle='rgba(168,216,240,0.88)';rr(200,370,624,210,22);
   ctx.strokeStyle='white';ctx.lineWidth=6;ctx.globalAlpha=0.5;
   ctx.beginPath();ctx.moveTo(512,370);ctx.lineTo(512,580);ctx.stroke();ctx.globalAlpha=1;
-  // Blauer Streifen
   ctx.fillStyle='rgba(26,111,168,0.9)';ctx.fillRect(162,540,700,34);
-  // Motorhaube
   ctx.fillStyle='#e0e8f0';ctx.fillRect(162,572,700,90);
-  // Grill
   ctx.fillStyle='#ccd4dc';rr(240,582,544,46,10);
   ctx.strokeStyle='#aab4bc';ctx.lineWidth=3;
   for(let x=280;x<=744;x+=40){ctx.beginPath();ctx.moveTo(x,582);ctx.lineTo(x,628);ctx.stroke();}
-  // Scheinwerfer
   ctx.fillStyle='rgba(255,224,102,0.95)';rr(164,574,68,66,12);rr(792,574,68,66,12);
-  // Stoßstange
   ctx.fillStyle='#ccd4dc';rr(172,658,680,26,13);
-  // Untere Karosserie
   ctx.fillStyle='white';rr(162,682,700,68,36);
-  // PNG einbinden
-  document.getElementById('appicon').href=c.toDataURL('image/png');
+  const png=c.toDataURL('image/png');
+  // Apple Touch Icon
+  document.getElementById('appicon').href=png;
+  // Manifest für Android + iOS
+  const manifest={name:'Amrum Bus',short_name:'Amrum Bus',start_url:'.',display:'standalone',background_color:'#f2f2f7',theme_color:'#b22222',icons:[{src:png,sizes:'1024x1024',type:'image/png'}]};
+  const blob=new Blob([JSON.stringify(manifest)],{type:'application/json'});
+  document.getElementById('manifest').href=URL.createObjectURL(blob);
 })();window._manualTime=false;render();}
 function setDay(d){
   dayType=d;
