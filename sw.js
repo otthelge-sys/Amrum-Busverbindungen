@@ -5,7 +5,8 @@ self.addEventListener("install", e => {
   e.waitUntil(
     caches.open(CACHE).then(c => c.addAll(["/Amrum-Busverbindungen-Vorsaison/", "/Amrum-Busverbindungen-Vorsaison/index.html", "/Amrum-Busverbindungen-Vorsaison/icon.png"]))
   );
-  self.skipWaiting();
+  // Nicht sofort skippen – erst auf Nachricht warten
+
 });
 
 self.addEventListener("activate", e => {
@@ -15,6 +16,10 @@ self.addEventListener("activate", e => {
     )
   );
   self.clients.claim();
+});
+
+self.addEventListener("message", e => {
+  if(e.data?.action === "skipWaiting") self.skipWaiting();
 });
 
 self.addEventListener("fetch", e => {
