@@ -576,16 +576,52 @@ function openPicker(target){
 }
 function closePicker(){document.getElementById("picker").classList.remove("open");}
 
+function getFoehrReachable(fromStop, direction) {
+  // direction: 'von' = welche Ziele sind von fromStop erreichbar
+  //            'nach' = von welchen Stationen kommt man zu fromStop
+  const dateStr = document.getElementById("dateinput").value;
+  const info = getDateInfo(dateStr, 'foehr');
+  if (!info || !info.inRange) return new Set(FOEHR_STOPS);
+  const trips = buildFoehrTrips(info.season, info.dayType);
+  const reachable = new Set();
+  for (const trip of trips) {
+    if (direction === 'von') {
+      const fromIdx = trip.findIndex(s => s.stop === fromStop);
+      if (fromIdx === -1) continue;
+      trip.slice(fromIdx + 1).forEach(s => reachable.add(s.stop));
+    } else {
+      const toIdx = trip.findIndex(s => s.stop === fromStop);
+      if (toIdx === -1) continue;
+      trip.slice(0, toIdx).forEach(s => reachable.add(s.stop));
+    }
+  }
+  return reachable;
+}
+
 function filterPicker(q){
   const stops = curIsland==='amrum' ? AMRUM_ROUTE : FOEHR_STOPS;
   const curSel = pickerTarget==='von'?curVon:curNach;
   const other = pickerTarget==='von'?curNach:curVon;
+
+  let reachable = null;
+  if (curIsland === 'foehr') {
+    if (pickerTarget === 'nach') {
+      reachable = getFoehrReachable(curVon, 'von');
+    } else {
+      reachable = getFoehrReachable(curNach, 'nach');
+    }
+  }
+
   document.getElementById("pickerList").innerHTML=stops
     .filter(s=>s.toLowerCase().includes(q.toLowerCase()))
-    .map(s=>`<div class="picker-item ${s===curSel?'selected':''} ${s===other?'disabled':''}"
-      onclick="${s!==other?`selectStop('${s.replace(/'/g,"\\'")}')`:''}">
-      ${s}${s===curSel?' <span>✓</span>':''}
-    </div>`).join("");
+    .map(s=>{
+      const isOther = s === other;
+      const isDisabled = isOther || (reachable && !reachable.has(s) && s !== curSel);
+      return `<div class="picker-item ${s===curSel?'selected':''} ${isDisabled?'disabled':''}"
+        onclick="${!isDisabled?`selectStop('${s.replace(/'/g,"\\'")}')`:''}">
+        ${s}${s===curSel?' <span>✓</span>':''}
+      </div>`;
+    }).join("");
 }
 
 function selectStop(s){
