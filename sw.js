@@ -1,4 +1,4 @@
-const VERSION = "1.7";
+const VERSION = "1.8";
 const CACHE = "amrum-bus-" + VERSION;
 
 self.addEventListener("install", e => {
