@@ -98,15 +98,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <div class="slabel">Von</div>
           <div class="sname" id="vonLabel">Wittdün Fähranleger</div>
         </div>
-        <button class="loc-btn" id="locBtn" onclick="event.stopPropagation();toggleLocation()">
-          <svg width="12" height="16" viewBox="0 0 14 18" fill="none">
-            <path id="locPin" d="M7 0C4.24 0 2 2.24 2 5c0 3.75 5 11 5 11s5-7.25 5-11c0-2.76-2.24-5-5-5z" fill="#0077b6"/>
-            <circle id="locDot" cx="7" cy="5" r="2" fill="white"/>
-          </svg>
-          Standort
-        </button>
-        <button class="map-btn" onclick="event.stopPropagation();openMap('von')">
-          <svg width="16" height="16" viewBox="0 0 24 24">
+        <button class="map-btn" onclick="event.stopPropagation();openMap('von')" title="Weg zur Haltestelle">
+          <svg width="18" height="18" viewBox="0 0 24 24">
             <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" fill="#34C759"/>
           </svg>
         </button>
@@ -121,8 +114,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <div class="slabel">Nach</div>
           <div class="sname" id="nachLabel">Norddorf Mitte</div>
         </div>
-        <button class="map-btn" onclick="event.stopPropagation();openMap('nach')">
-          <svg width="16" height="16" viewBox="0 0 24 24">
+        <button class="map-btn" onclick="event.stopPropagation();openMap('nach')" title="Weg zur Haltestelle">
+          <svg width="18" height="18" viewBox="0 0 24 24">
             <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" fill="#34C759"/>
           </svg>
         </button>
@@ -432,53 +425,45 @@ function selectStop(s){
   closePicker();render();
 }
 
-function toggleLocation(){locationActive?stopLocation():startLocation();}
-function startLocation(){
-  if(!navigator.geolocation){document.getElementById("locInfo").textContent="Standort nicht verfügbar.";return;}
+// Automatische Standorterfassung beim Start
+function startAutoLocation(){
+  if(!navigator.geolocation)return;
   document.getElementById("locInfo").textContent="📡 Standort wird ermittelt…";
-  const btn=document.getElementById("locBtn");
-  btn.classList.add("active");
-  document.getElementById("locPin").setAttribute("fill","white");
-  document.getElementById("locDot").setAttribute("fill","#0077b6");
-  locationActive=true;
-  watchId=navigator.geolocation.watchPosition(pos=>{
+  navigator.geolocation.getCurrentPosition(pos=>{
     const{latitude:lat,longitude:lon}=pos.coords;
-    const{stop,dist}=findNearest(lat,lon);
-    document.getElementById("locInfo").textContent=`📍 ${stop} (${dist}m)`;
-    curVon=stop;
-    if(curNach===stop){curNach=getReachable(stop)[0]||stop;}
-    render();
+    // Prüfe ob auf Amrum (grobe Bounding Box)
+    const onAmrum=lat>=54.60&&lat<=54.70&&lon>=8.32&&lon<=8.43;
+    if(onAmrum){
+      const{stop,dist}=findNearest(lat,lon);
+      document.getElementById("locInfo").textContent=`📍 ${stop} (${dist}m)`;
+      curVon=stop;
+      if(curNach===stop){curNach=getReachable(stop)[0]||stop;}
+      render();
+    } else {
+      document.getElementById("locInfo").textContent="";
+    }
   },()=>{
-    document.getElementById("locInfo").textContent="⚠️ Standort nicht verfügbar.";
-    stopLocation();
-  },{enableHighAccuracy:true,maximumAge:10000,timeout:10000});
-}
-function stopLocation(){
-  if(watchId!==null){navigator.geolocation.clearWatch(watchId);watchId=null;}
-  locationActive=false;
-  const btn=document.getElementById("locBtn");
-  btn.classList.remove("active");
-  document.getElementById("locPin").setAttribute("fill","#0077b6");
-  document.getElementById("locDot").setAttribute("fill","white");
-  document.getElementById("locInfo").textContent="";
+    document.getElementById("locInfo").textContent="";
+  },{enableHighAccuracy:true,timeout:10000});
 }
 
 function openMap(target){
   const stop=target==="von"?curVon:curNach;
   const coords=STOP_COORDS[stop];
-  if(!coords){return;}
+  if(!coords)return;
   const[lat,lon]=coords;
   const name=encodeURIComponent(stop);
   const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
   const url=isIOS
-    ?`https://maps.apple.com/?daddr=${lat},${lon}&q=${name}`
-    :`https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`;
+    ?`https://maps.apple.com/?daddr=${lat},${lon}&q=${name}&dirflg=w`
+    :`https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}&travelmode=walking`;
   window.open(url,"_blank");
 }
 
 document.getElementById("dateinput").value=getTodayStr();
 document.getElementById("timeinput").value=getNowStr();
 render();
+startAutoLocation();
 setInterval(()=>{if(!window._manualTime){document.getElementById("timeinput").value=getNowStr();render();}},60000);
 document.getElementById("timeinput").addEventListener("change",()=>{window._manualTime=true;render();});
 </script>
