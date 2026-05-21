@@ -9,67 +9,68 @@
 <link rel="apple-touch-icon" href="icon.png"/>
 <title>Amrum Bus</title>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f2f2f7;height:100dvh;overflow-y:auto;overflow-x:hidden;padding-bottom:calc(20px + env(safe-area-inset-bottom));overscroll-behavior:none;position:fixed;width:100%;}
-  .wrap{max-width:390px;margin:0 auto;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-  .header{background:linear-gradient(135deg,#b22222,#8b0000);padding:calc(48px + env(safe-area-inset-top)) 20px 20px;color:#fff}
-  .header-sub{font-size:12px;opacity:.8;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
-  .header-title{font-size:26px;font-weight:700;margin-bottom:16px}
-  .date-time-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-  .date-time-row input{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:8px;padding:6px 10px;font-size:15px;font-weight:600;color-scheme:dark}
-  .date-time-row button{background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;white-space:nowrap}
-  .day-badge{background:rgba(255,255,255,.25);border-radius:8px;padding:4px 10px;font-size:13px;font-weight:700;color:#fff;white-space:nowrap}
-  .section{padding:12px 16px 0}
-  .section-label{font-size:12px;color:#8e8e93;margin-bottom:4px;padding-left:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
-  .route-card{background:#fff;border-radius:14px;padding:4px 0;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-  .stop-row{display:flex;align-items:center;padding:12px 16px;gap:12px}
-  .stop-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
-  .stop-icon.von{background:#e8f4fd;color:#0077b6}
-  .stop-icon.nach{background:#fef3e2;color:#e07b00}
-  .stop-btn-inner{flex:1;text-align:left}
-  .stop-btn-inner .slabel{font-size:11px;color:#8e8e93;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
-  .stop-btn-inner .sname{font-size:16px;font-weight:600;color:#1c1c1e}
-  .stop-btn-arrow{color:#b22222;font-size:18px}
-  .stop-divider{height:1px;background:#f2f2f7;margin:0 16px}
-  .swap-row{display:flex;justify-content:center;padding:2px 0}
-  .swap-btn{background:none;border:none;font-size:20px;cursor:pointer;padding:4px 16px;color:#b22222}
-  .location-btn{background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px}
-  .location-btn.active{background:rgba(255,255,255,.4);font-weight:700}
-  .location-info{font-size:12px;color:rgba(255,255,255,.75);margin-top:4px;min-height:16px}
-  .result-card{margin:14px 16px 0;background:linear-gradient(135deg,#0077b6,#005f8e);border-radius:16px;padding:20px;color:#fff;box-shadow:0 4px 12px rgba(0,119,182,.3)}
-  .result-sub{font-size:12px;opacity:.8;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
-  .result-times{display:flex;align-items:center;gap:10px;margin-bottom:4px}
-  .result-time{font-size:42px;font-weight:700;line-height:1}
-  .result-arrow{font-size:20px;opacity:.7}
-  .result-arr{font-size:28px;font-weight:600;opacity:.9}
-  .result-detail{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
-  .result-dur{font-size:14px;opacity:.8}
-  .result-mins{font-size:22px;font-weight:700}
-  .result-minslabel{font-size:11px;opacity:.7;text-align:right}
-  .warning{margin:8px 16px 0;background:#fff3cd;border:1px solid #ffc107;border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#7d4e00}
-  .empty{margin:14px 16px 0;background:#fff;border-radius:16px;padding:20px;text-align:center;color:#8e8e93;font-size:15px}
-  .next-card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-  .dep-row{display:flex;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7}
-  .dep-row:last-child{border-bottom:none}
-  .dep-bar{width:4px;height:40px;border-radius:2px;margin-right:14px;flex-shrink:0;background:#0077b6}
-  .dep-info{flex:1}
-  .dep-times{display:flex;align-items:center;gap:6px}
-  .dep-t{font-size:17px;font-weight:700;color:#1c1c1e}
-  .dep-arr{font-size:14px;color:#555}
-  .dep-warn{font-size:12px;color:#b8860b;font-weight:600;margin-top:2px}
-  .dep-mins{font-size:13px;font-weight:600;color:#0077b6;white-space:nowrap}
-  .ferry-times{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-  .ferry-pill{padding:5px 10px;border-radius:8px;font-size:14px;font-weight:600}
-  .footer{text-align:center;font-size:11px;color:#c7c7cc;margin-top:20px;padding:0 20px 20px}
-  #picker{display:none;position:fixed;inset:0;z-index:100;background:#fff;flex-direction:column}
-  #picker.open{display:flex}
-  .picker-head{background:#b22222;padding:calc(16px + env(safe-area-inset-top)) 16px 8px;display:flex;align-items:center;gap:12px}
-  .picker-back{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:0}
-  .picker-search{flex:1;padding:8px 12px;border-radius:20px;border:none;font-size:15px;outline:none}
-  .picker-list{overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
-  .picker-item{padding:16px 20px;border-bottom:1px solid #f0f0f0;font-size:16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
-  .picker-item.selected{background:#fff3e0;color:#e07b00;font-weight:700}
-  .picker-item.disabled{color:#ccc;pointer-events:none}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f2f2f7;min-height:100dvh;overflow-x:hidden;padding-bottom:calc(20px + env(safe-area-inset-bottom));overscroll-behavior:none}
+.wrap{max-width:390px;margin:0 auto}
+.header{background:linear-gradient(135deg,#b22222,#8b0000);padding:calc(48px + env(safe-area-inset-top)) 20px 20px;color:#fff}
+.header-sub{font-size:12px;opacity:.8;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
+.header-title{font-size:26px;font-weight:700;margin-bottom:12px}
+.date-time-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.date-time-row input{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:8px;padding:6px 10px;font-size:15px;font-weight:600;color-scheme:dark}
+.date-time-row button{background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;white-space:nowrap}
+.day-badge{background:rgba(255,255,255,.2);border-radius:8px;padding:4px 10px;font-size:13px;font-weight:700;color:#fff;white-space:nowrap}
+.loc-info{font-size:12px;color:rgba(255,255,255,.8);margin-top:4px;min-height:16px}
+.section{padding:12px 16px 0}
+.section-label{font-size:12px;color:#8e8e93;margin-bottom:4px;padding-left:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.route-card{background:#fff;border-radius:14px;padding:4px 0;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.stop-row{display:flex;align-items:center;padding:12px 16px;gap:8px;cursor:pointer}
+.stop-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+.stop-icon.von{background:#e8f4fd;color:#0077b6}
+.stop-icon.nach{background:#fef3e2;color:#e07b00}
+.stop-btn-inner{flex:1;min-width:0}
+.slabel{font-size:11px;color:#8e8e93;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.sname{font-size:15px;font-weight:600;color:#1c1c1e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stop-btn-arrow{color:#b22222;font-size:18px;flex-shrink:0}
+.stop-divider{height:1px;background:#f2f2f7;margin:0 16px}
+.swap-row{display:flex;justify-content:center;padding:2px 0}
+.swap-btn{background:none;border:none;font-size:20px;cursor:pointer;padding:4px 16px;color:#b22222}
+.loc-btn{background:none;border:2px solid #0077b6;border-radius:10px;padding:5px 8px;cursor:pointer;display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:#0077b6;white-space:nowrap;flex-shrink:0}
+.loc-btn.active{background:#0077b6;color:white}
+.map-btn{background:none;border:2px solid #34C759;border-radius:10px;padding:5px 7px;cursor:pointer;display:flex;align-items:center;flex-shrink:0}
+.result-card{margin:14px 16px 0;background:linear-gradient(135deg,#0077b6,#005f8e);border-radius:16px;padding:20px;color:#fff;box-shadow:0 4px 12px rgba(0,119,182,.3)}
+.result-sub{font-size:12px;opacity:.8;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+.result-times{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.result-time{font-size:42px;font-weight:700;line-height:1}
+.result-arrow{font-size:20px;opacity:.7}
+.result-arr{font-size:28px;font-weight:600;opacity:.9}
+.result-detail{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.result-dur{font-size:14px;opacity:.8}
+.result-mins{font-size:22px;font-weight:700}
+.result-minslabel{font-size:11px;opacity:.7;text-align:right}
+.warning{margin:8px 16px 0;background:#fff3cd;border:1px solid #ffc107;border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#7d4e00}
+.empty{margin:14px 16px 0;background:#fff;border-radius:16px;padding:20px;text-align:center;color:#8e8e93;font-size:15px}
+.next-card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.dep-row{display:flex;align-items:center;padding:13px 16px;border-bottom:1px solid #f2f2f7}
+.dep-row:last-child{border-bottom:none}
+.dep-bar{width:4px;height:40px;border-radius:2px;margin-right:14px;flex-shrink:0;background:#0077b6}
+.dep-info{flex:1}
+.dep-times{display:flex;align-items:center;gap:6px}
+.dep-t{font-size:17px;font-weight:700;color:#1c1c1e}
+.dep-arr{font-size:14px;color:#555}
+.dep-warn{font-size:12px;color:#b8860b;font-weight:600;margin-top:2px}
+.dep-mins{font-size:13px;font-weight:600;color:#0077b6;white-space:nowrap}
+.ferry-times{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.ferry-pill{padding:5px 10px;border-radius:8px;font-size:14px;font-weight:600}
+.footer{text-align:center;font-size:11px;color:#c7c7cc;margin-top:20px;padding:0 20px 20px}
+#picker{display:none;position:fixed;inset:0;z-index:100;background:#fff;flex-direction:column}
+#picker.open{display:flex}
+.picker-head{background:#b22222;padding:calc(16px + env(safe-area-inset-top)) 16px 8px;display:flex;align-items:center;gap:12px}
+.picker-back{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:0}
+.picker-search{flex:1;padding:8px 12px;border-radius:20px;border:none;font-size:15px;outline:none}
+.picker-list{overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
+.picker-item{padding:16px 20px;border-bottom:1px solid #f0f0f0;font-size:16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.picker-item.selected{background:#fff3e0;color:#e07b00;font-weight:700}
+.picker-item.disabled{color:#ccc;pointer-events:none}
 </style>
 </head>
 <body>
@@ -81,36 +82,50 @@
       <input type="date" id="dateinput" oninput="render()"/>
       <input type="time" id="timeinput" oninput="render()"/>
       <button onclick="setNow()">Jetzt</button>
-      <button class="location-btn" id="locBtn" onclick="toggleLocation()">📍</button>
     </div>
     <div class="date-time-row">
       <span class="day-badge" id="dayBadge">–</span>
     </div>
-    <div class="location-info" id="locInfo"></div>
+    <div class="loc-info" id="locInfo"></div>
   </div>
 
   <div class="section">
     <div class="section-label">Route</div>
     <div class="route-card">
-      <div class="stop-row" onclick="openPicker('von')" style="cursor:pointer">
+      <div class="stop-row" onclick="openPicker('von')">
         <div class="stop-icon von">A</div>
         <div class="stop-btn-inner">
           <div class="slabel">Von</div>
           <div class="sname" id="vonLabel">Wittdün Fähranleger</div>
         </div>
+        <button class="loc-btn" id="locBtn" onclick="event.stopPropagation();toggleLocation()">
+          <svg width="12" height="16" viewBox="0 0 14 18" fill="none">
+            <path id="locPin" d="M7 0C4.24 0 2 2.24 2 5c0 3.75 5 11 5 11s5-7.25 5-11c0-2.76-2.24-5-5-5z" fill="#0077b6"/>
+            <circle id="locDot" cx="7" cy="5" r="2" fill="white"/>
+          </svg>
+          Standort
+        </button>
+        <button class="map-btn" onclick="event.stopPropagation();openMap('von')">
+          <svg width="16" height="16" viewBox="0 0 24 24">
+            <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" fill="#34C759"/>
+          </svg>
+        </button>
         <span class="stop-btn-arrow">›</span>
       </div>
       <div class="stop-divider"></div>
-      <div class="swap-row">
-        <button class="swap-btn" onclick="swapStops()">⇅</button>
-      </div>
+      <div class="swap-row"><button class="swap-btn" onclick="swapStops()">⇅</button></div>
       <div class="stop-divider"></div>
-      <div class="stop-row" onclick="openPicker('nach')" style="cursor:pointer">
+      <div class="stop-row" onclick="openPicker('nach')">
         <div class="stop-icon nach">B</div>
         <div class="stop-btn-inner">
           <div class="slabel">Nach</div>
           <div class="sname" id="nachLabel">Norddorf Mitte</div>
         </div>
+        <button class="map-btn" onclick="event.stopPropagation();openMap('nach')">
+          <svg width="16" height="16" viewBox="0 0 24 24">
+            <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" fill="#34C759"/>
+          </svg>
+        </button>
         <span class="stop-btn-arrow">›</span>
       </div>
     </div>
@@ -128,7 +143,7 @@
       <div class="ferry-times" id="ferryTimes"></div>
     </div>
   </div>
-  <div class="footer">Fahrplan 21.3.–26.6.2026 · Feiertage wie Mo–Fr</div>
+  <div class="footer">Fahrplan 21.3.–26.6.2026 · Mo–Fr ohne Feiertage &amp; Ferien</div>
 </div>
 
 <div id="picker">
@@ -140,14 +155,7 @@
 </div>
 
 <script>
-const ROUTE_ORDER=[
-  "Wittdün Fähranleger","Wittdün Mitte","Wittdün Köhns Übergang","Wittdün Badeland","Wittdün Blaue Maus",
-  "Zeltplatz","Leuchtturm","Süddorf",
-  "Nebel Mühle","Nebel Mitte","Nebel Strandweg","Nebel Westerheide",
-  "Vogelkoje",
-  "Norddorf Onkel Toms Hütte","Norddorf Sturmmöwe","Norddorf Mitte",
-  "Norddorf Minigolfplatz","Norddorf Aussichtsdüne"
-];
+const ROUTE_ORDER=["Wittdün Fähranleger","Wittdün Mitte","Wittdün Köhns Übergang","Wittdün Badeland","Wittdün Blaue Maus","Zeltplatz","Leuchtturm","Süddorf","Nebel Mühle","Nebel Mitte","Nebel Strandweg","Nebel Westerheide","Vogelkoje","Norddorf Onkel Toms Hütte","Norddorf Sturmmöwe","Norddorf Mitte","Norddorf Minigolfplatz","Norddorf Aussichtsdüne"];
 
 const SASO_N={
   "Wittdün Fähranleger":  ["5:15","6:25","8:25","9:30","10:15","11:00","11:50","12:30","13:15","14:00","14:45","15:30","16:15","17:15","18:15","20:05","22:00"],
@@ -222,34 +230,51 @@ const MOFR_S={
   "Wittdün Fähranleger":   ["5:46","7:34","8:14","9:16","10:21","11:06","11:51","12:41","13:21","14:06","14:51","15:36","16:21","17:06","18:06","19:06","20:51","22:46"],
 };
 
-// Fährabfahrten
 const FERRY={
-  saso: ["6:00","7:10","9:30","12:05","15:15","17:25"],
-  mofr: ["6:00","9:30","12:05","15:15","17:25"],
-  fr:   ["6:00","9:30","12:05","15:15","17:25"]
+  saso:["6:00","7:10","9:30","12:05","15:15","17:25"],
+  mofr:["6:00","9:30","12:05","15:15","17:25"],
+  fr:  ["6:00","9:30","12:05","15:15","17:25"]
+};
+const FERRY_ARR={
+  saso:[toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("17:05"),toMin("20:00"),toMin("21:55")],
+  mofr:[toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("17:05")],
+  fr:  [toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("17:05"),toMin("20:00"),toMin("21:55")]
 };
 
-// Fährankunftszeiten
-// Sa+So: 9:15, 11:35, 14:30, 17:05, 20:00, 21:55
-// Mo-Do: 9:15, 11:35, 14:30, 17:05, 20:00 (20:00 = b = Fr-So → nur Fr+Sa+So!)
-// Fr:    9:15, 11:35, 14:30, 17:05, 20:00, 21:55
-const FERRY_ARR={
-  saso: [toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("17:05"),toMin("20:00"),toMin("21:55")],
-  mofr: [toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("17:05")],
-  fr:   [toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("17:05"),toMin("20:00"),toMin("21:55")]
+const STOP_COORDS={
+  "Wittdün Fähranleger":   [54.6233,8.3697],
+  "Wittdün Mitte":         [54.6251,8.3712],
+  "Wittdün Köhns Übergang":[54.6268,8.3724],
+  "Wittdün Badeland":      [54.6282,8.3731],
+  "Wittdün Blaue Maus":    [54.6298,8.3742],
+  "Zeltplatz":             [54.6321,8.3755],
+  "Leuchtturm":            [54.6358,8.3769],
+  "Süddorf":               [54.6412,8.3782],
+  "Nebel Mühle":           [54.6468,8.3791],
+  "Nebel Mitte":           [54.6489,8.3798],
+  "Nebel Strandweg":       [54.6502,8.3712],
+  "Nebel Westerheide":     [54.6518,8.3748],
+  "Vogelkoje":             [54.6548,8.3761],
+  "Norddorf Onkel Toms Hütte":[54.6678,8.3698],
+  "Norddorf Sturmmöwe":    [54.6698,8.3681],
+  "Norddorf Mitte":        [54.6712,8.3665],
+  "Norddorf Minigolfplatz":[54.6725,8.3658],
+  "Norddorf Aussichtsdüne":[54.6738,8.3641],
 };
 
 function toMin(t){if(!t)return Infinity;const[h,m]=t.split(":").map(Number);return h*60+m;}
 function minsLabel(d){if(d===0)return"jetzt";if(d<60)return d+" Min.";return Math.floor(d/60)+"h "+d%60+"m";}
-function durLabel(dep,arr){const d=toMin(arr)-toMin(dep);return d+" Min. Fahrt";}
+function durLabel(dep,arr){return(toMin(arr)-toMin(dep))+" Min. Fahrt";}
+function getNowStr(){const d=new Date();return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");}
+function getTodayStr(){return new Date().toISOString().slice(0,10);}
 
 function getDateInfo(){
   const d=new Date(document.getElementById("dateinput").value+"T12:00:00");
-  const dow=d.getDay(); // 0=So,1=Mo,...,5=Fr,6=Sa
+  const dow=d.getDay();
   const isSaSo=dow===0||dow===6;
   const isFr=dow===5;
-  const dayNames=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
-  return{isSaSo,isFr,dow,dayName:dayNames[dow]};
+  const names=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
+  return{isSaSo,isFr,dayName:names[dow]};
 }
 
 function getDayType(){
@@ -293,47 +318,51 @@ function getConnections(von,nach,nowMin,dt){
 function getReachable(von){
   const vi=ROUTE_ORDER.indexOf(von);
   if(vi===-1)return ROUTE_ORDER.filter(s=>s!==von);
-  return [...ROUTE_ORDER.slice(vi+1),...ROUTE_ORDER.slice(0,vi)];
+  return[...ROUTE_ORDER.slice(vi+1),...ROUTE_ORDER.slice(0,vi)];
 }
 
-function getNowStr(){const d=new Date();return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");}
-function getTodayStr(){const d=new Date();return d.toISOString().slice(0,10);}
+function haversine(lat1,lon1,lat2,lon2){
+  const R=6371000,dLat=(lat2-lat1)*Math.PI/180,dLon=(lon2-lon1)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+function findNearest(lat,lon){
+  let nearest=null,minD=Infinity;
+  for(const[s,[slat,slon]] of Object.entries(STOP_COORDS)){
+    const d=haversine(lat,lon,slat,slon);
+    if(d<minD){minD=d;nearest=s;}
+  }
+  return{stop:nearest,dist:Math.round(minD)};
+}
 
 let curVon="Wittdün Fähranleger",curNach="Norddorf Mitte",pickerTarget="von";
+let locationActive=false,watchId=null;
 
 function render(){
   const timeStr=document.getElementById("timeinput").value;
   const nowMin=toMin(timeStr);
   const dt=getDayType();
   const{dayName,isSaSo,isFr}=getDateInfo();
-  const badge=isSaSo?`${dayName} · Sa/So Fahrplan`:isFr?`${dayName} · Fr Fahrplan`:`${dayName} · Mo–Fr Fahrplan`;
+  const badge=isSaSo?`${dayName} · Sa/So`:isFr?`${dayName} · Freitag`:`${dayName} · Mo–Fr`;
   document.getElementById("dayBadge").textContent=badge;
+  document.getElementById("vonLabel").textContent=curVon;
+  document.getElementById("nachLabel").textContent=curNach;
 
   const conns=getConnections(curVon,curNach,nowMin,dt);
-  const resultArea=document.getElementById("resultArea");
-  const warnArea=document.getElementById("warnArea");
-  const nextArea=document.getElementById("nextArea");
-  const nextList=document.getElementById("nextList");
-  warnArea.innerHTML="";
+  const ra=document.getElementById("resultArea");
+  const wa=document.getElementById("warnArea");
+  const na=document.getElementById("nextArea");
+  const nl=document.getElementById("nextList");
+  wa.innerHTML="";
 
-  if(curVon===curNach){
-    resultArea.innerHTML='<div class="empty">Bitte verschiedene Haltestellen wählen.</div>';
-    nextArea.style.display="none";
-    return;
-  }
-  if(!conns.length){
-    resultArea.innerHTML='<div class="empty">Keine weiteren Verbindungen heute. 🌙</div>';
-    nextArea.style.display="none";
-    return;
-  }
+  if(curVon===curNach){ra.innerHTML='<div class="empty">Bitte verschiedene Haltestellen wählen.</div>';na.style.display="none";return;}
+  if(!conns.length){ra.innerHTML='<div class="empty">Keine weiteren Verbindungen heute. 🌙</div>';na.style.display="none";return;}
 
   const first=conns[0];
   const diff=toMin(first.dep)-nowMin;
   const dir=getDirection(curVon,curNach);
-  const dirLabel=dir?"→ Norddorf":"→ Wittdün";
-
-  resultArea.innerHTML=`<div class="result-card">
-    <div class="result-sub">Nächste Verbindung · ${dirLabel}</div>
+  ra.innerHTML=`<div class="result-card">
+    <div class="result-sub">Nächste Verbindung · ${dir?"→ Norddorf":"→ Wittdün"}</div>
     <div class="result-times">
       <div class="result-time">${first.dep}</div>
       <div class="result-arrow">→</div>
@@ -341,18 +370,15 @@ function render(){
     </div>
     <div class="result-detail">
       <div class="result-dur">${durLabel(first.dep,first.arr)}</div>
-      <div>
-        <div class="result-mins">${minsLabel(diff)}</div>
-        <div class="result-minslabel">bis Abfahrt</div>
-      </div>
+      <div><div class="result-mins">${minsLabel(diff)}</div><div class="result-minslabel">bis Abfahrt</div></div>
     </div>
   </div>`;
 
-  if(first.warn)warnArea.innerHTML=`<div class="warning">🚨 Achtung Fährbus – könnte voll sein!</div>`;
+  if(first.warn)wa.innerHTML=`<div class="warning">🚨 Achtung Fährbus – könnte voll sein!</div>`;
 
   if(conns.length>1){
-    nextArea.style.display="block";
-    nextList.innerHTML=conns.slice(1).map((c,i,arr)=>`
+    na.style.display="block";
+    nl.innerHTML=conns.slice(1).map((c,i,arr)=>`
       <div class="dep-row" style="${i===arr.length-1?'border-bottom:none':''}">
         <div class="dep-bar"></div>
         <div class="dep-info">
@@ -362,13 +388,11 @@ function render(){
         </div>
         <div class="dep-mins">${minsLabel(toMin(c.dep)-nowMin)}</div>
       </div>`).join("");
-  }else{nextArea.style.display="none";}
+  } else {na.style.display="none";}
 
   const ft=document.getElementById("ferryTimes");
-  const ferryList=FERRY[dt]||FERRY.mofr;
-  ft.innerHTML=ferryList.map(t=>`
-    <span class="ferry-pill" style="background:${toMin(t)>=nowMin?'#fff3e0':'#f2f2f7'};color:${toMin(t)>=nowMin?'#e07b00':'#aaa'}">${t}</span>
-  `).join("");
+  ft.innerHTML=(FERRY[dt]||FERRY.mofr).map(t=>`
+    <span class="ferry-pill" style="background:${toMin(t)>=nowMin?'#fff3e0':'#f2f2f7'};color:${toMin(t)>=nowMin?'#e07b00':'#aaa'}">${t}</span>`).join("");
 }
 
 function setNow(){
@@ -378,12 +402,7 @@ function setNow(){
   render();
 }
 
-function swapStops(){
-  [curVon,curNach]=[curNach,curVon];
-  document.getElementById("vonLabel").textContent=curVon;
-  document.getElementById("nachLabel").textContent=curNach;
-  render();
-}
+function swapStops(){[curVon,curNach]=[curNach,curVon];render();}
 
 function openPicker(target){
   pickerTarget=target;
@@ -394,68 +413,74 @@ function openPicker(target){
 }
 function closePicker(){document.getElementById("picker").classList.remove("open");}
 function filterPicker(q){
-  const list=document.getElementById("pickerList");
   const reachable=pickerTarget==="nach"?getReachable(curVon):ROUTE_ORDER;
   const curSel=pickerTarget==="von"?curVon:curNach;
-  list.innerHTML=ROUTE_ORDER.filter(s=>s.toLowerCase().includes(q.toLowerCase())).map(s=>{
-    const ok=pickerTarget==="von"||reachable.includes(s);
-    return`<div class="picker-item ${s===curSel?'selected':''} ${!ok?'disabled':''}" onclick="${ok?`selectStop('${s.replace(/'/g,"\\'")}')`:''}">
-      ${s}${s===curSel?' <span>✓</span>':''}
-    </div>`;
-  }).join("");
+  document.getElementById("pickerList").innerHTML=ROUTE_ORDER
+    .filter(s=>s.toLowerCase().includes(q.toLowerCase()))
+    .map(s=>{
+      const ok=pickerTarget==="von"||reachable.includes(s);
+      return`<div class="picker-item ${s===curSel?'selected':''} ${!ok?'disabled':''}" onclick="${ok?`selectStop('${s.replace(/'/g,"\\'")}')`:''}">
+        ${s}${s===curSel?' <span>✓</span>':''}
+      </div>`;
+    }).join("");
 }
 function selectStop(s){
   if(pickerTarget==="von"){
     curVon=s;
-    document.getElementById("vonLabel").textContent=s;
-    if(curNach===s){curNach=getReachable(s)[0]||s;document.getElementById("nachLabel").textContent=curNach;}
-  }else{
-    curNach=s;
-    document.getElementById("nachLabel").textContent=s;
-  }
+    if(curNach===s){curNach=getReachable(s)[0]||s;}
+  } else {curNach=s;}
   closePicker();render();
 }
 
-// Init
+function toggleLocation(){locationActive?stopLocation():startLocation();}
+function startLocation(){
+  if(!navigator.geolocation){document.getElementById("locInfo").textContent="Standort nicht verfügbar.";return;}
+  document.getElementById("locInfo").textContent="📡 Standort wird ermittelt…";
+  const btn=document.getElementById("locBtn");
+  btn.classList.add("active");
+  document.getElementById("locPin").setAttribute("fill","white");
+  document.getElementById("locDot").setAttribute("fill","#0077b6");
+  locationActive=true;
+  watchId=navigator.geolocation.watchPosition(pos=>{
+    const{latitude:lat,longitude:lon}=pos.coords;
+    const{stop,dist}=findNearest(lat,lon);
+    document.getElementById("locInfo").textContent=`📍 ${stop} (${dist}m)`;
+    curVon=stop;
+    if(curNach===stop){curNach=getReachable(stop)[0]||stop;}
+    render();
+  },()=>{
+    document.getElementById("locInfo").textContent="⚠️ Standort nicht verfügbar.";
+    stopLocation();
+  },{enableHighAccuracy:true,maximumAge:10000,timeout:10000});
+}
+function stopLocation(){
+  if(watchId!==null){navigator.geolocation.clearWatch(watchId);watchId=null;}
+  locationActive=false;
+  const btn=document.getElementById("locBtn");
+  btn.classList.remove("active");
+  document.getElementById("locPin").setAttribute("fill","#0077b6");
+  document.getElementById("locDot").setAttribute("fill","white");
+  document.getElementById("locInfo").textContent="";
+}
+
+function openMap(target){
+  const stop=target==="von"?curVon:curNach;
+  const coords=STOP_COORDS[stop];
+  if(!coords){return;}
+  const[lat,lon]=coords;
+  const name=encodeURIComponent(stop);
+  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+  const url=isIOS
+    ?`https://maps.apple.com/?daddr=${lat},${lon}&q=${name}`
+    :`https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`;
+  window.open(url,"_blank");
+}
+
 document.getElementById("dateinput").value=getTodayStr();
 document.getElementById("timeinput").value=getNowStr();
 render();
 setInterval(()=>{if(!window._manualTime){document.getElementById("timeinput").value=getNowStr();render();}},60000);
 document.getElementById("timeinput").addEventListener("change",()=>{window._manualTime=true;render();});
-
-// Icon generieren
-(function(){
-  const c=document.createElement('canvas');c.width=1024;c.height=1024;
-  const ctx=c.getContext('2d');
-  function roundRect(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
-  function rr(x,y,w,h,r){roundRect(x,y,w,h,r);ctx.fill();}
-  roundRect(0,0,1024,1024,220);ctx.clip();
-  ctx.fillStyle='#003F8A';ctx.fillRect(0,0,1024,1024);
-  ctx.fillStyle='#CC0000';ctx.fillRect(0,0,1024,682);
-  ctx.fillStyle='#F5D800';ctx.fillRect(0,0,1024,341);
-  ctx.fillStyle='white';ctx.font='900 80px Arial Black,sans-serif';ctx.textAlign='center';ctx.globalAlpha=.9;
-  ctx.fillText('AMRUM',512,110);ctx.globalAlpha=1;
-  ctx.fillStyle='#111';rr(280,700,120,100,12);rr(624,700,120,100,12);
-  ctx.fillStyle='#f0f4f8';rr(182,230,660,95,36);ctx.fillRect(182,285,660,40);
-  ctx.fillStyle='#CC0000';ctx.font='900 44px Arial Black,sans-serif';ctx.fillText('LEUCHTTURM',512,292);
-  ctx.fillStyle='white';rr(162,320,700,430,36);
-  ctx.fillStyle='rgba(168,216,240,0.88)';rr(200,370,624,210,22);
-  ctx.strokeStyle='white';ctx.lineWidth=6;ctx.globalAlpha=.5;
-  ctx.beginPath();ctx.moveTo(512,370);ctx.lineTo(512,580);ctx.stroke();ctx.globalAlpha=1;
-  ctx.fillStyle='rgba(26,111,168,0.9)';ctx.fillRect(162,540,700,34);
-  ctx.fillStyle='#e0e8f0';ctx.fillRect(162,572,700,90);
-  ctx.fillStyle='#ccd4dc';rr(240,582,544,46,10);
-  ctx.strokeStyle='#aab4bc';ctx.lineWidth=3;
-  for(let x=280;x<=744;x+=40){ctx.beginPath();ctx.moveTo(x,582);ctx.lineTo(x,628);ctx.stroke();}
-  ctx.fillStyle='rgba(255,224,102,0.95)';rr(164,574,68,66,12);rr(792,574,68,66,12);
-  ctx.fillStyle='#ccd4dc';rr(172,658,680,26,13);
-  ctx.fillStyle='white';rr(162,682,700,68,36);
-  const png=c.toDataURL('image/png');
-  document.getElementById('appicon').href=png;
-  const m={name:'Amrum Bus',short_name:'Amrum Bus',start_url:'.',display:'standalone',background_color:'#f2f2f7',theme_color:'#b22222',icons:[{src:png,sizes:'1024x1024',type:'image/png'}]};
-  const blob=new Blob([JSON.stringify(m)],{type:'application/json'});
-  document.getElementById('manifest').href=URL.createObjectURL(blob);
-})();
 </script>
 </body>
 </html>
