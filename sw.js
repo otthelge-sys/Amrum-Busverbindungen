@@ -1,9 +1,9 @@
-const VERSION = "2.1";
+const VERSION = "2.2";
 const CACHE = "amrum-bus-" + VERSION;
 
 self.addEventListener("install", e => {
   e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(["/Amrum-Busverbindungen-Vorsaison/", "/Amrum-Busverbindungen-Vorsaison/index.html", "/Amrum-Busverbindungen-Vorsaison/icon.png"]))
+   caches.open(CACHE).then(c => c.addAll(["/Amrum-Busverbindungen/", "/Amrum-Busverbindungen/index.html", "/Amrum-Busverbindungen/icon.png"]))
   );
   // Nicht sofort skippen – erst auf Nachricht warten
 
