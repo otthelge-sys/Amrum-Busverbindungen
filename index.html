@@ -19,7 +19,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .date-time-row input{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:8px;padding:6px 10px;font-size:15px;font-weight:600;color-scheme:dark}
 .date-time-row button{background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;white-space:nowrap}
 .day-badge{background:rgba(255,255,255,.2);border-radius:8px;padding:4px 10px;font-size:13px;font-weight:700;color:#fff;white-space:nowrap}
-.loc-info{font-size:12px;color:rgba(255,255,255,.8);margin-top:4px;min-height:16px}
 .section{padding:12px 16px 0}
 .section-label{font-size:12px;color:#8e8e93;margin-bottom:4px;padding-left:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
 .route-card{background:#fff;border-radius:14px;padding:4px 0;box-shadow:0 1px 3px rgba(0,0,0,.08)}
@@ -34,8 +33,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .stop-divider{height:1px;background:#f2f2f7;margin:0 16px}
 .swap-row{display:flex;justify-content:center;padding:2px 0}
 .swap-btn{background:none;border:none;font-size:20px;cursor:pointer;padding:4px 16px;color:#b22222}
-.loc-btn{background:none;border:2px solid #0077b6;border-radius:10px;padding:5px 8px;cursor:pointer;display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:#0077b6;white-space:nowrap;flex-shrink:0}
-.loc-btn.active{background:#0077b6;color:white}
 .map-btn{background:none;border:2px solid #34C759;border-radius:10px;padding:5px 7px;cursor:pointer;display:flex;align-items:center;flex-shrink:0}
 .result-card{margin:14px 16px 0;background:linear-gradient(135deg,#0077b6,#005f8e);border-radius:16px;padding:20px;color:#fff;box-shadow:0 4px 12px rgba(0,119,182,.3)}
 .result-sub{font-size:12px;opacity:.8;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
@@ -62,15 +59,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .ferry-times{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .ferry-pill{padding:5px 10px;border-radius:8px;font-size:14px;font-weight:600}
 .footer{text-align:center;font-size:11px;color:#c7c7cc;margin-top:20px;padding:0 20px 20px}
-#picker{display:none;position:fixed;inset:0;z-index:100;background:#fff;flex-direction:column}
-#picker.open{display:flex}
-.picker-head{background:#b22222;padding:calc(16px + env(safe-area-inset-top)) 16px 8px;display:flex;align-items:center;gap:12px}
-.picker-back{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:0}
-.picker-search{flex:1;padding:8px 12px;border-radius:20px;border:none;font-size:15px;outline:none}
-.picker-list{overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
-.picker-item{padding:16px 20px;border-bottom:1px solid #f0f0f0;font-size:16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
-.picker-item.selected{background:#fff3e0;color:#e07b00;font-weight:700}
-.picker-item.disabled{color:#ccc;pointer-events:none}
+.overlay{display:none;position:fixed;inset:0;z-index:100;background:#f2f2f7;flex-direction:column}
+.overlay.open{display:flex}
+.overlay-head{padding:calc(16px + env(safe-area-inset-top)) 16px 12px;display:flex;align-items:center;gap:12px;color:#fff}
+.overlay-back{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:0;flex-shrink:0}
+.overlay-body{overflow-y:auto;flex:1;padding:12px 16px;-webkit-overflow-scrolling:touch}
 </style>
 </head>
 <body>
@@ -86,7 +79,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="date-time-row">
       <span class="day-badge" id="dayBadge">–</span>
     </div>
-    <div class="loc-info" id="locInfo"></div>
   </div>
 
   <div class="section">
@@ -98,10 +90,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <div class="slabel">Von</div>
           <div class="sname" id="vonLabel">Wittdün Fähranleger</div>
         </div>
-        <button class="map-btn" onclick="event.stopPropagation();openMap('von')" title="Weg zur Haltestelle">
-          <svg width="18" height="18" viewBox="0 0 24 24">
-            <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" fill="#34C759"/>
-          </svg>
+        <button class="map-btn" onclick="event.stopPropagation();openMap('von')">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" fill="#34C759"/></svg>
         </button>
         <span class="stop-btn-arrow">›</span>
       </div>
@@ -114,10 +104,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <div class="slabel">Nach</div>
           <div class="sname" id="nachLabel">Norddorf Mitte</div>
         </div>
-        <button class="map-btn" onclick="event.stopPropagation();openMap('nach')" title="Weg zur Haltestelle">
-          <svg width="18" height="18" viewBox="0 0 24 24">
-            <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" fill="#34C759"/>
-          </svg>
+        <button class="map-btn" onclick="event.stopPropagation();openMap('nach')">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" fill="#34C759"/></svg>
         </button>
         <span class="stop-btn-arrow">›</span>
       </div>
@@ -130,6 +118,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="section-label">Weitere Verbindungen</div>
     <div class="next-card" id="nextList"></div>
   </div>
+
+  <div class="section">
+    <div class="section-label">🌊 Gezeiten</div>
+    <div id="tideArea"></div>
+  </div>
+
   <div class="section">
     <div class="section-label">⛴ Fährabfahrten</div>
     <div style="background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.06)">
@@ -139,143 +133,55 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="footer">Fahrplan 21.3.–26.6.2026 · Mo–Fr ohne Feiertage &amp; Ferien</div>
 </div>
 
-<div id="picker">
-  <div class="picker-head">
-    <button class="picker-back" onclick="closePicker()">‹</button>
-    <input class="picker-search" type="text" id="pickerSearch" placeholder="Haltestelle suchen…" oninput="filterPicker(this.value)"/>
+<!-- Haltestellen Picker -->
+<div class="overlay" id="picker">
+  <div class="overlay-head" style="background:#b22222">
+    <button class="overlay-back" onclick="closePicker()">‹</button>
+    <input style="flex:1;padding:8px 12px;border-radius:20px;border:none;font-size:15px;outline:none" type="text" id="pickerSearch" placeholder="Haltestelle suchen…" oninput="filterPicker(this.value)"/>
   </div>
-  <div class="picker-list" id="pickerList"></div>
+  <div class="overlay-body" id="pickerList"></div>
+</div>
+
+<!-- Gezeiten Vorhersage -->
+<div class="overlay" id="tideForecast">
+  <div class="overlay-head" style="background:linear-gradient(135deg,#0077b6,#005f8e)">
+    <button class="overlay-back" onclick="document.getElementById('tideForecast').classList.remove('open')">‹</button>
+    <div style="flex:1">
+      <div style="font-size:12px;opacity:.8;text-transform:uppercase;letter-spacing:1px">7-Tage Vorhersage</div>
+      <div style="font-size:18px;font-weight:700" id="forecastTitle">Wittdün</div>
+    </div>
+    <input type="date" id="tideDatePicker" oninput="renderForecast()"
+      style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:8px;padding:6px 8px;font-size:13px;font-weight:600;color-scheme:dark"/>
+  </div>
+  <div class="overlay-body" id="forecastBody"></div>
 </div>
 
 <script>
+// ── Fahrplandaten ─────────────────────────────────────────────────────────────
 const ROUTE_ORDER=["Wittdün Fähranleger","Wittdün Mitte","Wittdün Köhns Übergang","Wittdün Badeland","Wittdün Blaue Maus","Zeltplatz","Leuchtturm","Süddorf","Nebel Mühle","Nebel Mitte","Nebel Strandweg","Nebel Westerheide","Vogelkoje","Norddorf Onkel Toms Hütte","Norddorf Sturmmöwe","Norddorf Mitte","Norddorf Minigolfplatz","Norddorf Aussichtsdüne"];
+const SASO_N={"Wittdün Fähranleger":["5:15","6:25","8:25","9:30","10:15","11:00","11:50","12:30","13:15","14:00","14:45","15:30","16:15","17:15","18:15","20:05","22:00"],"Wittdün Mitte":["5:16","6:26","8:27","9:32","10:17","11:02","11:52","12:32","13:17","14:02","14:47","15:32","16:17","17:17","18:17","20:07","22:02"],"Wittdün Köhns Übergang":["5:17","6:27","8:28","9:33","10:18","11:03","11:53","12:33","13:18","14:03","14:48","15:33","16:18","17:18","18:18","20:08","22:03"],"Wittdün Badeland":["5:18","6:28","8:29","9:34","10:19","11:04","11:54","12:34","13:19","14:04","14:49","15:34","16:19","17:19","18:19","20:09","22:04"],"Wittdün Blaue Maus":["5:19","6:29","8:30","9:35","10:20","11:05","11:55","12:35","13:20","14:05","14:50","15:35","16:20","17:20","18:20","20:10","22:05"],"Zeltplatz":["5:20","6:30","8:31","9:36","10:21","11:06","11:56","12:36","13:21","14:06","14:51","15:36","16:21","17:21","18:21","20:11","22:06"],"Leuchtturm":["5:21","6:31","8:32","9:37","10:22","11:07","11:57","12:37","13:22","14:07","14:52","15:37","16:22","17:22","18:22","20:12","22:07"],"Süddorf":["5:22","6:32","8:33","9:38","10:23","11:08","11:58","12:38","13:23","14:08","14:53","15:38","16:23","17:23","18:23","20:13","22:08"],"Nebel Mühle":["5:23","6:33","8:34","9:39","10:24","11:09","11:59","12:39","13:24","14:09","14:54","15:39","16:24","17:24","18:24","20:14","22:09"],"Nebel Mitte":["5:24","6:34","8:36","9:41","10:26","11:11","12:01","12:41","13:26","14:11","14:56","15:41","16:26","17:26","18:26","20:16","22:11"],"Nebel Strandweg":["5:25","6:35","8:38","9:43","10:28","11:13","12:03","12:43","13:28","14:13","14:58","15:43","16:28","17:28","18:28","20:18","22:13"],"Nebel Westerheide":["5:26","6:36","8:39","9:44","10:29","11:14","12:04","12:44","13:29","14:14","14:59","15:44","16:29","17:29","18:29","20:19","22:14"],"Vogelkoje":["5:27","6:37","8:40","9:45","10:30","11:15","12:05","12:45","13:30","14:15","15:00","15:45","16:30","17:30","18:30","20:20","22:15"],"Norddorf Onkel Toms Hütte":["5:28","6:38","8:42","9:47","10:32","11:17","12:07","12:47","13:32","14:17","15:02","15:47","16:32","17:32","18:32","20:22","22:17"],"Norddorf Sturmmöwe":["5:29","6:39","8:43","9:48","10:33","11:18","12:08","12:48","13:33","14:18","15:03","15:48","16:33","17:33","18:33","20:23","22:18"],"Norddorf Mitte":["5:30","6:40","8:45","9:50","10:35","11:20","12:10","12:50","13:35","14:20","15:05","15:50","16:35","17:35","18:35","20:25","22:20"]};
+const SASO_S={"Norddorf Mitte":["5:30","6:40","8:55","10:00","10:45","11:30","12:20","13:00","13:45","14:30","15:15","16:00","16:45","17:45","18:45","20:30","22:25"],"Norddorf Minigolfplatz":["5:31","6:41","8:56","10:01","10:46","11:31","12:21","13:01","13:46","14:31","15:16","16:01","16:46","17:46","18:46","20:31","22:26"],"Norddorf Aussichtsdüne":["5:32","6:42","8:57","10:02","10:47","11:32","12:22","13:02","13:47","14:32","15:17","16:02","16:47","17:47","18:47","20:32","22:27"],"Vogelkoje":["5:33","6:43","8:58","10:03","10:48","11:33","12:23","13:03","13:48","14:33","15:18","16:03","16:48","17:48","18:48","20:33","22:28"],"Nebel Westerheide":["5:34","6:44","8:59","10:04","10:49","11:34","12:24","13:04","13:49","14:34","15:19","16:04","16:49","17:49","18:49","20:34","22:29"],"Nebel Strandweg":["5:35","6:45","9:01","10:06","10:51","11:36","12:26","13:06","13:51","14:36","15:21","16:06","16:51","17:51","18:51","20:36","22:31"],"Nebel Mitte":["5:36","6:46","9:03","10:08","10:53","11:38","12:28","13:08","13:53","14:38","15:23","16:08","16:53","17:53","18:53","20:38","22:33"],"Nebel Mühle":["5:37","6:47","9:04","10:09","10:54","11:39","12:29","13:09","13:54","14:39","15:24","16:09","16:54","17:54","18:54","20:39","22:34"],"Süddorf":["5:38","6:48","9:06","10:11","10:56","11:41","12:31","13:11","13:56","14:41","15:26","16:11","16:56","17:56","18:56","20:41","22:36"],"Leuchtturm":["5:39","6:49","9:08","10:13","10:58","11:43","12:33","13:13","13:58","14:43","15:28","16:13","16:58","17:58","18:58","20:43","22:38"],"Zeltplatz":["5:40","6:50","9:09","10:14","10:59","11:44","12:34","13:14","13:59","14:44","15:29","16:14","16:59","17:59","18:59","20:44","22:39"],"Wittdün Blaue Maus":["5:41","6:51","9:10","10:15","11:00","11:45","12:35","13:15","14:00","14:45","15:30","16:15","17:00","18:00","19:00","20:45","22:40"],"Wittdün Badeland":["5:42","6:52","9:11","10:16","11:01","11:46","12:36","13:16","14:01","14:46","15:31","16:16","17:01","18:01","19:01","20:46","22:41"],"Wittdün Köhns Übergang":["5:43","6:53","9:12","10:17","11:02","11:47","12:37","13:17","14:02","14:47","15:32","16:17","17:02","18:02","19:02","20:47","22:42"],"Wittdün Mitte":["5:44","6:54","9:13","10:18","11:03","11:48","12:38","13:18","14:03","14:48","15:33","16:18","17:03","18:03","19:03","20:48","22:43"],"Wittdün Fähranleger":["5:46","6:56","9:16","10:21","11:06","11:51","12:41","13:21","14:06","14:51","15:36","16:21","17:06","18:06","19:06","20:51","22:46"]};
+const MOFR_N={"Wittdün Fähranleger":["5:15","7:00","7:40","8:25","9:30","10:15","11:00","11:50","12:30","13:15","14:00","14:45","15:30","16:15","17:15","18:15","20:05","22:00"],"Wittdün Mitte":["5:16","7:01","7:41","8:27","9:32","10:17","11:02","11:52","12:32","13:17","14:02","14:47","15:32","16:17","17:17","18:17","20:07","22:02"],"Wittdün Köhns Übergang":["5:17","7:02","7:42","8:28","9:33","10:18","11:03","11:53","12:33","13:18","14:03","14:48","15:33","16:18","17:18","18:18","20:08","22:03"],"Wittdün Badeland":["5:18","7:03","7:43","8:29","9:34","10:19","11:04","11:54","12:34","13:19","14:04","14:49","15:34","16:19","17:19","18:19","20:09","22:04"],"Wittdün Blaue Maus":["5:19","7:04","7:44","8:30","9:35","10:20","11:05","11:55","12:35","13:20","14:05","14:50","15:35","16:20","17:20","18:20","20:10","22:05"],"Zeltplatz":["5:20","7:05","7:45","8:31","9:36","10:21","11:06","11:56","12:36","13:21","14:06","14:51","15:36","16:21","17:21","18:21","20:11","22:06"],"Leuchtturm":["5:21","7:06","7:46","8:32","9:37","10:22","11:07","11:57","12:37","13:22","14:07","14:52","15:37","16:22","17:22","18:22","20:12","22:07"],"Süddorf":["5:22","7:07","7:47","8:33","9:38","10:23","11:08","11:58","12:38","13:23","14:08","14:53","15:38","16:23","17:23","18:23","20:13","22:08"],"Nebel Mühle":["5:23","7:08","7:48","8:34","9:39","10:24","11:09","11:59","12:39","13:24","14:09","14:54","15:39","16:24","17:24","18:24","20:14","22:09"],"Nebel Mitte":["5:24","7:09","7:49","8:36","9:41","10:26","11:11","12:01","12:41","13:26","14:11","14:56","15:41","16:26","17:26","18:26","20:16","22:11"],"Nebel Strandweg":["5:25","7:10","7:50","8:38","9:43","10:28","11:13","12:03","12:43","13:28","14:13","14:58","15:43","16:28","17:28","18:28","20:18","22:13"],"Nebel Westerheide":["5:26","7:11","7:51","8:39","9:44","10:29","11:14","12:04","12:44","13:29","14:14","14:59","15:44","16:29","17:29","18:29","20:19","22:14"],"Vogelkoje":["5:27","7:12","7:52","8:40","9:45","10:30","11:15","12:05","12:45","13:30","14:15","15:00","15:45","16:30","17:30","18:30","20:20","22:15"],"Norddorf Onkel Toms Hütte":["5:28","7:13","7:53","8:42","9:47","10:32","11:17","12:07","12:47","13:32","14:17","15:02","15:47","16:32","17:32","18:32","20:22","22:17"],"Norddorf Sturmmöwe":["5:29","7:14","7:54","8:43","9:48","10:33","11:18","12:08","12:48","13:33","14:18","15:03","15:48","16:33","17:33","18:33","20:23","22:18"],"Norddorf Mitte":["5:30","7:15","7:55","8:45","9:50","10:35","11:20","12:10","12:50","13:35","14:20","15:05","15:50","16:35","17:35","18:35","20:25","22:20"]};
+const MOFR_S={"Norddorf Mitte":["5:30","7:15","7:55","8:55","10:00","10:45","11:30","12:20","13:00","13:45","14:30","15:15","16:00","16:45","17:45","18:45","20:30","22:25"],"Norddorf Minigolfplatz":["5:31","7:16","7:56","8:56","10:01","10:46","11:31","12:21","13:01","13:46","14:31","15:16","16:01","16:46","17:46","18:46","20:31","22:26"],"Norddorf Aussichtsdüne":["5:32","7:17","7:57","8:57","10:02","10:47","11:32","12:22","13:02","13:47","14:32","15:17","16:02","16:47","17:47","18:47","20:32","22:27"],"Vogelkoje":["5:33","7:18","7:58","8:58","10:03","10:48","11:33","12:23","13:03","13:48","14:33","15:18","16:03","16:48","17:48","18:48","20:33","22:28"],"Nebel Westerheide":["5:34","7:19","7:59","8:59","10:04","10:49","11:34","12:24","13:04","13:49","14:34","15:19","16:04","16:49","17:49","18:49","20:34","22:29"],"Nebel Strandweg":["5:35","7:20","8:00","9:01","10:06","10:51","11:36","12:26","13:06","13:51","14:36","15:21","16:06","16:51","17:51","18:51","20:36","22:31"],"Nebel Mitte":["5:36","7:21","8:01","9:03","10:08","10:53","11:38","12:28","13:08","13:53","14:38","15:23","16:08","16:53","17:53","18:53","20:38","22:33"],"Nebel Mühle":["5:37",null,null,"9:04","10:09","10:54","11:39","12:29","13:09","13:54","14:39","15:24","16:09","16:54","17:54","18:54","20:39","22:34"],"Süddorf":["5:38","7:25","8:05","9:06","10:11","10:56","11:41","12:31","13:11","13:56","14:41","15:26","16:11","16:56","17:56","18:56","20:41","22:36"],"Leuchtturm":["5:39","7:27","8:07","9:08","10:13","10:58","11:43","12:33","13:13","13:58","14:43","15:28","16:13","16:58","17:58","18:58","20:43","22:38"],"Zeltplatz":["5:40","7:28","8:08","9:09","10:14","10:59","11:44","12:34","13:14","13:59","14:44","15:29","16:14","16:59","17:59","18:59","20:44","22:39"],"Wittdün Blaue Maus":["5:41","7:29","8:09","9:10","10:15","11:00","11:45","12:35","13:15","14:00","14:45","15:30","16:15","17:00","18:00","19:00","20:45","22:40"],"Wittdün Badeland":["5:42","7:30","8:10","9:11","10:16","11:01","11:46","12:36","13:16","14:01","14:46","15:31","16:16","17:01","18:01","19:01","20:46","22:41"],"Wittdün Köhns Übergang":["5:43","7:31","8:11","9:12","10:17","11:02","11:47","12:37","13:17","14:02","14:47","15:32","16:17","17:02","18:02","19:02","20:47","22:42"],"Wittdün Mitte":["5:44","7:32","8:12","9:13","10:18","11:03","11:48","12:38","13:18","14:03","14:48","15:33","16:18","17:03","18:03","19:03","20:48","22:43"],"Wittdün Fähranleger":["5:46","7:34","8:14","9:16","10:21","11:06","11:51","12:41","13:21","14:06","14:51","15:36","16:21","17:06","18:06","19:06","20:51","22:46"]};
+const FERRY={saso:["6:00","7:10","9:30","12:05","15:15","17:25"],mofr:["6:00","9:30","12:05","15:15","17:25"],fr:["6:00","9:30","12:05","15:15","17:25"]};
+const FERRY_ARR={saso:[toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("17:05"),toMin("20:00"),toMin("21:55")],mofr:[toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("17:05")],fr:[toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("17:05"),toMin("20:00"),toMin("21:55")]};
+const STOP_COORDS={"Wittdün Fähranleger":[54.6233,8.3697],"Wittdün Mitte":[54.6251,8.3712],"Wittdün Köhns Übergang":[54.6268,8.3724],"Wittdün Badeland":[54.6282,8.3731],"Wittdün Blaue Maus":[54.6298,8.3742],"Zeltplatz":[54.6321,8.3755],"Leuchtturm":[54.6358,8.3769],"Süddorf":[54.6412,8.3782],"Nebel Mühle":[54.6468,8.3791],"Nebel Mitte":[54.6489,8.3798],"Nebel Strandweg":[54.6502,8.3712],"Nebel Westerheide":[54.6518,8.3748],"Vogelkoje":[54.6548,8.3761],"Norddorf Onkel Toms Hütte":[54.6678,8.3698],"Norddorf Sturmmöwe":[54.6698,8.3681],"Norddorf Mitte":[54.6712,8.3665],"Norddorf Minigolfplatz":[54.6725,8.3658],"Norddorf Aussichtsdüne":[54.6738,8.3641]};
 
-const SASO_N={
-  "Wittdün Fähranleger":  ["5:15","6:25","8:25","9:30","10:15","11:00","11:50","12:30","13:15","14:00","14:45","15:30","16:15","17:15","18:15","20:05","22:00"],
-  "Wittdün Mitte":        ["5:16","6:26","8:27","9:32","10:17","11:02","11:52","12:32","13:17","14:02","14:47","15:32","16:17","17:17","18:17","20:07","22:02"],
-  "Wittdün Köhns Übergang":["5:17","6:27","8:28","9:33","10:18","11:03","11:53","12:33","13:18","14:03","14:48","15:33","16:18","17:18","18:18","20:08","22:03"],
-  "Wittdün Badeland":     ["5:18","6:28","8:29","9:34","10:19","11:04","11:54","12:34","13:19","14:04","14:49","15:34","16:19","17:19","18:19","20:09","22:04"],
-  "Wittdün Blaue Maus":   ["5:19","6:29","8:30","9:35","10:20","11:05","11:55","12:35","13:20","14:05","14:50","15:35","16:20","17:20","18:20","20:10","22:05"],
-  "Zeltplatz":            ["5:20","6:30","8:31","9:36","10:21","11:06","11:56","12:36","13:21","14:06","14:51","15:36","16:21","17:21","18:21","20:11","22:06"],
-  "Leuchtturm":           ["5:21","6:31","8:32","9:37","10:22","11:07","11:57","12:37","13:22","14:07","14:52","15:37","16:22","17:22","18:22","20:12","22:07"],
-  "Süddorf":              ["5:22","6:32","8:33","9:38","10:23","11:08","11:58","12:38","13:23","14:08","14:53","15:38","16:23","17:23","18:23","20:13","22:08"],
-  "Nebel Mühle":          ["5:23","6:33","8:34","9:39","10:24","11:09","11:59","12:39","13:24","14:09","14:54","15:39","16:24","17:24","18:24","20:14","22:09"],
-  "Nebel Mitte":          ["5:24","6:34","8:36","9:41","10:26","11:11","12:01","12:41","13:26","14:11","14:56","15:41","16:26","17:26","18:26","20:16","22:11"],
-  "Nebel Strandweg":      ["5:25","6:35","8:38","9:43","10:28","11:13","12:03","12:43","13:28","14:13","14:58","15:43","16:28","17:28","18:28","20:18","22:13"],
-  "Nebel Westerheide":    ["5:26","6:36","8:39","9:44","10:29","11:14","12:04","12:44","13:29","14:14","14:59","15:44","16:29","17:29","18:29","20:19","22:14"],
-  "Vogelkoje":            ["5:27","6:37","8:40","9:45","10:30","11:15","12:05","12:45","13:30","14:15","15:00","15:45","16:30","17:30","18:30","20:20","22:15"],
-  "Norddorf Onkel Toms Hütte":["5:28","6:38","8:42","9:47","10:32","11:17","12:07","12:47","13:32","14:17","15:02","15:47","16:32","17:32","18:32","20:22","22:17"],
-  "Norddorf Sturmmöwe":   ["5:29","6:39","8:43","9:48","10:33","11:18","12:08","12:48","13:33","14:18","15:03","15:48","16:33","17:33","18:33","20:23","22:18"],
-  "Norddorf Mitte":       ["5:30","6:40","8:45","9:50","10:35","11:20","12:10","12:50","13:35","14:20","15:05","15:50","16:35","17:35","18:35","20:25","22:20"],
-};
-const SASO_S={
-  "Norddorf Mitte":       ["5:30","6:40","8:55","10:00","10:45","11:30","12:20","13:00","13:45","14:30","15:15","16:00","16:45","17:45","18:45","20:30","22:25"],
-  "Norddorf Minigolfplatz":["5:31","6:41","8:56","10:01","10:46","11:31","12:21","13:01","13:46","14:31","15:16","16:01","16:46","17:46","18:46","20:31","22:26"],
-  "Norddorf Aussichtsdüne":["5:32","6:42","8:57","10:02","10:47","11:32","12:22","13:02","13:47","14:32","15:17","16:02","16:47","17:47","18:47","20:32","22:27"],
-  "Vogelkoje":            ["5:33","6:43","8:58","10:03","10:48","11:33","12:23","13:03","13:48","14:33","15:18","16:03","16:48","17:48","18:48","20:33","22:28"],
-  "Nebel Westerheide":    ["5:34","6:44","8:59","10:04","10:49","11:34","12:24","13:04","13:49","14:34","15:19","16:04","16:49","17:49","18:49","20:34","22:29"],
-  "Nebel Strandweg":      ["5:35","6:45","9:01","10:06","10:51","11:36","12:26","13:06","13:51","14:36","15:21","16:06","16:51","17:51","18:51","20:36","22:31"],
-  "Nebel Mitte":          ["5:36","6:46","9:03","10:08","10:53","11:38","12:28","13:08","13:53","14:38","15:23","16:08","16:53","17:53","18:53","20:38","22:33"],
-  "Nebel Mühle":          ["5:37","6:47","9:04","10:09","10:54","11:39","12:29","13:09","13:54","14:39","15:24","16:09","16:54","17:54","18:54","20:39","22:34"],
-  "Süddorf":              ["5:38","6:48","9:06","10:11","10:56","11:41","12:31","13:11","13:56","14:41","15:26","16:11","16:56","17:56","18:56","20:41","22:36"],
-  "Leuchtturm":           ["5:39","6:49","9:08","10:13","10:58","11:43","12:33","13:13","13:58","14:43","15:28","16:13","16:58","17:58","18:58","20:43","22:38"],
-  "Zeltplatz":            ["5:40","6:50","9:09","10:14","10:59","11:44","12:34","13:14","13:59","14:44","15:29","16:14","16:59","17:59","18:59","20:44","22:39"],
-  "Wittdün Blaue Maus":   ["5:41","6:51","9:10","10:15","11:00","11:45","12:35","13:15","14:00","14:45","15:30","16:15","17:00","18:00","19:00","20:45","22:40"],
-  "Wittdün Badeland":     ["5:42","6:52","9:11","10:16","11:01","11:46","12:36","13:16","14:01","14:46","15:31","16:16","17:01","18:01","19:01","20:46","22:41"],
-  "Wittdün Köhns Übergang":["5:43","6:53","9:12","10:17","11:02","11:47","12:37","13:17","14:02","14:47","15:32","16:17","17:02","18:02","19:02","20:47","22:42"],
-  "Wittdün Mitte":        ["5:44","6:54","9:13","10:18","11:03","11:48","12:38","13:18","14:03","14:48","15:33","16:18","17:03","18:03","19:03","20:48","22:43"],
-  "Wittdün Fähranleger":  ["5:46","6:56","9:16","10:21","11:06","11:51","12:41","13:21","14:06","14:51","15:36","16:21","17:06","18:06","19:06","20:51","22:46"],
-};
-const MOFR_N={
-  "Wittdün Fähranleger":  ["5:15","7:00","7:40","8:25","9:30","10:15","11:00","11:50","12:30","13:15","14:00","14:45","15:30","16:15","17:15","18:15","20:05","22:00"],
-  "Wittdün Mitte":        ["5:16","7:01","7:41","8:27","9:32","10:17","11:02","11:52","12:32","13:17","14:02","14:47","15:32","16:17","17:17","18:17","20:07","22:02"],
-  "Wittdün Köhns Übergang":["5:17","7:02","7:42","8:28","9:33","10:18","11:03","11:53","12:33","13:18","14:03","14:48","15:33","16:18","17:18","18:18","20:08","22:03"],
-  "Wittdün Badeland":     ["5:18","7:03","7:43","8:29","9:34","10:19","11:04","11:54","12:34","13:19","14:04","14:49","15:34","16:19","17:19","18:19","20:09","22:04"],
-  "Wittdün Blaue Maus":   ["5:19","7:04","7:44","8:30","9:35","10:20","11:05","11:55","12:35","13:20","14:05","14:50","15:35","16:20","17:20","18:20","20:10","22:05"],
-  "Zeltplatz":            ["5:20","7:05","7:45","8:31","9:36","10:21","11:06","11:56","12:36","13:21","14:06","14:51","15:36","16:21","17:21","18:21","20:11","22:06"],
-  "Leuchtturm":           ["5:21","7:06","7:46","8:32","9:37","10:22","11:07","11:57","12:37","13:22","14:07","14:52","15:37","16:22","17:22","18:22","20:12","22:07"],
-  "Süddorf":              ["5:22","7:07","7:47","8:33","9:38","10:23","11:08","11:58","12:38","13:23","14:08","14:53","15:38","16:23","17:23","18:23","20:13","22:08"],
-  "Nebel Mühle":          ["5:23","7:08","7:48","8:34","9:39","10:24","11:09","11:59","12:39","13:24","14:09","14:54","15:39","16:24","17:24","18:24","20:14","22:09"],
-  "Nebel Mitte":          ["5:24","7:09","7:49","8:36","9:41","10:26","11:11","12:01","12:41","13:26","14:11","14:56","15:41","16:26","17:26","18:26","20:16","22:11"],
-  "Nebel Strandweg":      ["5:25","7:10","7:50","8:38","9:43","10:28","11:13","12:03","12:43","13:28","14:13","14:58","15:43","16:28","17:28","18:28","20:18","22:13"],
-  "Nebel Westerheide":    ["5:26","7:11","7:51","8:39","9:44","10:29","11:14","12:04","12:44","13:29","14:14","14:59","15:44","16:29","17:29","18:29","20:19","22:14"],
-  "Vogelkoje":            ["5:27","7:12","7:52","8:40","9:45","10:30","11:15","12:05","12:45","13:30","14:15","15:00","15:45","16:30","17:30","18:30","20:20","22:15"],
-  "Norddorf Onkel Toms Hütte":["5:28","7:13","7:53","8:42","9:47","10:32","11:17","12:07","12:47","13:32","14:17","15:02","15:47","16:32","17:32","18:32","20:22","22:17"],
-  "Norddorf Sturmmöwe":   ["5:29","7:14","7:54","8:43","9:48","10:33","11:18","12:08","12:48","13:33","14:18","15:03","15:48","16:33","17:33","18:33","20:23","22:18"],
-  "Norddorf Mitte":       ["5:30","7:15","7:55","8:45","9:50","10:35","11:20","12:10","12:50","13:35","14:20","15:05","15:50","16:35","17:35","18:35","20:25","22:20"],
-};
-const MOFR_S={
-  "Norddorf Mitte":        ["5:30","7:15","7:55","8:55","10:00","10:45","11:30","12:20","13:00","13:45","14:30","15:15","16:00","16:45","17:45","18:45","20:30","22:25"],
-  "Norddorf Minigolfplatz":["5:31","7:16","7:56","8:56","10:01","10:46","11:31","12:21","13:01","13:46","14:31","15:16","16:01","16:46","17:46","18:46","20:31","22:26"],
-  "Norddorf Aussichtsdüne":["5:32","7:17","7:57","8:57","10:02","10:47","11:32","12:22","13:02","13:47","14:32","15:17","16:02","16:47","17:47","18:47","20:32","22:27"],
-  "Vogelkoje":             ["5:33","7:18","7:58","8:58","10:03","10:48","11:33","12:23","13:03","13:48","14:33","15:18","16:03","16:48","17:48","18:48","20:33","22:28"],
-  "Nebel Westerheide":     ["5:34","7:19","7:59","8:59","10:04","10:49","11:34","12:24","13:04","13:49","14:34","15:19","16:04","16:49","17:49","18:49","20:34","22:29"],
-  "Nebel Strandweg":       ["5:35","7:20","8:00","9:01","10:06","10:51","11:36","12:26","13:06","13:51","14:36","15:21","16:06","16:51","17:51","18:51","20:36","22:31"],
-  "Nebel Mitte":           ["5:36","7:21","8:01","9:03","10:08","10:53","11:38","12:28","13:08","13:53","14:38","15:23","16:08","16:53","17:53","18:53","20:38","22:33"],
-  "Nebel Mühle":           ["5:37",null,null,"9:04","10:09","10:54","11:39","12:29","13:09","13:54","14:39","15:24","16:09","16:54","17:54","18:54","20:39","22:34"],
-  "Süddorf":               ["5:38","7:25","8:05","9:06","10:11","10:56","11:41","12:31","13:11","13:56","14:41","15:26","16:11","16:56","17:56","18:56","20:41","22:36"],
-  "Leuchtturm":            ["5:39","7:27","8:07","9:08","10:13","10:58","11:43","12:33","13:13","13:58","14:43","15:28","16:13","16:58","17:58","18:58","20:43","22:38"],
-  "Zeltplatz":             ["5:40","7:28","8:08","9:09","10:14","10:59","11:44","12:34","13:14","13:59","14:44","15:29","16:14","16:59","17:59","18:59","20:44","22:39"],
-  "Wittdün Blaue Maus":    ["5:41","7:29","8:09","9:10","10:15","11:00","11:45","12:35","13:15","14:00","14:45","15:30","16:15","17:00","18:00","19:00","20:45","22:40"],
-  "Wittdün Badeland":      ["5:42","7:30","8:10","9:11","10:16","11:01","11:46","12:36","13:16","14:01","14:46","15:31","16:16","17:01","18:01","19:01","20:46","22:41"],
-  "Wittdün Köhns Übergang":["5:43","7:31","8:11","9:12","10:17","11:02","11:47","12:37","13:17","14:02","14:47","15:32","16:17","17:02","18:02","19:02","20:47","22:42"],
-  "Wittdün Mitte":         ["5:44","7:32","8:12","9:13","10:18","11:03","11:48","12:38","13:18","14:03","14:48","15:33","16:18","17:03","18:03","19:03","20:48","22:43"],
-  "Wittdün Fähranleger":   ["5:46","7:34","8:14","9:16","10:21","11:06","11:51","12:41","13:21","14:06","14:51","15:36","16:21","17:06","18:06","19:06","20:51","22:46"],
-};
-
-const FERRY={
-  saso:["6:00","7:10","9:30","12:05","15:15","17:25"],
-  mofr:["6:00","9:30","12:05","15:15","17:25"],
-  fr:  ["6:00","9:30","12:05","15:15","17:25"]
-};
-const FERRY_ARR={
-  saso:[toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("17:05"),toMin("20:00"),toMin("21:55")],
-  mofr:[toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("17:05")],
-  fr:  [toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("17:05"),toMin("20:00"),toMin("21:55")]
-};
-
-const STOP_COORDS={
-  "Wittdün Fähranleger":   [54.6233,8.3697],
-  "Wittdün Mitte":         [54.6251,8.3712],
-  "Wittdün Köhns Übergang":[54.6268,8.3724],
-  "Wittdün Badeland":      [54.6282,8.3731],
-  "Wittdün Blaue Maus":    [54.6298,8.3742],
-  "Zeltplatz":             [54.6321,8.3755],
-  "Leuchtturm":            [54.6358,8.3769],
-  "Süddorf":               [54.6412,8.3782],
-  "Nebel Mühle":           [54.6468,8.3791],
-  "Nebel Mitte":           [54.6489,8.3798],
-  "Nebel Strandweg":       [54.6502,8.3712],
-  "Nebel Westerheide":     [54.6518,8.3748],
-  "Vogelkoje":             [54.6548,8.3761],
-  "Norddorf Onkel Toms Hütte":[54.6678,8.3698],
-  "Norddorf Sturmmöwe":    [54.6698,8.3681],
-  "Norddorf Mitte":        [54.6712,8.3665],
-  "Norddorf Minigolfplatz":[54.6725,8.3658],
-  "Norddorf Aussichtsdüne":[54.6738,8.3641],
-};
-
+// ── Hilfsfunktionen ───────────────────────────────────────────────────────────
 function toMin(t){if(!t)return Infinity;const[h,m]=t.split(":").map(Number);return h*60+m;}
 function minsLabel(d){if(d===0)return"jetzt";if(d<60)return d+" Min.";return Math.floor(d/60)+"h "+d%60+"m";}
 function durLabel(dep,arr){return(toMin(arr)-toMin(dep))+" Min. Fahrt";}
 function getNowStr(){const d=new Date();return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");}
 function getTodayStr(){return new Date().toISOString().slice(0,10);}
+function pad2(n){return String(n).padStart(2,"0");}
 
 function getDateInfo(){
   const d=new Date(document.getElementById("dateinput").value+"T12:00:00");
   const dow=d.getDay();
-  const isSaSo=dow===0||dow===6;
-  const isFr=dow===5;
   const names=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
-  return{isSaSo,isFr,dayName:names[dow]};
+  return{isSaSo:dow===0||dow===6,isFr:dow===5,dayName:names[dow]};
 }
-
-function getDayType(){
-  const{isSaSo,isFr}=getDateInfo();
-  if(isSaSo)return"saso";
-  if(isFr)return"fr";
-  return"mofr";
-}
+function getDayType(){const{isSaSo,isFr}=getDateInfo();return isSaSo?"saso":isFr?"fr":"mofr";}
 
 function isFaehrbus(t,dt){
   const m=toMin(t);
@@ -283,119 +189,220 @@ function isFaehrbus(t,dt){
   const dep=(FERRY[dt]||FERRY.mofr).map(toMin);
   return arr.some(fa=>m>=fa&&m<=fa+20)||dep.some(fd=>m<=fd&&fd-m<=30);
 }
-
 function getDirection(von,nach){
-  const vi=ROUTE_ORDER.indexOf(von);
-  const ni=ROUTE_ORDER.indexOf(nach);
+  const vi=ROUTE_ORDER.indexOf(von),ni=ROUTE_ORDER.indexOf(nach);
   if(vi===-1||ni===-1||vi===ni)return null;
   return ni>vi;
 }
-
 function getConnections(von,nach,nowMin,dt){
   const dir=getDirection(von,nach);
   if(dir===null)return[];
-  const isSaSo=dt==="saso";
-  const tbl=dir?(isSaSo?SASO_N:MOFR_N):(isSaSo?SASO_S:MOFR_S);
-  const depTimes=tbl[von]||[];
-  const arrTimes=tbl[nach]||[];
+  const tbl=dir?(dt==="saso"?SASO_N:MOFR_N):(dt==="saso"?SASO_S:MOFR_S);
   const res=[];
-  for(let i=0;i<depTimes.length;i++){
-    const dep=depTimes[i],arr=arrTimes[i];
-    if(!dep||!arr)continue;
-    if(toMin(dep)<nowMin)continue;
-    res.push({dep,arr,warn:isFaehrbus(dep,dt)});
+  const depT=tbl[von]||[],arrT=tbl[nach]||[];
+  for(let i=0;i<depT.length;i++){
+    if(!depT[i]||!arrT[i])continue;
+    if(toMin(depT[i])<nowMin)continue;
+    res.push({dep:depT[i],arr:arrT[i],warn:isFaehrbus(depT[i],dt)});
   }
   return res.slice(0,5);
 }
-
 function getReachable(von){
   const vi=ROUTE_ORDER.indexOf(von);
   if(vi===-1)return ROUTE_ORDER.filter(s=>s!==von);
   return[...ROUTE_ORDER.slice(vi+1),...ROUTE_ORDER.slice(0,vi)];
 }
 
-function haversine(lat1,lon1,lat2,lon2){
-  const R=6371000,dLat=(lat2-lat1)*Math.PI/180,dLon=(lon2-lon1)*Math.PI/180;
-  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
-  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+// ── Gezeitenrechner ───────────────────────────────────────────────────────────
+const TIDE_CONST=[
+  {amp:145.2,phase:107.3,speed:28.9841},
+  {amp:47.1, phase:136.8,speed:30.0000},
+  {amp:28.4, phase:88.5, speed:28.4397},
+  {amp:12.8, phase:138.2,speed:30.0821},
+  {amp:9.2,  phase:219.4,speed:15.0411},
+  {amp:6.8,  phase:189.2,speed:13.9430},
+  {amp:8.1,  phase:251.6,speed:57.9682},
+  {amp:4.2,  phase:268.4,speed:58.9841},
+  {amp:2.1,  phase:312.5,speed:86.9523},
+];
+const TIDE_MEAN=148;
+const TIDE_OFFSET={wittduen:0,nebel:8,norddorf:12};
+
+function tideHeight(ts,offsetMin){
+  const h=(ts+offsetMin*60000)/3600000;
+  let lev=TIDE_MEAN;
+  for(const c of TIDE_CONST) lev+=c.amp*Math.cos((c.speed*h-c.phase)*Math.PI/180);
+  return Math.round(lev);
 }
-function findNearest(lat,lon){
-  let nearest=null,minD=Infinity;
-  for(const[s,[slat,slon]] of Object.entries(STOP_COORDS)){
-    const d=haversine(lat,lon,slat,slon);
-    if(d<minD){minD=d;nearest=s;}
+function getTidesForDay(date,loc){
+  const off=TIDE_OFFSET[loc]||0;
+  const start=new Date(date);start.setHours(0,0,0,0);
+  const end=new Date(date);end.setHours(23,59,0,0);
+  const res=[];
+  let prev=tideHeight(start.getTime(),off),prevDir=0;
+  for(let t=start.getTime();t<=end.getTime();t+=6*60000){
+    const h=tideHeight(t,off);
+    const dir=h>prev?1:h<prev?-1:prevDir;
+    if(prevDir===1&&dir===-1) res.push(refine(t-6*60000,t+6*60000,off,true));
+    else if(prevDir===-1&&dir===1) res.push(refine(t-6*60000,t+6*60000,off,false));
+    prev=h;if(dir!==0)prevDir=dir;
   }
-  return{stop:nearest,dist:Math.round(minD)};
+  return res;
+}
+function refine(t1,t2,off,findMax){
+  let best={t:t1,h:tideHeight(t1,off),type:findMax?"HW":"NW"};
+  for(let t=t1;t<=t2;t+=60000){
+    const h=tideHeight(t,off);
+    if(findMax?h>best.h:h<best.h) best={t,h,type:findMax?"HW":"NW"};
+  }
+  best.time=new Date(best.t);
+  return best;
+}
+function fmtT(d){return pad2(d.getHours())+":"+pad2(d.getMinutes());}
+
+let tideLocation="wittduen";
+
+function renderTides(){
+  const el=document.getElementById("tideArea");
+  if(!el)return;
+  const tides=getTidesForDay(new Date(),tideLocation);
+  const now=Date.now();
+  const next=tides.find(t=>t.time.getTime()>now);
+  const locs={wittduen:"Wittdün",nebel:"Nebel",norddorf:"Norddorf"};
+
+  const btns=Object.keys(locs).map(function(loc){
+    const active=tideLocation===loc;
+    return '<button onclick="tideLocation=\''+loc+'\';renderTides()" style="flex:1;padding:6px 4px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:700;background:'+(active?'#0077b6':'#f2f2f7')+';color:'+(active?'#fff':'#555')+'">'+locs[loc]+'</button>';
+  }).join("");
+
+  let nextHtml="";
+  if(next){
+    nextHtml='<div style="background:#e8f4fd;border-radius:10px;padding:10px 12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">'
+      +'<div><div style="font-size:11px;color:#0077b6;font-weight:700;text-transform:uppercase">Nächste '+(next.type==="HW"?"🌊 Flut":"🏝 Ebbe")+'</div>'
+      +'<div style="font-size:24px;font-weight:700;color:#0077b6">'+fmtT(next.time)+'</div></div>'
+      +'<div style="text-align:right"><div style="font-size:22px;font-weight:700;color:#0077b6">'+next.h+' cm</div>'
+      +'<div style="font-size:11px;color:#8e8e93">über PNP</div></div></div>';
+  }
+
+  const cards=tides.map(function(t){
+    const isPast=t.time.getTime()<now;
+    const isNext=next&&t.time.getTime()===next.time.getTime();
+    const bg=isNext?'#0077b6':isPast?'#f9f9f9':'#f2f8ff';
+    const col=isNext?'#fff':'#1c1c1e';
+    const sub=isNext?'rgba(255,255,255,.8)':'#8e8e93';
+    const val=isNext?'rgba(255,255,255,.9)':'#0077b6';
+    return '<div style="background:'+bg+';border-radius:10px;padding:10px;opacity:'+(isPast?'0.45':'1')+'">'
+      +'<div style="font-size:11px;font-weight:700;color:'+sub+';text-transform:uppercase">'+(t.type==="HW"?"🌊 Hochwasser":"🏝 Niedrigwasser")+'</div>'
+      +'<div style="font-size:20px;font-weight:700;color:'+col+'">'+fmtT(t.time)+'</div>'
+      +'<div style="font-size:14px;font-weight:600;color:'+val+'">'+t.h+' cm</div></div>';
+  }).join("");
+
+  el.innerHTML='<div style="background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.06)">'
+    +'<div style="display:flex;gap:6px;margin-bottom:12px">'+btns+'</div>'
+    +nextHtml
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">'+cards+'</div>'
+    +'<button onclick="openTideForecast()" style="width:100%;margin-top:10px;padding:10px;border:none;border-radius:10px;cursor:pointer;background:#0077b6;color:#fff;font-size:14px;font-weight:600">📅 7-Tage Vorhersage</button>'
+    +'</div>';
 }
 
-let curVon="Wittdün Fähranleger",curNach="Norddorf Mitte",pickerTarget="von";
-let locationActive=false,watchId=null;
+function openTideForecast(){
+  const locs={wittduen:"Wittdün",nebel:"Nebel",norddorf:"Norddorf"};
+  document.getElementById("forecastTitle").textContent=locs[tideLocation];
+  document.getElementById("tideDatePicker").value=getTodayStr();
+  document.getElementById("tideForecast").classList.add("open");
+  renderForecast();
+}
 
+function renderForecast(){
+  const locs={wittduen:"Wittdün",nebel:"Nebel",norddorf:"Norddorf"};
+  document.getElementById("forecastTitle").textContent=locs[tideLocation];
+  const val=document.getElementById("tideDatePicker").value;
+  if(!val)return;
+  const base=new Date(val+"T12:00:00");
+  const days=["So","Mo","Di","Mi","Do","Fr","Sa"];
+  let html="";
+  for(let i=0;i<7;i++){
+    const d=new Date(base);d.setDate(d.getDate()+i);
+    const tides=getTidesForDay(d,tideLocation);
+    const isToday=d.toDateString()===new Date().toDateString();
+    const label=days[d.getDay()]+" "+d.getDate()+"."+(d.getMonth()+1)+".";
+    const todayBadge=isToday?'<span style="background:#0077b6;color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px">Heute</span>':"";
+    const tideCards=tides.map(function(t){
+      const isHW=t.type==="HW";
+      return '<div style="background:'+(isHW?'#e8f4fd':'#fff8e8')+';border-radius:10px;padding:10px">'
+        +'<div style="font-size:11px;font-weight:700;color:'+(isHW?'#0077b6':'#e07b00')+';text-transform:uppercase">'+(isHW?"🌊 Hochwasser":"🏝 Niedrigwasser")+'</div>'
+        +'<div style="font-size:20px;font-weight:700;color:#1c1c1e">'+fmtT(t.time)+'</div>'
+        +'<div style="font-size:13px;font-weight:600;color:'+(isHW?'#0077b6':'#e07b00')+'">'+t.h+' cm</div></div>';
+    }).join("");
+    html+='<div style="background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.06)">'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">'
+      +'<span style="font-size:15px;font-weight:700;color:'+(isToday?'#0077b6':'#1c1c1e')+'">'+label+'</span>'+todayBadge+'</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">'+tideCards+'</div></div>';
+  }
+  document.getElementById("forecastBody").innerHTML=html;
+}
+
+// ── Bus-Render ────────────────────────────────────────────────────────────────
 function render(){
   const timeStr=document.getElementById("timeinput").value;
   const nowMin=toMin(timeStr);
   const dt=getDayType();
   const{dayName,isSaSo,isFr}=getDateInfo();
-  const badge=isSaSo?`${dayName} · Sa/So`:isFr?`${dayName} · Freitag`:`${dayName} · Mo–Fr`;
-  document.getElementById("dayBadge").textContent=badge;
+  document.getElementById("dayBadge").textContent=dayName+" · "+(isSaSo?"Sa/So":isFr?"Freitag":"Mo–Fr");
   document.getElementById("vonLabel").textContent=curVon;
   document.getElementById("nachLabel").textContent=curNach;
-
   const conns=getConnections(curVon,curNach,nowMin,dt);
   const ra=document.getElementById("resultArea");
   const wa=document.getElementById("warnArea");
   const na=document.getElementById("nextArea");
   const nl=document.getElementById("nextList");
   wa.innerHTML="";
-
   if(curVon===curNach){ra.innerHTML='<div class="empty">Bitte verschiedene Haltestellen wählen.</div>';na.style.display="none";return;}
   if(!conns.length){ra.innerHTML='<div class="empty">Keine weiteren Verbindungen heute. 🌙</div>';na.style.display="none";return;}
-
   const first=conns[0];
   const diff=toMin(first.dep)-nowMin;
   const dir=getDirection(curVon,curNach);
-  ra.innerHTML=`<div class="result-card">
-    <div class="result-sub">Nächste Verbindung · ${dir?"→ Norddorf":"→ Wittdün"}</div>
-    <div class="result-times">
-      <div class="result-time">${first.dep}</div>
-      <div class="result-arrow">→</div>
-      <div class="result-arr">${first.arr}</div>
-    </div>
-    <div class="result-detail">
-      <div class="result-dur">${durLabel(first.dep,first.arr)}</div>
-      <div><div class="result-mins">${minsLabel(diff)}</div><div class="result-minslabel">bis Abfahrt</div></div>
-    </div>
-  </div>`;
-
-  if(first.warn)wa.innerHTML=`<div class="warning">🚨 Achtung Fährbus – könnte voll sein!</div>`;
-
+  ra.innerHTML='<div class="result-card"><div class="result-sub">Nächste Verbindung · '+(dir?"→ Norddorf":"→ Wittdün")+'</div>'
+    +'<div class="result-times"><div class="result-time">'+first.dep+'</div><div class="result-arrow">→</div><div class="result-arr">'+first.arr+'</div></div>'
+    +'<div class="result-detail"><div class="result-dur">'+durLabel(first.dep,first.arr)+'</div>'
+    +'<div><div class="result-mins">'+minsLabel(diff)+'</div><div class="result-minslabel">bis Abfahrt</div></div></div></div>';
+  if(first.warn) wa.innerHTML='<div class="warning">🚨 Achtung Fährbus – könnte voll sein!</div>';
   if(conns.length>1){
     na.style.display="block";
-    nl.innerHTML=conns.slice(1).map((c,i,arr)=>`
-      <div class="dep-row" style="${i===arr.length-1?'border-bottom:none':''}">
-        <div class="dep-bar"></div>
-        <div class="dep-info">
-          <div class="dep-times"><span class="dep-t">${c.dep}</span><span class="dep-arr">→ ${c.arr}</span></div>
-          <div style="font-size:12px;color:#8e8e93">${durLabel(c.dep,c.arr)}</div>
-          ${c.warn?'<div class="dep-warn">🚨 Achtung Fährbus – könnte voll sein!</div>':''}
-        </div>
-        <div class="dep-mins">${minsLabel(toMin(c.dep)-nowMin)}</div>
-      </div>`).join("");
+    nl.innerHTML=conns.slice(1).map(function(c,i,arr){
+      return '<div class="dep-row" style="'+(i===arr.length-1?'border-bottom:none':'')+'">'
+        +'<div class="dep-bar"></div><div class="dep-info">'
+        +'<div class="dep-times"><span class="dep-t">'+c.dep+'</span><span class="dep-arr">→ '+c.arr+'</span></div>'
+        +'<div style="font-size:12px;color:#8e8e93">'+durLabel(c.dep,c.arr)+'</div>'
+        +(c.warn?'<div class="dep-warn">🚨 Achtung Fährbus – könnte voll sein!</div>':'')
+        +'</div><div class="dep-mins">'+minsLabel(toMin(c.dep)-nowMin)+'</div></div>';
+    }).join("");
   } else {na.style.display="none";}
-
   const ft=document.getElementById("ferryTimes");
-  ft.innerHTML=(FERRY[dt]||FERRY.mofr).map(t=>`
-    <span class="ferry-pill" style="background:${toMin(t)>=nowMin?'#fff3e0':'#f2f2f7'};color:${toMin(t)>=nowMin?'#e07b00':'#aaa'}">${t}</span>`).join("");
+  ft.innerHTML=(FERRY[dt]||FERRY.mofr).map(function(t){
+    return '<span class="ferry-pill" style="background:'+(toMin(t)>=nowMin?'#fff3e0':'#f2f2f7')+';color:'+(toMin(t)>=nowMin?'#e07b00':'#aaa')+'">'+t+'</span>';
+  }).join("");
 }
 
 function setNow(){
   document.getElementById("dateinput").value=getTodayStr();
   document.getElementById("timeinput").value=getNowStr();
-  window._manualTime=false;
-  render();
+  window._manualTime=false;render();
+}
+function swapStops(){var t=curVon;curVon=curNach;curNach=t;render();}
+
+function openMap(target){
+  const stop=target==="von"?curVon:curNach;
+  const coords=STOP_COORDS[stop];
+  if(!coords)return;
+  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+  const url=isIOS
+    ?"https://maps.apple.com/?daddr="+coords[0]+","+coords[1]+"&q="+encodeURIComponent(stop)+"&dirflg=w"
+    :"https://www.google.com/maps/dir/?api=1&destination="+coords[0]+","+coords[1]+"&travelmode=walking";
+  window.open(url,"_blank");
 }
 
-function swapStops(){[curVon,curNach]=[curNach,curVon];render();}
+let curVon="Wittdün Fähranleger",curNach="Norddorf Mitte",pickerTarget="von";
 
 function openPicker(target){
   pickerTarget=target;
@@ -406,66 +413,32 @@ function openPicker(target){
 }
 function closePicker(){document.getElementById("picker").classList.remove("open");}
 function filterPicker(q){
-  const reachable=pickerTarget==="nach"?getReachable(curVon):ROUTE_ORDER;
-  const curSel=pickerTarget==="von"?curVon:curNach;
+  const reach=pickerTarget==="nach"?getReachable(curVon):ROUTE_ORDER;
+  const sel=pickerTarget==="von"?curVon:curNach;
   document.getElementById("pickerList").innerHTML=ROUTE_ORDER
-    .filter(s=>s.toLowerCase().includes(q.toLowerCase()))
-    .map(s=>{
-      const ok=pickerTarget==="von"||reachable.includes(s);
-      return`<div class="picker-item ${s===curSel?'selected':''} ${!ok?'disabled':''}" onclick="${ok?`selectStop('${s.replace(/'/g,"\\'")}')`:''}">
-        ${s}${s===curSel?' <span>✓</span>':''}
-      </div>`;
+    .filter(function(s){return s.toLowerCase().includes(q.toLowerCase());})
+    .map(function(s){
+      const ok=pickerTarget==="von"||reach.includes(s);
+      return '<div class="picker-item '+(s===sel?'selected':'')+(ok?'':' disabled')+'" '
+        +(ok?'onclick="selectStop(\''+s.replace(/'/g,"\\'")+'\')"':'')+'>'+s+(s===sel?' <span>✓</span>':'')+'</div>';
     }).join("");
 }
 function selectStop(s){
-  if(pickerTarget==="von"){
-    curVon=s;
-    if(curNach===s){curNach=getReachable(s)[0]||s;}
-  } else {curNach=s;}
+  if(pickerTarget==="von"){curVon=s;if(curNach===s){curNach=getReachable(s)[0]||s;}}
+  else{curNach=s;}
   closePicker();render();
 }
 
-// Automatische Standorterfassung beim Start
-function startAutoLocation(){
-  if(!navigator.geolocation)return;
-  document.getElementById("locInfo").textContent="📡 Standort wird ermittelt…";
-  navigator.geolocation.getCurrentPosition(pos=>{
-    const{latitude:lat,longitude:lon}=pos.coords;
-    // Prüfe ob auf Amrum (grobe Bounding Box)
-    const onAmrum=lat>=54.60&&lat<=54.70&&lon>=8.32&&lon<=8.43;
-    if(onAmrum){
-      const{stop,dist}=findNearest(lat,lon);
-      document.getElementById("locInfo").textContent=`📍 ${stop} (${dist}m)`;
-      curVon=stop;
-      if(curNach===stop){curNach=getReachable(stop)[0]||stop;}
-      render();
-    } else {
-      document.getElementById("locInfo").textContent="";
-    }
-  },()=>{
-    document.getElementById("locInfo").textContent="";
-  },{enableHighAccuracy:true,timeout:10000});
-}
-
-function openMap(target){
-  const stop=target==="von"?curVon:curNach;
-  const coords=STOP_COORDS[stop];
-  if(!coords)return;
-  const[lat,lon]=coords;
-  const name=encodeURIComponent(stop);
-  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
-  const url=isIOS
-    ?`https://maps.apple.com/?daddr=${lat},${lon}&q=${name}&dirflg=w`
-    :`https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}&travelmode=walking`;
-  window.open(url,"_blank");
-}
-
+// ── Init ──────────────────────────────────────────────────────────────────────
 document.getElementById("dateinput").value=getTodayStr();
 document.getElementById("timeinput").value=getNowStr();
 render();
-startAutoLocation();
-setInterval(()=>{if(!window._manualTime){document.getElementById("timeinput").value=getNowStr();render();}},60000);
-document.getElementById("timeinput").addEventListener("change",()=>{window._manualTime=true;render();});
+renderTides();
+setInterval(function(){
+  if(!window._manualTime){document.getElementById("timeinput").value=getNowStr();render();}
+  renderTides();
+},3600000); // Gezeiten stündlich neu laden
+document.getElementById("timeinput").addEventListener("change",function(){window._manualTime=true;render();});
 </script>
 </body>
 </html>
