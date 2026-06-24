@@ -499,19 +499,23 @@ function openWalkRoute(stop){
 
 let curVon="Wittdün Fähranleger",curNach="Norddorf Mitte",pickerTarget="von";
 
-// ── Veranstaltungen heute (Variante A: RSS-Feed / Variante B: Fallback-Link) ──
-// WICHTIG – vor dem Hochladen zu Hause prüfen:
-// Diese Feed-URL stammt vom "Nordfrieslandkalender" (der Datenquelle hinter amrum.de/veranstaltungskalender).
-// Sie wurde über eine fremde Partner-Einbindung gefunden (waid=2 gehört vermutlich zu einem anderen Anbieter,
-// z.B. dem Kino Amrum) und liefert daher evtl. nicht nur Amrum-Termine oder ggf. gar keine.
-// → Bitte auf https://www.nordfrieslandkalender.de/Veranstaltungskalender-in-eigene-Webseite-einbinden.htm
-//   selbst einen eigenen Feed-Link erzeugen (Veranstaltungsort: "Amrum, alle Dörfer" / "Amrum, inselweit"
-//   auswählen) und die Konstante EVENTS_FEED_URL unten damit ersetzen.
-const EVENTS_FEED_URL="https://www.nordfrieslandkalender.de/city_info/display/feed/rss_event.cfm?region_id=5&eventAmount=100&eventType=event&event_image_types=1&groupByDay=false&waid=2&template=257&sworte=9,11,6,4,10,12,8&keyword_group=2&type=rss2_0&imgSize=0";
+// ── Veranstaltungen (statische Daten, manuell gepflegt) ──────────────────────
+// Einfach hier eintragen – kein Server, kein Feed, kein CORS-Problem.
+// Format: { date:"JJJJ-MM-TT", time:"HH:MM", title:"...", loc:"...", link:"..." }
+// loc enthält den Ort als Text, z.B. "Norddorf", "Wittdün Fähranleger", "Nebel"
+// link ist optional – bei "" oder Weglassen erscheint kein Link.
+// EVENTS_STAND: bitte nach jeder Aktualisierung das Datum anpassen.
+const EVENTS_STAND="bitte aktualisieren";
+const EVENTS=[
+  // Beispiele – durch echte Termine ersetzen:
+  // {date:"2026-06-27",time:"10:00",title:"Wattwanderung",loc:"Norddorf",link:"https://www.amrum.de/veranstaltungskalender"},
+  // {date:"2026-06-27",time:"14:00",title:"Kinderprogramm AmrumTouristik",loc:"Wittdün",link:""},
+  // {date:"2026-06-28",time:"20:00",title:"Konzert Gemeindehaus",loc:"Norddorf",link:""},
+];
 const EVENTS_FALLBACK_URL="https://www.amrum.de/veranstaltungskalender";
 const EVENTS_VILLAGES={alle:"Alle",wittduen:"Wittdün",nebel:"Nebel",norddorf:"Norddorf"};
 
-let _eventsCache=null,eventsVillage="alle";
+let eventsVillage="alle";
 
 function matchVillage(text,village){
   if(village==="alle")return true;
@@ -529,28 +533,18 @@ function stopToVillage(stop){
   if(s.includes("norddorf"))return"norddorf";
   return null;
 }
-// Gibt das erste passende Event zurück, das am heutigen Tag stattfindet
-// und zeitlich in einem Fenster [arrMin-30 … arrMin+180] Minuten liegt.
 function getEventTip(nachStop,arrTimeStr){
-  if(!_eventsCache||!nachStop||!arrTimeStr)return null;
+  if(!EVENTS.length||!nachStop||!arrTimeStr)return null;
   const village=stopToVillage(nachStop);
   if(!village)return null;
+  const today=new Date().toISOString().slice(0,10);
   const arrMin=toMin(arrTimeStr);
-  const today=new Date();
-  return _eventsCache.find(function(e){
-    if(!e.date||isNaN(e.date.getTime()))return false;
-    const d=e.date;
-    const sameDay=d.getFullYear()===today.getFullYear()&&d.getMonth()===today.getMonth()&&d.getDate()===today.getDate();
-    if(!sameDay)return false;
-    if(!matchVillage(e.title+" "+e.desc,village))return false;
-    const evMin=d.getHours()*60+d.getMinutes();
+  return EVENTS.find(function(e){
+    if(e.date!==today)return false;
+    if(!matchVillage(e.loc,village))return false;
+    const evMin=e.time?toMin(e.time):0;
     return evMin>=arrMin-30&&evMin<=arrMin+180;
   })||null;
-}
-function isToday(d){
-  if(!d||isNaN(d.getTime()))return false;
-  const n=new Date();
-  return d.getFullYear()===n.getFullYear()&&d.getMonth()===n.getMonth()&&d.getDate()===n.getDate();
 }
 
 function renderEventsFilter(){
@@ -562,93 +556,31 @@ function renderEventsFilter(){
   }).join("");
 }
 
-// ── Variante A: RSS-Feed über CORS-Proxy laden und parsen ────────────────────
-// Zwei Proxys werden nacheinander versucht; erst wenn beide scheitern greift
-// Variante B (Fallback-Link).
-const CORS_PROXIES=[
-  "https://api.allorigins.win/raw?url=",
-  "https://corsproxy.io/?"
-];
-
-function fetchViaProxy(proxies,url){
-  if(!proxies.length)return Promise.reject(new Error("Alle Proxys fehlgeschlagen"));
-  const proxy=proxies[0];
-  return fetch(proxy+encodeURIComponent(url))
-    .then(function(res){if(!res.ok)throw new Error("HTTP "+res.status);return res.text();})
-    .catch(function(){return fetchViaProxy(proxies.slice(1),url);});
-}
-
-function loadEvents(){
-  renderEventsFilter();
-  const el=document.getElementById("eventsArea");
-  el.innerHTML='<div class="locate-msg">Lade Veranstaltungen…</div>';
-  fetchViaProxy(CORS_PROXIES,EVENTS_FEED_URL).then(function(xmlText){
-    const xml=new DOMParser().parseFromString(xmlText,"application/xml");
-    if(xml.querySelector("parsererror"))throw new Error("XML ungültig");
-    const items=Array.from(xml.querySelectorAll("item"));
-    if(!items.length)throw new Error("Feed leer");
-    _eventsCache=items.map(function(it){
-      const title=(it.querySelector("title")?.textContent||"").trim();
-      const desc=(it.querySelector("description")?.textContent||"").trim();
-      const link=(it.querySelector("link")?.textContent||"").trim();
-      const pubDateRaw=it.querySelector("pubDate")?.textContent||"";
-      const date=pubDateRaw?new Date(pubDateRaw):null;
-      return{title:title,desc:desc,link:link,date:date};
-    });
-    renderEventsList();
-    render(); // Verbindungskarte neu rendern, damit Veranstaltungstipp erscheint
-  }).catch(function(err){
-    console.warn("Events: Alle Proxys fehlgeschlagen.",err);
-    _eventsCache=null;
-    renderEventsFallback();
-  });
-}
-
 function renderEventsList(){
-  const el=document.getElementById("eventsArea");
   renderEventsFilter();
-  if(!_eventsCache){renderEventsFallback();return;}
-  const todays=_eventsCache.filter(function(e){
-    return isToday(e.date)&&matchVillage(e.title+" "+e.desc,eventsVillage);
+  const el=document.getElementById("eventsArea");
+  const today=new Date().toISOString().slice(0,10);
+  const todays=EVENTS.filter(function(e){
+    return e.date===today&&matchVillage(e.loc,eventsVillage);
   });
   if(!todays.length){
-    el.innerHTML='<div class="locate-msg">Heute keine Termine gefunden'+(eventsVillage!=="alle"?" für "+EVENTS_VILLAGES[eventsVillage]:"")+'.</div>'
-      +'<a class="events-fallback-btn" href="'+EVENTS_FALLBACK_URL+'" target="_blank">📅 Kalender auf amrum.de öffnen</a>';
+    el.innerHTML='<div class="locate-msg">Heute keine eingetragenen Termine'+(eventsVillage!=="alle"?" für "+EVENTS_VILLAGES[eventsVillage]:"")+'.</div>'
+      +'<a class="events-fallback-btn" href="'+EVENTS_FALLBACK_URL+'" target="_blank">📅 Kalender auf amrum.de</a>'
+      +(EVENTS_STAND?'<div style="font-size:11px;color:#c7c7cc;text-align:center;margin-top:8px">Daten-Stand: '+EVENTS_STAND+'</div>':"");
     return;
   }
   el.innerHTML=todays.map(function(e){
-    const time=e.date&&!isNaN(e.date.getTime())?fmtT(e.date):"";
     return '<div class="event-row">'
-      +(time?'<div class="event-time">'+time+' Uhr</div>':"")
+      +(e.time?'<div class="event-time">'+e.time+' Uhr</div>':"")
       +'<div class="event-title">'+e.title+'</div>'
-      +(e.link?'<div class="event-loc"><a href="'+e.link+'" target="_blank" style="color:#8a3ab9">Details ›</a></div>':"")
+      +'<div class="event-loc">'+e.loc+'</div>'
+      +(e.link?'<div><a href="'+e.link+'" target="_blank" style="color:#8a3ab9;font-size:12px">Details ›</a></div>':"")
       +'</div>';
-  }).join("");
+  }).join("")
+  +(EVENTS_STAND?'<div style="font-size:11px;color:#c7c7cc;text-align:center;margin-top:10px;padding-top:8px;border-top:1px solid #f2f2f7">Daten-Stand: '+EVENTS_STAND+'</div>':"");
 }
 
-// ── Variante B: Fallback, falls Proxy-Abruf scheitert ────────────────────────
-function renderEventsFallback(){
-  renderEventsFilter();
-  const el=document.getElementById("eventsArea");
-  el.innerHTML='<div class="locate-msg">Live-Termine konnten nicht geladen werden – bitte Internetverbindung prüfen.</div>'
-    +'<a class="events-fallback-btn" href="'+EVENTS_FALLBACK_URL+'" target="_blank">📅 Veranstaltungskalender öffnen</a>'
-    +'<button class="locate-retry" onclick="loadEvents()">Erneut versuchen</button>';
-}
-
-/* Variante B (Alternative): Statt des Fallback-Links oben kann auch ein <iframe>
-   des offiziellen Einbinde-Widgets verwendet werden – dafür auf
-   https://www.nordfrieslandkalender.de/Veranstaltungskalender-in-eigene-Webseite-einbinden.htm
-   den fertigen <iframe>-Einbettungscode für "Amrum" erzeugen lassen und hier einfügen, z.B.:
-
-   function renderEventsIframe(){
-     document.getElementById("eventsArea").innerHTML =
-       '<iframe src="HIER_IFRAME_URL_VON_NORDFRIESLANDKALENDER" '
-       +'style="width:100%;height:420px;border:none;border-radius:10px"></iframe>';
-   }
-
-   Hinweis: Ob die Zielseite das Einbetten per iframe erlaubt (X-Frame-Options), lässt sich
-   erst beim Testen im Browser sicher sagen – ggf. bietet der Anbieter dafür einen separaten
-   Embed-Code an (siehe Seite oben), der sich von der normalen Seiten-URL unterscheidet. */
+function loadEvents(){renderEventsFilter();renderEventsList();}
 
 function openPicker(target){
   pickerTarget=target;
