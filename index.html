@@ -33,25 +33,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .stop-divider{height:1px;background:#f2f2f7;margin:0 16px}
 .swap-row{display:flex;justify-content:center;padding:2px 0}
 .swap-btn{background:none;border:none;font-size:20px;cursor:pointer;padding:4px 16px;color:#b22222}
-.locate-card{background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-.locate-btn{width:100%;padding:12px;border:none;border-radius:10px;cursor:pointer;background:#0077b6;color:#fff;font-size:15px;font-weight:600}
-.locate-msg{font-size:14px;color:#555;text-align:center;padding:6px 0;line-height:1.4}
-.locate-result{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px}
-.locate-name{font-size:16px;font-weight:700;color:#1c1c1e}
-.locate-dist{font-size:13px;color:#8e8e93;white-space:nowrap;text-align:right}
-.locate-route-btn{width:100%;padding:12px;border:none;border-radius:10px;cursor:pointer;background:#34C759;color:#fff;font-size:15px;font-weight:600}
-.locate-retry{width:100%;margin-top:8px;padding:10px;border:none;border-radius:10px;cursor:pointer;background:#f2f2f7;color:#1c1c1e;font-size:14px;font-weight:600}
-.event-row{padding:11px 0;border-bottom:1px solid #f2f2f7}
-.event-row:last-child{border-bottom:none}
-.event-time{font-size:13px;font-weight:700;color:#8a3ab9}
-.event-title{font-size:15px;font-weight:600;color:#1c1c1e;margin-top:1px}
-.event-loc{font-size:12px;color:#8e8e93;margin-top:1px}
-.events-fallback-btn{width:100%;margin-top:6px;padding:10px;border:none;border-radius:10px;cursor:pointer;background:#8a3ab9;color:#fff;font-size:14px;font-weight:600;text-decoration:none;display:block;text-align:center}
-.event-tip{margin:6px 16px 0;background:linear-gradient(135deg,#6a1b9a,#8a3ab9);border-radius:14px;padding:14px 16px;color:#fff}
-.event-tip-label{font-size:11px;opacity:.8;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
-.event-tip-title{font-size:15px;font-weight:700;margin-bottom:2px}
-.event-tip-time{font-size:13px;opacity:.85}
-.event-tip-link{display:inline-block;margin-top:8px;font-size:13px;color:rgba(255,255,255,.9);text-decoration:underline}
+.map-btn{background:none;border:2px solid #34C759;border-radius:10px;padding:5px 7px;cursor:pointer;display:flex;align-items:center;flex-shrink:0}
 .result-card{margin:14px 16px 0;background:linear-gradient(135deg,#0077b6,#005f8e);border-radius:16px;padding:20px;color:#fff;box-shadow:0 4px 12px rgba(0,119,182,.3)}
 .result-sub{font-size:12px;opacity:.8;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
 .result-times{display:flex;align-items:center;gap:10px;margin-bottom:4px}
@@ -108,6 +90,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <div class="slabel">Von</div>
           <div class="sname" id="vonLabel">Wittdün Fähranleger</div>
         </div>
+        <button class="map-btn" onclick="event.stopPropagation();openMap('von')">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" fill="#34C759"/></svg>
+        </button>
         <span class="stop-btn-arrow">›</span>
       </div>
       <div class="stop-divider"></div>
@@ -119,15 +104,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <div class="slabel">Nach</div>
           <div class="sname" id="nachLabel">Norddorf Mitte</div>
         </div>
+        <button class="map-btn" onclick="event.stopPropagation();openMap('nach')">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" fill="#34C759"/></svg>
+        </button>
         <span class="stop-btn-arrow">›</span>
       </div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-label">📍 Nächste Haltestelle</div>
-    <div class="locate-card" id="locateCard">
-      <button class="locate-btn" onclick="locateNearestStop()">📍 Meinen Standort verwenden</button>
     </div>
   </div>
 
@@ -139,16 +120,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 
   <div class="section">
-    <div class="section-label">🌊 Gezeiten</div>
-    <div id="tideArea"></div>
+    <div class="section-label">🛍 Orte & Öffnungszeiten</div>
+    <div id="poiArea"></div>
   </div>
 
   <div class="section">
-    <div class="section-label">🎉 Veranstaltungen heute</div>
-    <div style="background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.06)">
-      <div style="display:flex;gap:6px;margin-bottom:10px" id="eventsFilterRow"></div>
-      <div id="eventsArea"><div class="locate-msg">Lade Veranstaltungen…</div></div>
-    </div>
+    <div class="section-label">🌊 Gezeiten</div>
+    <div id="tideArea"></div>
+  </div>
+    <div id="tideArea"></div>
   </div>
 
   <div class="section">
@@ -192,26 +172,8 @@ const MOFR_N={"Wittdün Fähranleger":["5:15","7:00","7:40","8:25","9:30","10:15
 const MOFR_S={"Norddorf Mitte":["5:30","7:15","7:55","8:55","10:00","10:45","11:30","12:20","13:00","13:45","14:30","15:15","16:00","16:45","17:45","18:45","20:30","22:25"],"Norddorf Minigolfplatz":["5:31","7:16","7:56","8:56","10:01","10:46","11:31","12:21","13:01","13:46","14:31","15:16","16:01","16:46","17:46","18:46","20:31","22:26"],"Norddorf Aussichtsdüne":["5:32","7:17","7:57","8:57","10:02","10:47","11:32","12:22","13:02","13:47","14:32","15:17","16:02","16:47","17:47","18:47","20:32","22:27"],"Vogelkoje":["5:33","7:18","7:58","8:58","10:03","10:48","11:33","12:23","13:03","13:48","14:33","15:18","16:03","16:48","17:48","18:48","20:33","22:28"],"Nebel Westerheide":["5:34","7:19","7:59","8:59","10:04","10:49","11:34","12:24","13:04","13:49","14:34","15:19","16:04","16:49","17:49","18:49","20:34","22:29"],"Nebel Strandweg":["5:35","7:20","8:00","9:01","10:06","10:51","11:36","12:26","13:06","13:51","14:36","15:21","16:06","16:51","17:51","18:51","20:36","22:31"],"Nebel Mitte":["5:36","7:21","8:01","9:03","10:08","10:53","11:38","12:28","13:08","13:53","14:38","15:23","16:08","16:53","17:53","18:53","20:38","22:33"],"Nebel Mühle":["5:37",null,null,"9:04","10:09","10:54","11:39","12:29","13:09","13:54","14:39","15:24","16:09","16:54","17:54","18:54","20:39","22:34"],"Süddorf":["5:38","7:25","8:05","9:06","10:11","10:56","11:41","12:31","13:11","13:56","14:41","15:26","16:11","16:56","17:56","18:56","20:41","22:36"],"Leuchtturm":["5:39","7:27","8:07","9:08","10:13","10:58","11:43","12:33","13:13","13:58","14:43","15:28","16:13","16:58","17:58","18:58","20:43","22:38"],"Zeltplatz":["5:40","7:28","8:08","9:09","10:14","10:59","11:44","12:34","13:14","13:59","14:44","15:29","16:14","16:59","17:59","18:59","20:44","22:39"],"Wittdün Blaue Maus":["5:41","7:29","8:09","9:10","10:15","11:00","11:45","12:35","13:15","14:00","14:45","15:30","16:15","17:00","18:00","19:00","20:45","22:40"],"Wittdün Badeland":["5:42","7:30","8:10","9:11","10:16","11:01","11:46","12:36","13:16","14:01","14:46","15:31","16:16","17:01","18:01","19:01","20:46","22:41"],"Wittdün Köhns Übergang":["5:43","7:31","8:11","9:12","10:17","11:02","11:47","12:37","13:17","14:02","14:47","15:32","16:17","17:02","18:02","19:02","20:47","22:42"],"Wittdün Mitte":["5:44","7:32","8:12","9:13","10:18","11:03","11:48","12:38","13:18","14:03","14:48","15:33","16:18","17:03","18:03","19:03","20:48","22:43"],"Wittdün Fähranleger":["5:46","7:34","8:14","9:16","10:21","11:06","11:51","12:41","13:21","14:06","14:51","15:36","16:21","17:06","18:06","19:06","20:51","22:46"]};
 const FERRY={saso:["6:00","7:10","9:30","12:05","15:15","17:25"],mofr:["6:00","9:30","12:05","15:15","17:25"],fr:["6:00","9:30","12:05","15:15","17:25"]};
 const FERRY_ARR={saso:[toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("17:05"),toMin("20:00"),toMin("21:55")],mofr:[toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("17:05")],fr:[toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("17:05"),toMin("20:00"),toMin("21:55")]};
-const STOP_COORDS={
-  "Wittdün Fähranleger":[54.62850,8.39781],
-  "Wittdün Mitte":[54.62684,8.39248],
-  "Wittdün Köhns Übergang":[54.62739,8.38451],
-  "Wittdün Badeland":[54.62781,8.37968],
-  "Wittdün Blaue Maus":[54.62971,8.37307],
-  "Zeltplatz":[54.63041,8.36720],
-  "Leuchtturm":[54.63166,8.36003],
-  "Süddorf":[54.64169,8.35567],
-  "Nebel Mühle":[54.64825,8.35382],
-  "Nebel Mitte":[54.65035,8.35158],
-  "Nebel Strandweg":[54.64975,8.34573],
-  "Nebel Westerheide":[54.65308,8.34594],
-  "Vogelkoje":[54.66417,8.34068],
-  "Norddorf Onkel Toms Hütte":[54.67262,8.33474],
-  "Norddorf Sturmmöwe":[54.67683,8.33531],
-  "Norddorf Mitte":[54.67930,8.33452],
-  "Norddorf Minigolfplatz":[54.67703,8.33137],
-  "Norddorf Aussichtsdüne":[54.67512,8.33063]
-};
+// STOP_COORDS: Genaue GPS-Koordinaten noch ausstehend – werden nach Befahrung der Strecke ergänzt
+// const STOP_COORDS = { ... };
 
 // ── Hilfsfunktionen ───────────────────────────────────────────────────────────
 function toMin(t){if(!t)return Infinity;const[h,m]=t.split(":").map(Number);return h*60+m;}
@@ -343,11 +305,11 @@ function renderTides(){
       +'<div style="font-size:14px;font-weight:600;color:'+val+'">'+t.h+' cm</div></div>';
   }).join("");
 
-  el.innerHTML='<div style="background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.06)">'
-    +'<div style="display:flex;gap:6px;margin-bottom:12px">'+btns+'</div>'
+  el.innerHTML='<div style="display:flex;gap:8px;margin-bottom:8px">'+btns+'</div>'
+    +'<div style="background:#fff;border-radius:16px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.06)">'
     +nextHtml
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">'+cards+'</div>'
-    +'<button onclick="openTideForecast()" style="width:100%;margin-top:10px;padding:10px;border:none;border-radius:10px;cursor:pointer;background:#0077b6;color:#fff;font-size:14px;font-weight:600">📅 7-Tage Vorhersage</button>'
+    +'<button onclick="openTideForecast()" style="width:100%;margin-top:10px;padding:12px;border:none;border-radius:14px;cursor:pointer;background:#0077b6;color:#fff;font-size:14px;font-weight:700;box-shadow:0 2px 8px rgba(0,119,182,.25)">📅 7-Tage Vorhersage</button>'
     +'</div>';
 }
 
@@ -412,16 +374,6 @@ function render(){
     +'<div class="result-times"><div class="result-time">'+first.dep+'</div><div class="result-arrow">→</div><div class="result-arr">'+first.arr+'</div></div>'
     +'<div class="result-detail"><div class="result-dur">'+durLabel(first.dep,first.arr)+'</div>'
     +'<div><div class="result-mins">'+minsLabel(diff)+'</div><div class="result-minslabel">bis Abfahrt</div></div></div></div>';
-  // Veranstaltungstipp passend zum Zielort + Ankunftszeit
-  const tip=getEventTip(curNach,first.arr);
-  if(tip){
-    const tipTime=tip.date?fmtT(tip.date)+" Uhr":"";
-    ra.innerHTML+='<div class="event-tip"><div class="event-tip-label">💡 Veranstaltungstipp in der Nähe</div>'
-      +'<div class="event-tip-title">'+tip.title+'</div>'
-      +(tipTime?'<div class="event-tip-time">'+tipTime+'</div>':'')
-      +(tip.link?'<a class="event-tip-link" href="'+tip.link+'" target="_blank">Details ›</a>':'')
-      +'</div>';
-  }
   if(first.warn) wa.innerHTML='<div class="warning">🚨 Achtung Fährbus – könnte voll sein!</div>';
   if(conns.length>1){
     na.style.display="block";
@@ -447,140 +399,13 @@ function setNow(){
 }
 function swapStops(){var t=curVon;curVon=curNach;curNach=t;render();}
 
-// ── Nächste Haltestelle (Geolocation) ─────────────────────────────────────────
-let _lastFix=null;
-
-function haversine(lat1,lon1,lat2,lon2){
-  const R=6371000,toRad=x=>x*Math.PI/180;
-  const dLat=toRad(lat2-lat1),dLon=toRad(lon2-lon1);
-  const a=Math.sin(dLat/2)**2+Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
-  return 2*R*Math.asin(Math.sqrt(a));
-}
-function distLabel(m){
-  if(m<1000)return(Math.round(m/10)*10)+" m";
-  return(m/1000).toFixed(1).replace(".",",")+" km";
-}
-function locateNearestStop(){
-  const card=document.getElementById("locateCard");
-  if(!("geolocation" in navigator)){
-    card.innerHTML='<div class="locate-msg">Standortbestimmung wird von diesem Browser nicht unterstützt.</div>';
-    return;
-  }
-  card.innerHTML='<div class="locate-msg">Standort wird ermittelt…</div>';
-  navigator.geolocation.getCurrentPosition(function(pos){
-    const lat=pos.coords.latitude,lon=pos.coords.longitude;
-    let nearest=null,nearestDist=Infinity;
-    for(const name in STOP_COORDS){
-      const c=STOP_COORDS[name];
-      const d=haversine(lat,lon,c[0],c[1]);
-      if(d<nearestDist){nearestDist=d;nearest=name;}
-    }
-    _lastFix={lat:lat,lon:lon};
-    card.innerHTML='<div class="locate-result"><div class="locate-name">'+nearest+'</div>'
-      +'<div class="locate-dist">Luftlinie<br>ca. '+distLabel(nearestDist)+'</div></div>'
-      +'<button class="locate-route-btn" onclick="openWalkRoute(\''+nearest.replace(/'/g,"\\'")+'\')">🚶 Fußweg-Route öffnen</button>'
-      +'<button class="locate-retry" onclick="locateNearestStop()">Standort aktualisieren</button>';
-  },function(err){
-    let msg="Standort konnte nicht ermittelt werden. Bitte erneut versuchen.";
-    if(err.code===err.PERMISSION_DENIED)msg="Standortzugriff wurde verweigert. Bitte in den iPhone-Einstellungen unter Datenschutz &amp; Sicherheit → Ortungsdienste für Safari-Websites erlauben.";
-    else if(err.code===err.TIMEOUT)msg="Standortbestimmung hat zu lange gedauert. Bitte erneut versuchen.";
-    card.innerHTML='<div class="locate-msg">'+msg+'</div><button class="locate-retry" onclick="locateNearestStop()">Erneut versuchen</button>';
-  },{enableHighAccuracy:true,timeout:10000,maximumAge:30000});
-}
-function openWalkRoute(stop){
-  const coords=STOP_COORDS[stop];
-  if(!coords||!_lastFix)return;
-  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
-  const url=isIOS
-    ?"https://maps.apple.com/?saddr="+_lastFix.lat+","+_lastFix.lon+"&daddr="+coords[0]+","+coords[1]+"&q="+encodeURIComponent(stop)+"&dirflg=w"
-    :"https://www.google.com/maps/dir/?api=1&origin="+_lastFix.lat+","+_lastFix.lon+"&destination="+coords[0]+","+coords[1]+"&travelmode=walking";
-  window.open(url,"_blank");
+function openMap(target){
+  const stop=target==="von"?curVon:curNach;
+  // TODO: Karten-Button wird wieder aktiviert sobald STOP_COORDS vorhanden
+  alert("Karten-Navigation folgt nach Erfassung der genauen Haltestellen-Koordinaten.");
 }
 
 let curVon="Wittdün Fähranleger",curNach="Norddorf Mitte",pickerTarget="von";
-
-// ── Veranstaltungen (statische Daten, manuell gepflegt) ──────────────────────
-// Einfach hier eintragen – kein Server, kein Feed, kein CORS-Problem.
-// Format: { date:"JJJJ-MM-TT", time:"HH:MM", title:"...", loc:"...", link:"..." }
-// loc enthält den Ort als Text, z.B. "Norddorf", "Wittdün Fähranleger", "Nebel"
-// link ist optional – bei "" oder Weglassen erscheint kein Link.
-// EVENTS_STAND: bitte nach jeder Aktualisierung das Datum anpassen.
-const EVENTS_STAND="bitte aktualisieren";
-const EVENTS=[
-  // Beispiele – durch echte Termine ersetzen:
-  // {date:"2026-06-27",time:"10:00",title:"Wattwanderung",loc:"Norddorf",link:"https://www.amrum.de/veranstaltungskalender"},
-  // {date:"2026-06-27",time:"14:00",title:"Kinderprogramm AmrumTouristik",loc:"Wittdün",link:""},
-  // {date:"2026-06-28",time:"20:00",title:"Konzert Gemeindehaus",loc:"Norddorf",link:""},
-];
-const EVENTS_FALLBACK_URL="https://www.amrum.de/veranstaltungskalender";
-const EVENTS_VILLAGES={alle:"Alle",wittduen:"Wittdün",nebel:"Nebel",norddorf:"Norddorf"};
-
-let eventsVillage="alle";
-
-function matchVillage(text,village){
-  if(village==="alle")return true;
-  const t=(text||"").toLowerCase();
-  if(village==="wittduen")return t.includes("wittdün")||t.includes("wittduen");
-  if(village==="nebel")return t.includes("nebel");
-  if(village==="norddorf")return t.includes("norddorf");
-  return true;
-}
-function stopToVillage(stop){
-  if(!stop)return null;
-  const s=stop.toLowerCase();
-  if(s.includes("wittdün"))return"wittduen";
-  if(s.includes("nebel"))return"nebel";
-  if(s.includes("norddorf"))return"norddorf";
-  return null;
-}
-function getEventTip(nachStop,arrTimeStr){
-  if(!EVENTS.length||!nachStop||!arrTimeStr)return null;
-  const village=stopToVillage(nachStop);
-  if(!village)return null;
-  const today=new Date().toISOString().slice(0,10);
-  const arrMin=toMin(arrTimeStr);
-  return EVENTS.find(function(e){
-    if(e.date!==today)return false;
-    if(!matchVillage(e.loc,village))return false;
-    const evMin=e.time?toMin(e.time):0;
-    return evMin>=arrMin-30&&evMin<=arrMin+180;
-  })||null;
-}
-
-function renderEventsFilter(){
-  const row=document.getElementById("eventsFilterRow");
-  if(!row)return;
-  row.innerHTML=Object.keys(EVENTS_VILLAGES).map(function(v){
-    const active=eventsVillage===v;
-    return '<button onclick="eventsVillage=\''+v+'\';renderEventsList()" style="flex:1;padding:6px 4px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:700;background:'+(active?'#8a3ab9':'#f2f2f7')+';color:'+(active?'#fff':'#555')+'">'+EVENTS_VILLAGES[v]+'</button>';
-  }).join("");
-}
-
-function renderEventsList(){
-  renderEventsFilter();
-  const el=document.getElementById("eventsArea");
-  const today=new Date().toISOString().slice(0,10);
-  const todays=EVENTS.filter(function(e){
-    return e.date===today&&matchVillage(e.loc,eventsVillage);
-  });
-  if(!todays.length){
-    el.innerHTML='<div class="locate-msg">Heute keine eingetragenen Termine'+(eventsVillage!=="alle"?" für "+EVENTS_VILLAGES[eventsVillage]:"")+'.</div>'
-      +'<a class="events-fallback-btn" href="'+EVENTS_FALLBACK_URL+'" target="_blank">📅 Kalender auf amrum.de</a>'
-      +(EVENTS_STAND?'<div style="font-size:11px;color:#c7c7cc;text-align:center;margin-top:8px">Daten-Stand: '+EVENTS_STAND+'</div>':"");
-    return;
-  }
-  el.innerHTML=todays.map(function(e){
-    return '<div class="event-row">'
-      +(e.time?'<div class="event-time">'+e.time+' Uhr</div>':"")
-      +'<div class="event-title">'+e.title+'</div>'
-      +'<div class="event-loc">'+e.loc+'</div>'
-      +(e.link?'<div><a href="'+e.link+'" target="_blank" style="color:#8a3ab9;font-size:12px">Details ›</a></div>':"")
-      +'</div>';
-  }).join("")
-  +(EVENTS_STAND?'<div style="font-size:11px;color:#c7c7cc;text-align:center;margin-top:10px;padding-top:8px;border-top:1px solid #f2f2f7">Daten-Stand: '+EVENTS_STAND+'</div>':"");
-}
-
-function loadEvents(){renderEventsFilter();renderEventsList();}
 
 function openPicker(target){
   pickerTarget=target;
@@ -611,13 +436,12 @@ function selectStop(s){
 document.getElementById("dateinput").value=getTodayStr();
 document.getElementById("timeinput").value=getNowStr();
 render();
+renderPOI();
 renderTides();
-loadEvents();
 setInterval(function(){
   if(!window._manualTime){document.getElementById("timeinput").value=getNowStr();render();}
   renderTides();
 },3600000); // Gezeiten stündlich neu laden
-setInterval(loadEvents,3600000); // Veranstaltungen stündlich neu laden
 document.getElementById("timeinput").addEventListener("change",function(){window._manualTime=true;render();});
 </script>
 </body>
