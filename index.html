@@ -21,7 +21,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .day-badge{background:rgba(255,255,255,.2);border-radius:8px;padding:4px 10px;font-size:13px;font-weight:700;color:#fff;white-space:nowrap}
 .section{padding:12px 16px 0}
 .section-label{font-size:12px;color:#8e8e93;margin-bottom:4px;padding-left:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
-.route-card{background:#fff;border-radius:14px;padding:4px 0;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .route-card{background:#fff;border-radius:16px;overflow:hidden;padding:4px 0;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 .stop-row{display:flex;align-items:center;padding:12px 16px;gap:8px;cursor:pointer}
 .stop-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
 .stop-icon.von{background:#e8f4fd;color:#0077b6}
@@ -107,9 +107,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <!-- Weg zur nächsten Bushaltestelle -->
     <button onclick="openNearestStop()" style="
       width:100%;margin-top:8px;padding:12px 16px;border:none;border-radius:14px;cursor:pointer;
-      background:linear-gradient(135deg,#34C759,#28a745);color:#fff;
+      background:linear-gradient(135deg,#b22222,#8b0000);color:#fff;
       font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;
-      box-shadow:0 2px 8px rgba(52,199,89,.3)">
+      box-shadow:0 2px 8px rgba(178,34,34,.3)">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
         <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" fill="white"/>
       </svg>
@@ -124,13 +124,29 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="next-card" id="nextList"></div>
   </div>
 
+  <!-- Schnellzugriff Buttons -->
   <div class="section">
-    <div class="section-label">🛍 Orte & Öffnungszeiten</div>
-    <div id="poiArea"></div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button onclick="openTideOverlay()" style="
+        flex:1;padding:14px;border:none;border-radius:16px;cursor:pointer;
+        background:linear-gradient(135deg,#0077b6,#005f8e);color:#fff;
+        font-size:14px;font-weight:700;box-shadow:0 2px 8px rgba(0,119,182,.3);
+        display:flex;align-items:center;justify-content:center;gap:8px">
+        🌊 Gezeiten
+      </button>
+      <button onclick="openPOIOverlay()" style="
+        flex:1;padding:14px;border:none;border-radius:16px;cursor:pointer;
+        background:linear-gradient(135deg,#b22222,#8b0000);color:#fff;
+        font-size:14px;font-weight:700;box-shadow:0 2px 8px rgba(178,34,34,.3);
+        display:flex;align-items:center;justify-content:center;gap:8px">
+        🛍 Öffnungszeiten
+      </button>
+    </div>
   </div>
 
+  <!-- Tagesaktuelle Gezeiten kompakt auf Landingpage -->
   <div class="section">
-    <div class="section-label">🌊 Gezeiten</div>
+    <div class="section-label">🌊 Gezeiten heute</div>
     <div id="tideArea"></div>
   </div>
     <div id="tideArea"></div>
@@ -152,6 +168,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <input style="flex:1;padding:8px 12px;border-radius:20px;border:none;font-size:15px;outline:none" type="text" id="pickerSearch" placeholder="Haltestelle suchen…" oninput="filterPicker(this.value)"/>
   </div>
   <div class="overlay-body" id="pickerList"></div>
+</div>
+
+<!-- Gezeiten Overlay (vollständig) -->
+<div class="overlay" id="tideOverlay">
+  <div class="overlay-head" style="background:linear-gradient(135deg,#0077b6,#005f8e)">
+    <button class="overlay-back" onclick="document.getElementById('tideOverlay').classList.remove('open')">‹</button>
+    <div style="flex:1">
+      <div style="font-size:12px;opacity:.8;text-transform:uppercase;letter-spacing:1px">Gezeiten</div>
+      <div style="font-size:18px;font-weight:700" id="tideOverlayTitle">Wittdün</div>
+    </div>
+  </div>
+  <div class="overlay-body" id="tideOverlayBody"></div>
+</div>
+
+<!-- POI Overlay -->
+<div class="overlay" id="poiOverlay">
+  <div class="overlay-head" style="background:linear-gradient(135deg,#b22222,#8b0000)">
+    <button class="overlay-back" onclick="document.getElementById('poiOverlay').classList.remove('open')">‹</button>
+    <div style="font-size:18px;font-weight:700">🛍 Öffnungszeiten</div>
+  </div>
+  <div class="overlay-body" id="poiOverlayBody"></div>
 </div>
 
 <!-- Gezeiten Vorhersage -->
@@ -487,10 +524,11 @@ function selectStop(s){
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
+let poiOrt=null;
+
 document.getElementById("dateinput").value=getTodayStr();
 document.getElementById("timeinput").value=getNowStr();
 render();
-renderPOI();
 renderTides();
 setInterval(function(){
   if(!window._manualTime){document.getElementById("timeinput").value=getNowStr();render();}
