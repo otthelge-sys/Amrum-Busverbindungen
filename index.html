@@ -80,7 +80,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <span class="day-badge" id="dayBadge">–</span>
     </div>
   </div>
-
   <div class="section">
     <div class="section-label">Route</div>
     <div class="route-card">
@@ -116,14 +115,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       Weg zur nächsten Bushaltestelle
     </button>
   </div>
-
   <div id="resultArea"></div>
   <div id="warnArea"></div>
   <div class="section" id="nextArea" style="display:none">
     <div class="section-label">Weitere Verbindungen</div>
     <div class="next-card" id="nextList"></div>
   </div>
-
   <!-- Schnellzugriff Buttons -->
   <div class="section">
     <div style="display:flex;gap:8px;margin-top:4px">
@@ -143,7 +140,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </button>
     </div>
   </div>
-
   <!-- Tagesaktuelle Gezeiten kompakt auf Landingpage -->
   <div class="section">
     <div class="section-label">🌊 Gezeiten heute</div>
@@ -151,7 +147,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
     <div id="tideArea"></div>
   </div>
-
   <div class="section">
     <div class="section-label">⛴ Fährabfahrten</div>
     <div style="background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.06)">
@@ -160,7 +155,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
   <div class="footer">Fahrplan 21.3.–26.6.2026 · Mo–Fr ohne Feiertage &amp; Ferien</div>
 </div>
-
 <!-- Haltestellen Picker -->
 <div class="overlay" id="picker">
   <div class="overlay-head" style="background:#b22222">
@@ -169,7 +163,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
   <div class="overlay-body" id="pickerList"></div>
 </div>
-
 <!-- Gezeiten Overlay (vollständig) -->
 <div class="overlay" id="tideOverlay">
   <div class="overlay-head" style="background:linear-gradient(135deg,#0077b6,#005f8e)">
@@ -181,7 +174,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
   <div class="overlay-body" id="tideOverlayBody"></div>
 </div>
-
 <!-- POI Overlay -->
 <div class="overlay" id="poiOverlay">
   <div class="overlay-head" style="background:linear-gradient(135deg,#b22222,#8b0000)">
@@ -190,7 +182,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
   <div class="overlay-body" id="poiOverlayBody"></div>
 </div>
-
 <!-- Gezeiten Vorhersage -->
 <div class="overlay" id="tideForecast">
   <div class="overlay-head" style="background:linear-gradient(135deg,#0077b6,#005f8e)">
@@ -204,7 +195,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
   <div class="overlay-body" id="forecastBody"></div>
 </div>
-
 <script>
 // ── Fahrplandaten ─────────────────────────────────────────────────────────────
 const ROUTE_ORDER=["Wittdün Fähranleger","Wittdün Mitte","Wittdün Köhns Übergang","Wittdün Badeland","Wittdün Blaue Maus","Zeltplatz","Leuchtturm","Süddorf","Nebel Mühle","Nebel Mitte","Nebel Strandweg","Nebel Westerheide","Vogelkoje","Norddorf Onkel Toms Hütte","Norddorf Sturmmöwe","Norddorf Mitte","Norddorf Minigolfplatz","Norddorf Aussichtsdüne"];
@@ -235,7 +225,6 @@ const STOP_COORDS={
   "Norddorf Minigolfplatz":[54.6759, 8.3438],
   "Norddorf Aussichtsdüne":[54.6772, 8.3421],
 };
-
 // ── Hilfsfunktionen ───────────────────────────────────────────────────────────
 function toMin(t){if(!t)return Infinity;const[h,m]=t.split(":").map(Number);return h*60+m;}
 function minsLabel(d){if(d===0)return"jetzt";if(d<60)return d+" Min.";return Math.floor(d/60)+"h "+d%60+"m";}
@@ -243,7 +232,6 @@ function durLabel(dep,arr){return(toMin(arr)-toMin(dep))+" Min. Fahrt";}
 function getNowStr(){const d=new Date();return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");}
 function getTodayStr(){return new Date().toISOString().slice(0,10);}
 function pad2(n){return String(n).padStart(2,"0");}
-
 function getDateInfo(){
   const d=new Date(document.getElementById("dateinput").value+"T12:00:00");
   const dow=d.getDay();
@@ -251,7 +239,6 @@ function getDateInfo(){
   return{isSaSo:dow===0||dow===6,isFr:dow===5,dayName:names[dow]};
 }
 function getDayType(){const{isSaSo,isFr}=getDateInfo();return isSaSo?"saso":isFr?"fr":"mofr";}
-
 function isFaehrbus(t,dt){
   const m=toMin(t);
   const arr=FERRY_ARR[dt]||FERRY_ARR.mofr;
@@ -281,7 +268,6 @@ function getReachable(von){
   if(vi===-1)return ROUTE_ORDER.filter(s=>s!==von);
   return[...ROUTE_ORDER.slice(vi+1),...ROUTE_ORDER.slice(0,vi)];
 }
-
 // ── Gezeitenrechner ───────────────────────────────────────────────────────────
 const TIDE_CONST=[
   {amp:145.2,phase:107.3,speed:28.9841},
@@ -296,7 +282,6 @@ const TIDE_CONST=[
 ];
 const TIDE_MEAN=148;
 const TIDE_OFFSET={wittduen:0,nebel:8,norddorf:12};
-
 function tideHeight(ts,offsetMin){
   const h=(ts+offsetMin*60000)/3600000;
   let lev=TIDE_MEAN;
@@ -328,9 +313,7 @@ function refine(t1,t2,off,findMax){
   return best;
 }
 function fmtT(d){return pad2(d.getHours())+":"+pad2(d.getMinutes());}
-
 let tideLocation="wittduen";
-
 function renderTides(){
   const el=document.getElementById("tideArea");
   if(!el)return;
@@ -338,34 +321,26 @@ function renderTides(){
   const now=Date.now();
   const next=tides.find(t=>t.time.getTime()>now);
   const locs={wittduen:"Wittdün",nebel:"Nebel",norddorf:"Norddorf"};
-
   const btns=Object.keys(locs).map(function(loc){
     const active=tideLocation===loc;
     return '<button onclick="tideLocation=\''+loc+'\';renderTides()" style="flex:1;padding:6px 4px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:700;background:'+(active?'#0077b6':'#f2f2f7')+';color:'+(active?'#fff':'#555')+'">'+locs[loc]+'</button>';
   }).join("");
-
   let nextHtml="";
   if(next){
     nextHtml='<div style="background:#e8f4fd;border-radius:10px;padding:10px 12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">'
       +'<div><div style="font-size:11px;color:#0077b6;font-weight:700;text-transform:uppercase">Nächste '+(next.type==="HW"?"🌊 Flut":"🏝 Ebbe")+'</div>'
-      +'<div style="font-size:24px;font-weight:700;color:#0077b6">'+fmtT(next.time)+'</div></div>'
-      +'<div style="text-align:right"><div style="font-size:22px;font-weight:700;color:#0077b6">'+next.h+' cm</div>'
-      +'<div style="font-size:11px;color:#8e8e93">über PNP</div></div></div>';
+      +'<div style="font-size:24px;font-weight:700;color:#0077b6">'+fmtT(next.time)+'</div></div></div>';
   }
-
   const cards=tides.map(function(t){
     const isPast=t.time.getTime()<now;
     const isNext=next&&t.time.getTime()===next.time.getTime();
     const bg=isNext?'#0077b6':isPast?'#f9f9f9':'#f2f8ff';
     const col=isNext?'#fff':'#1c1c1e';
     const sub=isNext?'rgba(255,255,255,.8)':'#8e8e93';
-    const val=isNext?'rgba(255,255,255,.9)':'#0077b6';
     return '<div style="background:'+bg+';border-radius:10px;padding:10px;opacity:'+(isPast?'0.45':'1')+'">'
       +'<div style="font-size:11px;font-weight:700;color:'+sub+';text-transform:uppercase">'+(t.type==="HW"?"🌊 Hochwasser":"🏝 Niedrigwasser")+'</div>'
-      +'<div style="font-size:20px;font-weight:700;color:'+col+'">'+fmtT(t.time)+'</div>'
-      +'<div style="font-size:14px;font-weight:600;color:'+val+'">'+t.h+' cm</div></div>';
+      +'<div style="font-size:20px;font-weight:700;color:'+col+'">'+fmtT(t.time)+'</div></div>';
   }).join("");
-
   el.innerHTML='<div style="display:flex;gap:8px;margin-bottom:8px">'+btns+'</div>'
     +'<div style="background:#fff;border-radius:16px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.06)">'
     +nextHtml
@@ -373,7 +348,6 @@ function renderTides(){
     +'<button onclick="openTideForecast()" style="width:100%;margin-top:10px;padding:12px;border:none;border-radius:14px;cursor:pointer;background:#0077b6;color:#fff;font-size:14px;font-weight:700;box-shadow:0 2px 8px rgba(0,119,182,.25)">📅 7-Tage Vorhersage</button>'
     +'</div>';
 }
-
 function openTideForecast(){
   const locs={wittduen:"Wittdün",nebel:"Nebel",norddorf:"Norddorf"};
   document.getElementById("forecastTitle").textContent=locs[tideLocation];
@@ -381,7 +355,6 @@ function openTideForecast(){
   document.getElementById("tideForecast").classList.add("open");
   renderForecast();
 }
-
 function renderForecast(){
   const locs={wittduen:"Wittdün",nebel:"Nebel",norddorf:"Norddorf"};
   document.getElementById("forecastTitle").textContent=locs[tideLocation];
@@ -400,8 +373,7 @@ function renderForecast(){
       const isHW=t.type==="HW";
       return '<div style="background:'+(isHW?'#e8f4fd':'#fff8e8')+';border-radius:10px;padding:10px">'
         +'<div style="font-size:11px;font-weight:700;color:'+(isHW?'#0077b6':'#e07b00')+';text-transform:uppercase">'+(isHW?"🌊 Hochwasser":"🏝 Niedrigwasser")+'</div>'
-        +'<div style="font-size:20px;font-weight:700;color:#1c1c1e">'+fmtT(t.time)+'</div>'
-        +'<div style="font-size:13px;font-weight:600;color:'+(isHW?'#0077b6':'#e07b00')+'">'+t.h+' cm</div></div>';
+        +'<div style="font-size:20px;font-weight:700;color:#1c1c1e">'+fmtT(t.time)+'</div></div>';
     }).join("");
     html+='<div style="background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.06)">'
       +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">'
@@ -410,7 +382,6 @@ function renderForecast(){
   }
   document.getElementById("forecastBody").innerHTML=html;
 }
-
 // ── Bus-Render ────────────────────────────────────────────────────────────────
 function render(){
   const timeStr=document.getElementById("timeinput").value;
@@ -452,14 +423,12 @@ function render(){
     return '<span class="ferry-pill" style="background:'+(toMin(t)>=nowMin?'#fff3e0':'#f2f2f7')+';color:'+(toMin(t)>=nowMin?'#e07b00':'#aaa')+'">'+t+'</span>';
   }).join("");
 }
-
 function setNow(){
   document.getElementById("dateinput").value=getTodayStr();
   document.getElementById("timeinput").value=getNowStr();
   window._manualTime=false;render();
 }
 function swapStops(){var t=curVon;curVon=curNach;curNach=t;render();}
-
 function openNearestStop(){
   if(!navigator.geolocation){
     alert("Standort nicht verfügbar.");
@@ -484,7 +453,6 @@ function openNearestStop(){
     alert("Standort konnte nicht ermittelt werden.");
   },{enableHighAccuracy:true,timeout:10000});
 }
-
 function openMap(target){
   const stop=target==="von"?curVon:curNach;
   const coords=STOP_COORDS[stop];
@@ -495,9 +463,7 @@ function openMap(target){
     :"https://www.google.com/maps/dir/?api=1&destination="+coords[0]+","+coords[1]+"&travelmode=walking";
   window.open(url,"_blank");
 }
-
 let curVon="Wittdün Fähranleger",curNach="Norddorf Mitte",pickerTarget="von";
-
 function openPicker(target){
   pickerTarget=target;
   document.getElementById("picker").classList.add("open");
@@ -522,10 +488,8 @@ function selectStop(s){
   else{curNach=s;}
   closePicker();render();
 }
-
 // ── Init ──────────────────────────────────────────────────────────────────────
 let poiOrt=null;
-
 document.getElementById("dateinput").value=getTodayStr();
 document.getElementById("timeinput").value=getNowStr();
 render();
