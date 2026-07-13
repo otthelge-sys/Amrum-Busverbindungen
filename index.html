@@ -12,7 +12,7 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f2f2f7;min-height:100dvh;overflow-x:hidden;padding-bottom:calc(20px + env(safe-area-inset-bottom));overscroll-behavior:none}
 .wrap{max-width:390px;margin:0 auto}
-.header{background:linear-gradient(135deg,#b22222,#8b0000);padding:calc(48px + env(safe-area-inset-top)) 20px 20px;color:#fff}
+.header{background:linear-gradient(135deg,#b22222,#8b0000);padding:calc(48px + env(safe-area-inset-top)) 20px 20px;color:#fff;border-radius:0 0 16px 16px}
 .header-sub{font-size:12px;opacity:.8;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
 .header-title{font-size:26px;font-weight:700;margin-bottom:12px}
 .date-time-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
@@ -61,9 +61,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .footer{text-align:center;font-size:11px;color:#c7c7cc;margin-top:20px;padding:0 20px 20px}
 .overlay{display:none;position:fixed;inset:0;z-index:100;background:#f2f2f7;flex-direction:column}
 .overlay.open{display:flex}
-.overlay-head{padding:calc(16px + env(safe-area-inset-top)) 16px 12px;display:flex;align-items:center;gap:12px;color:#fff}
+.overlay-head{padding:calc(16px + env(safe-area-inset-top)) 16px 12px;display:flex;align-items:center;gap:12px;color:#fff;max-width:390px;width:100%;margin:0 auto;box-sizing:border-box}
 .overlay-back{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:0;flex-shrink:0}
-.overlay-body{overflow-y:auto;flex:1;padding:12px 16px;-webkit-overflow-scrolling:touch}
+.overlay-body{overflow-y:auto;flex:1;padding:12px 16px;-webkit-overflow-scrolling:touch;max-width:390px;width:100%;margin:0 auto;box-sizing:border-box}
 </style>
 </head>
 <body>
@@ -153,7 +153,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="ferry-times" id="ferryTimes"></div>
     </div>
   </div>
-  <div class="footer">Fahrplan 21.3.–26.6.2026 · Mo–Fr ohne Feiertage &amp; Ferien</div>
+  <div class="footer">Fahrplan 21.3.–1.11.2026 (Vor-/Haupt-/Nachsaison, automatische Umschaltung) · Mo–Fr ohne Feiertage &amp; Ferien</div>
 </div>
 <!-- Haltestellen Picker -->
 <div class="overlay" id="picker">
@@ -204,26 +204,56 @@ const MOFR_N={"Wittdün Fähranleger":["5:15","7:00","7:40","8:25","9:30","10:15
 const MOFR_S={"Norddorf Mitte":["5:30","7:15","7:55","8:55","10:00","10:45","11:30","12:20","13:00","13:45","14:30","15:15","16:00","16:45","17:45","18:45","20:30","22:25"],"Norddorf Minigolfplatz":["5:31","7:16","7:56","8:56","10:01","10:46","11:31","12:21","13:01","13:46","14:31","15:16","16:01","16:46","17:46","18:46","20:31","22:26"],"Norddorf Aussichtsdüne":["5:32","7:17","7:57","8:57","10:02","10:47","11:32","12:22","13:02","13:47","14:32","15:17","16:02","16:47","17:47","18:47","20:32","22:27"],"Vogelkoje":["5:33","7:18","7:58","8:58","10:03","10:48","11:33","12:23","13:03","13:48","14:33","15:18","16:03","16:48","17:48","18:48","20:33","22:28"],"Nebel Westerheide":["5:34","7:19","7:59","8:59","10:04","10:49","11:34","12:24","13:04","13:49","14:34","15:19","16:04","16:49","17:49","18:49","20:34","22:29"],"Nebel Strandweg":["5:35","7:20","8:00","9:01","10:06","10:51","11:36","12:26","13:06","13:51","14:36","15:21","16:06","16:51","17:51","18:51","20:36","22:31"],"Nebel Mitte":["5:36","7:21","8:01","9:03","10:08","10:53","11:38","12:28","13:08","13:53","14:38","15:23","16:08","16:53","17:53","18:53","20:38","22:33"],"Nebel Mühle":["5:37",null,null,"9:04","10:09","10:54","11:39","12:29","13:09","13:54","14:39","15:24","16:09","16:54","17:54","18:54","20:39","22:34"],"Süddorf":["5:38","7:25","8:05","9:06","10:11","10:56","11:41","12:31","13:11","13:56","14:41","15:26","16:11","16:56","17:56","18:56","20:41","22:36"],"Leuchtturm":["5:39","7:27","8:07","9:08","10:13","10:58","11:43","12:33","13:13","13:58","14:43","15:28","16:13","16:58","17:58","18:58","20:43","22:38"],"Zeltplatz":["5:40","7:28","8:08","9:09","10:14","10:59","11:44","12:34","13:14","13:59","14:44","15:29","16:14","16:59","17:59","18:59","20:44","22:39"],"Wittdün Blaue Maus":["5:41","7:29","8:09","9:10","10:15","11:00","11:45","12:35","13:15","14:00","14:45","15:30","16:15","17:00","18:00","19:00","20:45","22:40"],"Wittdün Badeland":["5:42","7:30","8:10","9:11","10:16","11:01","11:46","12:36","13:16","14:01","14:46","15:31","16:16","17:01","18:01","19:01","20:46","22:41"],"Wittdün Köhns Übergang":["5:43","7:31","8:11","9:12","10:17","11:02","11:47","12:37","13:17","14:02","14:47","15:32","16:17","17:02","18:02","19:02","20:47","22:42"],"Wittdün Mitte":["5:44","7:32","8:12","9:13","10:18","11:03","11:48","12:38","13:18","14:03","14:48","15:33","16:18","17:03","18:03","19:03","20:48","22:43"],"Wittdün Fähranleger":["5:46","7:34","8:14","9:16","10:21","11:06","11:51","12:41","13:21","14:06","14:51","15:36","16:21","17:06","18:06","19:06","20:51","22:46"]};
 const FERRY={saso:["6:00","7:10","9:30","12:05","15:15","17:25"],mofr:["6:00","9:30","12:05","15:15","17:25"],fr:["6:00","9:30","12:05","15:15","17:25"]};
 const FERRY_ARR={saso:[toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("17:05"),toMin("20:00"),toMin("21:55")],mofr:[toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("17:05")],fr:[toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("17:05"),toMin("20:00"),toMin("21:55")]};
-// STOP_COORDS – Koordinaten aus OpenStreetMap/Geocaching-Daten (verifiziert)
+// ── Hauptsaison-Fahrplan (27.6.–13.9.2026), aus PDF "Bus_Amrum_Flyer_2706-13092026-web.pdf" ───
+const HAUPT_SASO_N={"Wittdün Fähranleger":["4:45","6:25","8:00","9:00","10:15","11:00","11:50","12:30","13:15","14:00","14:45","15:30","16:15","17:00","18:15","20:05","22:00"],"Wittdün Mitte":["4:46","6:26","8:01","9:02","10:17","11:02","11:52","12:32","13:17","14:02","14:47","15:32","16:17","17:02","18:17","20:07","22:02"],"Wittdün Köhns Übergang":["4:47","6:27","8:02","9:03","10:18","11:03","11:53","12:33","13:18","14:03","14:48","15:33","16:18","17:03","18:18","20:08","22:03"],"Wittdün Badeland":["4:48","6:28","8:03","9:04","10:19","11:04","11:54","12:34","13:19","14:04","14:49","15:34","16:19","17:04","18:19","20:09","22:04"],"Wittdün Blaue Maus":["4:49","6:29","8:04","9:05","10:20","11:05","11:55","12:35","13:20","14:05","14:50","15:35","16:20","17:05","18:20","20:10","22:05"],"Zeltplatz":["4:50","6:30","8:05","9:06","10:21","11:06","11:56","12:36","13:21","14:06","14:51","15:36","16:21","17:06","18:21","20:11","22:06"],"Leuchtturm":["4:51","6:31","8:06","9:07","10:22","11:07","11:57","12:37","13:22","14:07","14:52","15:37","16:22","17:07","18:22","20:12","22:07"],"Süddorf":["4:52","6:32","8:07","9:08","10:23","11:08","11:58","12:38","13:23","14:08","14:53","15:38","16:23","17:08","18:23","20:13","22:08"],"Nebel Mühle":["4:53","6:33","8:08","9:09","10:24","11:09","11:59","12:39","13:24","14:09","14:54","15:39","16:24","17:09","18:24","20:14","22:09"],"Nebel Mitte":["4:54","6:34","8:09","9:11","10:26","11:11","12:01","12:41","13:26","14:11","14:56","15:41","16:26","17:11","18:26","20:16","22:11"],"Nebel Strandweg":["4:55","6:35","8:10","9:13","10:28","11:13","12:03","12:43","13:28","14:13","14:58","15:43","16:28","17:13","18:28","20:18","22:13"],"Nebel Westerheide":["4:56","6:36","8:11","9:14","10:29","11:14","12:04","12:44","13:29","14:14","14:59","15:44","16:29","17:14","18:29","20:19","22:14"],"Vogelkoje":["4:57","6:37","8:12","9:15","10:30","11:15","12:05","12:45","13:30","14:15","15:00","15:45","16:30","17:15","18:30","20:20","22:15"],"Norddorf Onkel Toms Hütte":["4:58","6:38","8:13","9:17","10:32","11:17","12:07","12:47","13:32","14:17","15:02","15:47","16:32","17:17","18:32","20:22","22:17"],"Norddorf Sturmmöwe":["4:59","6:39","8:14","9:18","10:33","11:18","12:08","12:48","13:33","14:18","15:03","15:48","16:33","17:18","18:33","20:23","22:18"],"Norddorf Mitte":["5:00","6:40","8:15","9:20","10:35","11:20","12:10","12:50","13:35","14:20","15:05","15:50","16:35","17:20","18:35","20:25","22:20"]};
+const HAUPT_SASO_S={"Norddorf Mitte":["5:00","6:40","8:25","9:30","10:45","11:30","12:20","13:00","13:45","14:30","15:15","16:00","16:45","17:30","18:45","20:30","22:25"],"Norddorf Minigolfplatz":["5:01","6:41","8:26","9:31","10:46","11:31","12:21","13:01","13:46","14:31","15:16","16:01","16:46","17:31","18:46","20:31","22:26"],"Norddorf Aussichtsdüne":["5:02","6:42","8:27","9:32","10:47","11:32","12:22","13:02","13:47","14:32","15:17","16:02","16:47","17:32","18:47","20:32","22:27"],"Vogelkoje":["5:03","6:43","8:28","9:33","10:48","11:33","12:23","13:03","13:48","14:33","15:18","16:03","16:48","17:33","18:48","20:33","22:28"],"Nebel Westerheide":["5:04","6:44","8:29","9:34","10:49","11:34","12:24","13:04","13:49","14:34","15:19","16:04","16:49","17:34","18:49","20:34","22:29"],"Nebel Strandweg":["5:05","6:45","8:31","9:36","10:51","11:36","12:26","13:06","13:51","14:36","15:21","16:06","16:51","17:36","18:51","20:36","22:31"],"Nebel Mitte":["5:06","6:46","8:33","9:38","10:53","11:38","12:28","13:08","13:53","14:38","15:23","16:08","16:53","17:38","18:53","20:38","22:33"],"Nebel Mühle":["5:07","6:47","8:34","9:39","10:54","11:39","12:29","13:09","13:54","14:39","15:24","16:09","16:54","17:39","18:54","20:39","22:34"],"Süddorf":["5:08","6:48","8:36","9:41","10:56","11:41","12:31","13:11","13:56","14:41","15:26","16:11","16:56","17:41","18:56","20:41","22:36"],"Leuchtturm":["5:09","6:49","8:38","9:43","10:58","11:43","12:33","13:13","13:58","14:43","15:28","16:13","16:58","17:43","18:58","20:43","22:38"],"Zeltplatz":["5:10","6:50","8:39","9:44","10:59","11:44","12:34","13:14","13:59","14:44","15:29","16:14","16:59","17:44","18:59","20:44","22:39"],"Wittdün Blaue Maus":["5:11","6:51","8:40","9:45","11:00","11:45","12:35","13:15","14:00","14:45","15:30","16:15","17:00","17:45","19:00","20:45","22:40"],"Wittdün Badeland":["5:12","6:52","8:41","9:46","11:01","11:46","12:36","13:16","14:01","14:46","15:31","16:16","17:01","17:46","19:01","20:46","22:41"],"Wittdün Köhns Übergang":["5:13","6:53","8:42","9:47","11:02","11:47","12:37","13:17","14:02","14:47","15:32","16:17","17:02","17:47","19:02","20:47","22:42"],"Wittdün Mitte":["5:14","6:54","8:43","9:48","11:03","11:48","12:38","13:18","14:03","14:48","15:33","16:18","17:03","17:48","19:03","20:48","22:43"],"Wittdün Fähranleger":["5:16","6:56","8:46","9:51","11:06","11:51","12:41","13:21","14:06","14:51","15:36","16:21","17:06","17:51","19:06","20:51","22:46"]};
+const HAUPT_MOFR_N={"Wittdün Fähranleger":["5:15","6:25","7:00","7:40","8:30","9:30","10:15","11:00","11:50","12:30","13:15","14:00","14:45","15:30","16:15","17:15","18:15","20:05","22:00"],"Wittdün Mitte":["5:16","6:26","7:01","7:41","8:31","9:32","10:17","11:02","11:52","12:32","13:17","14:02","14:47","15:32","16:17","17:17","18:17","20:07","22:02"],"Wittdün Köhns Übergang":["5:17","6:27","7:02","7:42","8:32","9:33","10:18","11:03","11:53","12:33","13:18","14:03","14:48","15:33","16:18","17:18","18:18","20:08","22:03"],"Wittdün Badeland":["5:18","6:28","7:03","7:43","8:33","9:34","10:19","11:04","11:54","12:34","13:19","14:04","14:49","15:34","16:19","17:19","18:19","20:09","22:04"],"Wittdün Blaue Maus":["5:19","6:29","7:04","7:44","8:34","9:35","10:20","11:05","11:55","12:35","13:20","14:05","14:50","15:35","16:20","17:20","18:20","20:10","22:05"],"Zeltplatz":["5:20","6:30","7:05","7:45","8:35","9:36","10:21","11:06","11:56","12:36","13:21","14:06","14:51","15:36","16:21","17:21","18:21","20:11","22:06"],"Leuchtturm":["5:21","6:31","7:06","7:46","8:36","9:37","10:22","11:07","11:57","12:37","13:22","14:07","14:52","15:37","16:22","17:22","18:22","20:12","22:07"],"Süddorf":["5:22","6:32","7:07","7:47","8:37","9:38","10:23","11:08","11:58","12:38","13:23","14:08","14:53","15:38","16:23","17:23","18:23","20:13","22:08"],"Nebel Mühle":["5:23","6:33","7:08","7:48","8:38","9:39","10:24","11:09","11:59","12:39","13:24","14:09","14:54","15:39","16:24","17:24","18:24","20:14","22:09"],"Nebel Mitte":["5:24","6:34","7:09","7:49","8:39","9:41","10:26","11:11","12:01","12:41","13:26","14:11","14:56","15:41","16:26","17:26","18:26","20:16","22:11"],"Nebel Strandweg":["5:25","6:35","7:10","7:50","8:40","9:43","10:28","11:13","12:03","12:43","13:28","14:13","14:58","15:43","16:28","17:28","18:28","20:18","22:13"],"Nebel Westerheide":["5:26","6:36","7:11","7:51","8:41","9:44","10:29","11:14","12:04","12:44","13:29","14:14","14:59","15:44","16:29","17:29","18:29","20:19","22:14"],"Vogelkoje":["5:27","6:37","7:12","7:52","8:42","9:45","10:30","11:15","12:05","12:45","13:30","14:15","15:00","15:45","16:30","17:30","18:30","20:20","22:15"],"Norddorf Onkel Toms Hütte":["5:28","6:38","7:13","7:53","8:43","9:47","10:32","11:17","12:07","12:47","13:32","14:17","15:02","15:47","16:32","17:32","18:32","20:22","22:17"],"Norddorf Sturmmöwe":["5:29","6:39","7:14","7:54","8:44","9:48","10:33","11:18","12:08","12:48","13:33","14:18","15:03","15:48","16:33","17:33","18:33","20:23","22:18"],"Norddorf Mitte":["5:30","6:40","7:15","7:55","8:45","9:50","10:35","11:20","12:10","12:50","13:35","14:20","15:05","15:50","16:35","17:35","18:35","20:25","22:20"]};
+const HAUPT_MOFR_S={"Norddorf Mitte":["5:30","6:40","7:15","7:55","8:55","10:00","10:45","11:30","12:20","13:00","13:45","14:30","15:15","16:00","16:45","17:45","18:45","20:30","22:25"],"Norddorf Minigolfplatz":["5:31","6:41","7:16","7:56","8:56","10:01","10:46","11:31","12:21","13:01","13:46","14:31","15:16","16:01","16:46","17:46","18:46","20:31","22:26"],"Norddorf Aussichtsdüne":["5:32","6:42","7:17","7:57","8:57","10:02","10:47","11:32","12:22","13:02","13:47","14:32","15:17","16:02","16:47","17:47","18:47","20:32","22:27"],"Vogelkoje":["5:33","6:43","7:18","7:58","8:58","10:03","10:48","11:33","12:23","13:03","13:48","14:33","15:18","16:03","16:48","17:48","18:48","20:33","22:28"],"Nebel Westerheide":["5:34","6:44","7:19","7:59","8:59","10:04","10:49","11:34","12:24","13:04","13:49","14:34","15:19","16:04","16:49","17:49","18:49","20:34","22:29"],"Nebel Strandweg":["5:35","6:45","7:20","8:00","9:01","10:06","10:51","11:36","12:26","13:06","13:51","14:36","15:21","16:06","16:51","17:51","18:51","20:36","22:31"],"Nebel Mitte":["5:36","6:46","7:21","8:01","9:03","10:08","10:53","11:38","12:28","13:08","13:53","14:38","15:23","16:08","16:53","17:53","18:53","20:38","22:33"],"Nebel Mühle":["5:37","6:47",null,null,"9:04","10:09","10:54","11:39","12:29","13:09","13:54","14:39","15:24","16:09","16:54","17:54","18:54","20:39","22:34"],"Süddorf":["5:38","6:48","7:25","8:05","9:06","10:11","10:56","11:41","12:31","13:11","13:56","14:41","15:26","16:11","16:56","17:56","18:56","20:41","22:36"],"Leuchtturm":["5:39","6:49","7:27","8:07","9:08","10:13","10:58","11:43","12:33","13:13","13:58","14:43","15:28","16:13","16:58","17:58","18:58","20:43","22:38"],"Zeltplatz":["5:40","6:50","7:28","8:08","9:09","10:14","10:59","11:44","12:34","13:14","13:59","14:44","15:29","16:14","16:59","17:59","18:59","20:44","22:39"],"Wittdün Blaue Maus":["5:41","6:51","7:29","8:09","9:10","10:15","11:00","11:45","12:35","13:15","14:00","14:45","15:30","16:15","17:00","18:00","19:00","20:45","22:40"],"Wittdün Badeland":["5:42","6:52","7:30","8:10","9:11","10:16","11:01","11:46","12:36","13:16","14:01","14:46","15:31","16:16","17:01","18:01","19:01","20:46","22:41"],"Wittdün Köhns Übergang":["5:43","6:53","7:31","8:11","9:12","10:17","11:02","11:47","12:37","13:17","14:02","14:47","15:32","16:17","17:02","18:02","19:02","20:47","22:42"],"Wittdün Mitte":["5:44","6:54","7:32","8:12","9:13","10:18","11:03","11:48","12:38","13:18","14:03","14:48","15:33","16:18","17:03","18:03","19:03","20:48","22:43"],"Wittdün Fähranleger":["5:46","6:56","7:34","8:14","9:16","10:21","11:06","11:51","12:41","13:21","14:06","14:51","15:36","16:21","17:06","18:06","19:06","20:51","22:46"]};
+const HAUPT_FERRY={saso:["5:30","7:10","9:00","12:05","14:45","16:45","18:15"],mofr:["6:00","7:10","9:30","12:05","15:15","17:25"],fr:["6:00","7:10","9:30","12:05","15:15","15:55","17:25"]};
+const HAUPT_FERRY_ARR={saso:[toMin("8:45"),toMin("11:35"),toMin("14:30"),toMin("16:35"),toMin("18:00"),toMin("20:00"),toMin("21:55")],mofr:[toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("17:05"),toMin("20:00"),toMin("21:55")],fr:[toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("15:45"),toMin("17:05"),toMin("20:00"),toMin("21:55")]};
+// ── Nachsaison-Fahrplan (14.9.–1.11.2026): Busfahrzeiten sind identisch mit der Vorsaison
+// (programmatisch mit SASO_N/S, MOFR_N/S abgeglichen – 0 Abweichungen), nur die Fährzeiten
+// unterscheiden sich, aus PDF "Busfahrplan_Amrum_14.09.2026_bis_1.11.2026.pdf"
+const NACH_FERRY={saso:["6:00","7:10","9:30","12:05","15:15","17:25"],mofr:["6:00","9:30","12:05","15:15","17:25"],fr:["6:00","9:30","12:05","15:15","17:25"]};
+const NACH_FERRY_ARR={saso:[toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("17:05"),toMin("20:00"),toMin("21:55")],mofr:[toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("17:05"),toMin("20:00"),toMin("21:55")],fr:[toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("17:05"),toMin("20:00"),toMin("21:55")]};
+// ── Saison-Umschaltung ──────────────────────────────────────────────────────────
+// Grenzen laut den drei Fahrplan-PDFs. Vor dem 21.3. bzw. nach dem 1.11.2026 liegt kein
+// Fahrplan vor – es wird dann auf die Nachsaison-Werte zurückgefallen (beste Näherung).
+const SEASONS=[
+  {start:"2026-03-21", end:"2026-06-26", key:"vor"},
+  {start:"2026-06-27", end:"2026-09-13", key:"haupt"},
+  {start:"2026-09-14", end:"2026-11-01", key:"nach"},
+];
+const SEASON_LABELS={vor:"Vorsaison",haupt:"Hauptsaison",nach:"Nachsaison"};
+function getSeasonKey(dateStr){
+  for(const s of SEASONS){ if(dateStr>=s.start && dateStr<=s.end) return s.key; }
+  return dateStr<SEASONS[0].start ? "vor" : "nach";
+}
+const SCHEDULES={
+  vor:  {N:SASO_N,       S:SASO_S,       MN:MOFR_N,       MS:MOFR_S,       FERRY:FERRY,       FERRY_ARR:FERRY_ARR},
+  haupt:{N:HAUPT_SASO_N, S:HAUPT_SASO_S, MN:HAUPT_MOFR_N, MS:HAUPT_MOFR_S, FERRY:HAUPT_FERRY, FERRY_ARR:HAUPT_FERRY_ARR},
+  nach: {N:SASO_N,       S:SASO_S,       MN:MOFR_N,       MS:MOFR_S,       FERRY:NACH_FERRY,  FERRY_ARR:NACH_FERRY_ARR},
+};
+// STOP_COORDS – reale Koordinaten, per uMap/OpenStreetMap manuell erfasst (Juli 2026)
 const STOP_COORDS={
-  "Wittdün Fähranleger":   [54.6289, 8.3965],
-  "Wittdün Mitte":         [54.6269, 8.3926],
-  "Wittdün Köhns Übergang":[54.6274, 8.3844],
-  "Wittdün Badeland":      [54.6278, 8.3798],
-  "Wittdün Blaue Maus":    [54.6297, 8.3733],
-  "Zeltplatz":             [54.6304, 8.3672],
-  "Leuchtturm":            [54.6317, 8.3596],
-  "Süddorf":               [54.6417, 8.3556],
-  "Nebel Mühle":           [54.6484, 8.3539],
-  "Nebel Mitte":           [54.6504, 8.3519],
-  "Nebel Strandweg":       [54.6496, 8.3457],
-  "Nebel Westerheide":     [54.6531, 8.3458],
-  "Vogelkoje":             [54.6614, 8.3476],
-  "Norddorf Onkel Toms Hütte":[54.6712, 8.3495],
-  "Norddorf Sturmmöwe":    [54.6728, 8.3467],
-  "Norddorf Mitte":        [54.6746, 8.3446],
-  "Norddorf Minigolfplatz":[54.6759, 8.3438],
-  "Norddorf Aussichtsdüne":[54.6772, 8.3421],
+  "Wittdün Fähranleger":   [54.628944, 8.397739],
+  "Wittdün Mitte":         [54.626854, 8.392562],
+  "Wittdün Köhns Übergang":[54.627422, 8.384542],
+  "Wittdün Badeland":      [54.627826, 8.379731],
+  "Wittdün Blaue Maus":    [54.629757, 8.373079],
+  "Zeltplatz":             [54.630431, 8.367296],
+  "Leuchtturm":            [54.631661, 8.360204],
+  "Süddorf":               [54.641866, 8.355644],
+  "Nebel Mühle":           [54.648381, 8.353885],
+  "Nebel Mitte":           [54.650368, 8.351632],
+  "Nebel Strandweg":       [54.649654, 8.345886],
+  "Nebel Westerheide":     [54.652972, 8.345951],
+  "Vogelkoje":             [54.664099, 8.340758],
+  "Norddorf Onkel Toms Hütte":[54.672596, 8.334728],
+  "Norddorf Sturmmöwe":    [54.676843, 8.335297],
+  "Norddorf Mitte":        [54.679312, 8.334551],
+  "Norddorf Minigolfplatz":[54.677096, 8.331467],
+  "Norddorf Aussichtsdüne":[54.675059, 8.3307],
 };
 // ── Hilfsfunktionen ───────────────────────────────────────────────────────────
 function toMin(t){if(!t)return Infinity;const[h,m]=t.split(":").map(Number);return h*60+m;}
@@ -236,13 +266,14 @@ function getDateInfo(){
   const d=new Date(document.getElementById("dateinput").value+"T12:00:00");
   const dow=d.getDay();
   const names=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
-  return{isSaSo:dow===0||dow===6,isFr:dow===5,dayName:names[dow]};
+  return{isSaSo:dow===0||dow===6,isFr:dow===5,dayName:names[dow],dow:dow};
 }
 function getDayType(){const{isSaSo,isFr}=getDateInfo();return isSaSo?"saso":isFr?"fr":"mofr";}
-function isFaehrbus(t,dt){
+function isFaehrbus(t,dt,season){
+  const sched=SCHEDULES[season]||SCHEDULES.vor;
   const m=toMin(t);
-  const arr=FERRY_ARR[dt]||FERRY_ARR.mofr;
-  const dep=(FERRY[dt]||FERRY.mofr).map(toMin);
+  const arr=sched.FERRY_ARR[dt]||sched.FERRY_ARR.mofr;
+  const dep=(sched.FERRY[dt]||sched.FERRY.mofr).map(toMin);
   return arr.some(fa=>m>=fa&&m<=fa+20)||dep.some(fd=>m<=fd&&fd-m<=30);
 }
 function getDirection(von,nach){
@@ -250,16 +281,39 @@ function getDirection(von,nach){
   if(vi===-1||ni===-1||vi===ni)return null;
   return ni>vi;
 }
-function getConnections(von,nach,nowMin,dt){
+// ── Ausnahme-Spalten "A"/"B" bei frühen Mo-Fr-Fahrten (laut Flyer-Fußnoten) ──────
+// A = Di–Fr (nicht Montag), B = Mo–Fr, beide pausieren in einem Zeitraum je Saison.
+// Spaltenindex ist je Saison fix (gleiche Tabellenspalte für alle Haltestellen/Richtungen).
+// Für die Vorsaison ist die genaue Pausenzeit nicht bekannt (PDF lag hier nicht vor) –
+// dort wird daher nicht gefiltert (bisheriges Verhalten bleibt erhalten).
+const SPECIAL_COLS={
+  haupt:{2:"A",3:"B"},
+  nach: {1:"A",2:"B"},
+};
+const SPECIAL_RANGES={
+  haupt:{A:["2026-07-06","2026-08-07"],B:["2026-07-06","2026-08-07"]},
+  nach: {A:["2026-10-06","2026-10-23"],B:["2026-10-05","2026-10-23"]},
+};
+function isColumnActive(type,season,dateStr,dow){
+  if(type==="A"&&dow===1)return false; // A läuft nur Di–Fr, nicht Montag
+  const r=(SPECIAL_RANGES[season]||{})[type];
+  if(r&&dateStr>=r[0]&&dateStr<=r[1])return false;
+  return true;
+}
+function getConnections(von,nach,nowMin,dt,season,dateStr,dow){
   const dir=getDirection(von,nach);
   if(dir===null)return[];
-  const tbl=dir?(dt==="saso"?SASO_N:MOFR_N):(dt==="saso"?SASO_S:MOFR_S);
+  const sched=SCHEDULES[season]||SCHEDULES.vor;
+  const tbl=dir?(dt==="saso"?sched.N:sched.MN):(dt==="saso"?sched.S:sched.MS);
+  const special=dt!=="saso"?(SPECIAL_COLS[season]||{}):{};
   const res=[];
   const depT=tbl[von]||[],arrT=tbl[nach]||[];
   for(let i=0;i<depT.length;i++){
     if(!depT[i]||!arrT[i])continue;
+    const colType=special[i];
+    if(colType&&!isColumnActive(colType,season,dateStr,dow))continue;
     if(toMin(depT[i])<nowMin)continue;
-    res.push({dep:depT[i],arr:arrT[i],warn:isFaehrbus(depT[i],dt)});
+    res.push({dep:depT[i],arr:arrT[i],warn:isFaehrbus(depT[i],dt,season)});
   }
   return res.slice(0,5);
 }
@@ -382,16 +436,138 @@ function renderForecast(){
   }
   document.getElementById("forecastBody").innerHTML=html;
 }
+// ── Öffnungszeiten (Geschäfte & Gastronomie) ───────────────────────────────────
+// Stand: Juni 2026. Quelle primär amrum.de/gastronomie-auf-amrum, ergänzt um eigenständig
+// bestätigte Betriebe. Öffnungszeiten ohne Bestätigung stammen aus Drittquellen und können abweichen.
+const POI_DATA={
+"Wittdün":{
+ shops:[
+  {name:"EDEKA Zentralmarkt",kat:"Supermarkt",zeiten:"Mo–Fr 07:00–18:30 · Sa 07:00–16:00 · So/Ft 11:00–13:00",link:"https://www.edeka.de/eh/nord/frischemarkt-amrumer-zentralmarkt-inh.-m%C3%BCller-inselstra%C3%9Fe-28/index.jsp"},
+  {name:"Pütt un Pann",kat:"Haushaltswaren",zeiten:"Mo–Fr 09:00–18:30 · Sa 09:00–13:00",link:"https://amrumer-zentralmarkt.de/?page_id=187"},
+  {name:"Bio Düne Naturwaren",kat:"Bioladen",zeiten:"saisonal",link:null},
+  {name:"Louisen-Apotheke",kat:"Apotheke",zeiten:"Mo–Fr 08:30–12:30 & 14:30–18:30 · Sa 09:00–13:00",link:"https://louisen-apotheke-amrum.de"},
+  {name:"Quedens (Hauptgeschäft)",kat:"Fotofachgeschäft",zeiten:"Mo–Fr 09:30–13:00 & 14:30–17:00 · Sa 09:30–12:30",link:"https://quedens.de"},
+  {name:"Quedens Strandgut",kat:"Geschenke/Mode",zeiten:"Mo–Fr 09:30–17:00 · Sa 09:30–12:30",link:"https://quedens.de"},
+  {name:"Dünencamping Amrum",kat:"Camping",zeiten:"01.03.–31.10. · Rezeption 08:00–12:30 & 14:30–18:00",link:"https://www.camping-amrum.de"},
+  {name:"Marcs Fahrradverleih",kat:"Fahrradverleih",zeiten:"saisonal",link:"https://www.fahrradverleih-amrum.de"},
+  {name:"Amrumer Radhaus",kat:"Fahrradverleih",zeiten:"saisonal",link:"https://www.camping-amrum.de"}
+ ],
+ food:[
+  {name:"Bella Ciao",kat:"Restaurant (Pizza/Italienisch)",zeiten:"Do–Mo 17:00–22:00 · Di+Mi Ruhetag",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-bella-ciao"},
+  {name:"Café Auszeit",kat:"Café",zeiten:"Mo–Do 13:00–17:00 · Fr–So Ruhetag",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-cafe-auszeit"},
+  {name:"Bäckerei Claussen, Wittdün",kat:"Café/Bäckerei",zeiten:"Mo–Fr 07:00–18:00 · Sa 07:00–17:00 · So 08:00–17:00",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-baeckerei-claussen-wittduen"},
+  {name:"Klabautermann",kat:"Restaurant (orientalisch)",zeiten:"Mi–Mo 12:00–21:00 · Di Ruhetag",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-klabautermann-6"},
+  {name:"Strandbar Seehund",kat:"Strandbar",zeiten:"ab 20.3.: 12:00–21:00 · Küche bis 20:00 · Mi Ruhetag",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-strandbar-seehund"},
+  {name:"Die Insel-Praline",kat:"Café/Konditorei",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-die-insel-praline"},
+  {name:"Schmaus & Schmunzel",kat:"Bistro",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/wittduen/a-schmaus-schmunzel"},
+  {name:"Seefohrerhus",kat:"Restaurant (Fisch)",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-seefohrerhus"},
+  {name:"Heidekate",kat:"Café/Bistro (am Leuchtturm)",zeiten:"täglich 12:00–14:00 & 17:00–21:00",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-heidekate"},
+  {name:"Café Pustekuchen",kat:"Café/Konditorei",zeiten:"unbekannt",link:"http://cafe-pustekuchen-amrum.de"},
+  {name:"Hafen 31",kat:"Bistro/Restaurant (Fisch)",zeiten:"unbekannt",link:"https://www.hafen31.de"},
+  {name:"Kaffeeflut",kat:"Café",zeiten:"unbekannt",link:null},
+  {name:"Blaue Maus",kat:"Kneipe/Bar",zeiten:"unbekannt",link:null}
+ ]
+},
+"Süddorf":{
+ shops:[
+  {name:"Hofladen Familie Martinen",kat:"Hofladen",zeiten:"saisonal",link:null},
+  {name:"Süddorfer Fahrradverleih",kat:"Fahrradverleih",zeiten:"saisonal",link:null}
+ ],
+ food:[
+  {name:"Strandhäuschen Süddorf",kat:"Strandrestaurant",zeiten:"Mo–Do & Sa–So 12:00–20:00 · Fr geschl.",link:"https://www.amrum.de/gastronomie-am-sueddorfer-strand"}
+ ]
+},
+"Nebel":{
+ shops:[
+  {name:"EDEKA Frischemarkt Bendixen",kat:"Supermarkt",zeiten:"Mo–Sa 07:00–18:00 · Pause 12:30–14:30 · So/Ft geschl.",link:null},
+  {name:"Wein und Meehr in der Post",kat:"Post/Weinhandlung",zeiten:"Mo–Fr 09:00–12:00 & 15:00–18:00 · Sa 09:00–12:00 · So geschl.",link:null},
+  {name:"Töpferei Nebel",kat:"Töpferei",zeiten:"unbekannt",link:null},
+  {name:"Stefans Fahrradverleih",kat:"Fahrradverleih",zeiten:"saisonal",link:"https://www.fahrradverleih-amrum.de"},
+  {name:"NordZeit Fahrradverleih",kat:"Fahrradverleih",zeiten:"saisonal",link:"https://nordzeit-amrum.de"}
+ ],
+ food:[
+  {name:"Seekiste",kat:"Restaurant",zeiten:"Di–So 17:00–22:00 · Mo Ruhetag",link:"https://www.amrum.de/freizeitangebote/nebel/a-seekiste"},
+  {name:"Fisch & Meer",kat:"Bistro/Imbiss",zeiten:"Mo–Fr 11:00–18:00 · So 12:00–18:00",link:"https://www.amrum.de/freizeitangebote/nebel/a-fisch-meer"},
+  {name:"Dörnsk an Köögem",kat:"Café/Pizza/Kneipe",zeiten:"Mo–So 13:00–19:00",link:"https://www.amrum.de/freizeitangebote/nebel/a-doernsk-an-koeoegem"},
+  {name:"54°NORD",kat:"Eventlocation/Imbiss",zeiten:"saisonal, Wochenenden",link:"https://www.amrum.de/freizeitangebote/nebel/a-54nord"},
+  {name:"Bistro Martin's",kat:"Bistro (vegan-freundlich)",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/nebel/a-bistro-martins"},
+  {name:"Bäckerei Claussen, Nebel (Stammsitz)",kat:"Café/Bäckerei",zeiten:"Mo–Fr 06:30–12:00 & 14:00–18:00 · Sa 06:30–12:00 · So 08:00–18:00",link:"https://www.amrum.de/freizeitangebote/nebel/a-baeckerei-claussen-nebel"},
+  {name:"Strandpirat",kat:"Restaurant/Imbiss",zeiten:"Mi–So 11:00–21:00 (saisonal)",link:"https://strandpirat-amrum.de"},
+  {name:"Klar Kimming",kat:"Weinkajüte/Flammkuchen",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/nebel/a-klar-kimming"},
+  {name:"Café Claussen",kat:"Café/Konditorei",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/nebel/a-cafe-claussen"},
+  {name:"Blaufeuer",kat:"Bar/Bistro",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/nebel/a-blaufeuer"},
+  {name:"Preesters Hüs",kat:"Restaurant",zeiten:"Mo–So 17:00–21:00",link:"https://www.amrum.de/freizeitangebote/nebel/a-preesters-hues"},
+  {name:"Friesen-Café",kat:"Café/Konditorei",zeiten:"Mo–So 11:00–18:00 (saisonal)",link:"http://friesen-cafe.de"}
+ ]
+},
+"Norddorf":{
+ shops:[
+  {name:"EDEKA Frischemarkt",kat:"Supermarkt",zeiten:"Mo–Sa 07:00–18:00 · Pause 12:30–14:30 · So/Ft 11:00–13:00",link:null},
+  {name:"Quedens Norddorf",kat:"Fotofachgeschäft",zeiten:"Mo–Fr 09:30–17:00 · Sa 09:30–12:30",link:"https://quedens.de"},
+  {name:"Möwen-Apotheke",kat:"Apotheke",zeiten:"Notdienst in geraden Wochen",link:null},
+  {name:"Amrumer Fahrradcenter",kat:"Fahrradverleih",zeiten:"saisonal",link:"https://norddorfer-fahrradverleih.de"},
+  {name:"Norddorfer Fahrradverleih",kat:"Fahrradverleih",zeiten:"saisonal",link:"https://norddorfer-fahrradverleih.de"}
+ ],
+ food:[
+  {name:"Seeblicker EssZimmer",kat:"Restaurant (Hotel)",zeiten:"tagsüber 12:00–17:30, Abendkarte",link:"https://www.amrum.de/freizeitangebote/norddorf-auf-amrum/a-seeblick-genuss-und-spa-resort-amrum-4"},
+  {name:"Lass",kat:"Restaurant/Weinbar (Neueröffn. 2024)",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/norddorf-auf-amrum/a-lass"},
+  {name:"Ual Öömrang Wiartshüs",kat:"Restaurant/Hotel",zeiten:"ab 13:00, saisonal",link:"https://www.amrum.de/freizeitangebote/norddorf-auf-amrum/a-ual-oeoemrang-wiartshues"},
+  {name:"Hotel Hüttmann",kat:"Restaurant (gehoben)",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/norddorf-auf-amrum/a-hotel-huettmann"},
+  {name:"Giovanni L. im Rialto",kat:"Eis/Pizza/Restaurant",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/norddorf/a-rialto"},
+  {name:"Die Muschelsucher",kat:"Café & Restaurant",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/norddorf-auf-amrum/a-die-muschelsucher"},
+  {name:"Café Schult",kat:"Café/Bäckerei",zeiten:"Hauptsaison: Mo–So 11:00–18:00 · Nebensaison (Nov–Dez): Mo–Sa 14:00–18:00",link:"https://cafe-schult.com"},
+  {name:"Burger Pier",kat:"Burger-Restaurant",zeiten:"Fr–Di 17:30–20:00 · Mi+Do Ruhetag (saisonal)",link:"https://www.burgerpier.de"}
+ ]
+}
+};
+let poiOrt="Wittdün",poiCategory="shops";
+function openPOIOverlay(){
+  document.getElementById("poiOverlay").classList.add("open");
+  renderPOI();
+}
+function selectPoiOrt(o){poiOrt=o;renderPOI();}
+function selectPoiCategory(c){poiCategory=c;renderPOI();}
+function renderPOI(){
+  const orte=["Wittdün","Süddorf","Nebel","Norddorf"];
+  const ortBtns=orte.map(function(o){
+    const active=poiOrt===o;
+    return '<button onclick="selectPoiOrt(\''+o+'\')" style="flex:1;padding:8px 4px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:700;background:'+(active?'#b22222':'#f2f2f7')+';color:'+(active?'#fff':'#555')+'">'+o+'</button>';
+  }).join("");
+  const cats=[{k:"shops",label:"🛍 Geschäfte"},{k:"food",label:"🍽 Gastronomie"}];
+  const catBtns=cats.map(function(c){
+    const active=poiCategory===c.k;
+    return '<button onclick="selectPoiCategory(\''+c.k+'\')" style="flex:1;padding:8px 4px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:700;background:'+(active?'#8b0000':'#f2f2f7')+';color:'+(active?'#fff':'#555')+'">'+c.label+'</button>';
+  }).join("");
+  const entries=(POI_DATA[poiOrt]&&POI_DATA[poiOrt][poiCategory])||[];
+  const cards=entries.length?entries.map(function(e){
+    const linkHtml=e.link?'<a href="'+e.link+'" target="_blank" style="font-size:12px;color:#0077b6;font-weight:600;text-decoration:none;white-space:nowrap">Website ↗</a>':'';
+    return '<div style="background:#fff;border-radius:12px;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.06)">'
+      +'<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">'
+      +'<div style="font-size:15px;font-weight:700;color:#1c1c1e">'+e.name+'</div>'
+      +linkHtml
+      +'</div>'
+      +'<div style="font-size:12px;color:#8e8e93;font-weight:600;text-transform:uppercase;margin-top:2px">'+e.kat+'</div>'
+      +'<div style="font-size:14px;color:#1c1c1e;margin-top:4px">'+e.zeiten+'</div>'
+      +'</div>';
+  }).join(""):'<div style="text-align:center;color:#8e8e93;padding:24px 12px;font-size:14px">Keine Einträge für diese Auswahl.</div>';
+  document.getElementById("poiOverlayBody").innerHTML=
+    '<div style="display:flex;gap:6px;margin-bottom:8px">'+ortBtns+'</div>'
+    +'<div style="display:flex;gap:6px;margin-bottom:12px">'+catBtns+'</div>'
+    +cards
+    +'<div style="text-align:center;font-size:11px;color:#c7c7cc;margin-top:12px;padding:0 8px;line-height:1.5">Stand: Juni 2026 · Quelle primär amrum.de/gastronomie-auf-amrum, ergänzt um eigenständig bestätigte Betriebe. Öffnungszeiten ohne Bestätigung stammen aus Drittquellen und können abweichen – bitte vor Besuch prüfen.</div>';
+}
 // ── Bus-Render ────────────────────────────────────────────────────────────────
 function render(){
   const timeStr=document.getElementById("timeinput").value;
+  const dateStr=document.getElementById("dateinput").value;
   const nowMin=toMin(timeStr);
   const dt=getDayType();
-  const{dayName,isSaSo,isFr}=getDateInfo();
-  document.getElementById("dayBadge").textContent=dayName+" · "+(isSaSo?"Sa/So":isFr?"Freitag":"Mo–Fr");
+  const season=getSeasonKey(dateStr);
+  const{dayName,isSaSo,isFr,dow}=getDateInfo();
+  document.getElementById("dayBadge").textContent=dayName+" · "+(isSaSo?"Sa/So":isFr?"Freitag":"Mo–Fr")+" · "+SEASON_LABELS[season];
   document.getElementById("vonLabel").textContent=curVon;
   document.getElementById("nachLabel").textContent=curNach;
-  const conns=getConnections(curVon,curNach,nowMin,dt);
+  const conns=getConnections(curVon,curNach,nowMin,dt,season,dateStr,dow);
   const ra=document.getElementById("resultArea");
   const wa=document.getElementById("warnArea");
   const na=document.getElementById("nextArea");
@@ -419,7 +595,8 @@ function render(){
     }).join("");
   } else {na.style.display="none";}
   const ft=document.getElementById("ferryTimes");
-  ft.innerHTML=(FERRY[dt]||FERRY.mofr).map(function(t){
+  const seasonFerry=(SCHEDULES[season]||SCHEDULES.vor).FERRY;
+  ft.innerHTML=(seasonFerry[dt]||seasonFerry.mofr).map(function(t){
     return '<span class="ferry-pill" style="background:'+(toMin(t)>=nowMin?'#fff3e0':'#f2f2f7')+';color:'+(toMin(t)>=nowMin?'#e07b00':'#aaa')+'">'+t+'</span>';
   }).join("");
 }
@@ -489,7 +666,6 @@ function selectStop(s){
   closePicker();render();
 }
 // ── Init ──────────────────────────────────────────────────────────────────────
-let poiOrt=null;
 document.getElementById("dateinput").value=getTodayStr();
 document.getElementById("timeinput").value=getNowStr();
 render();
