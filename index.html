@@ -677,6 +677,33 @@ setInterval(function(){
   renderTides();
 },3600000); // Gezeiten stündlich neu laden
 document.getElementById("timeinput").addEventListener("change",function(){window._manualTime=true;render();});
+// ── Service Worker: Registrierung + automatische Update-Erkennung ─────────────
+// Bisher fehlte dieser Block komplett, obwohl sw.js eine "skipWaiting"-Message erwartet –
+// dadurch konnte eine neue sw.js-Version nie automatisch aktiv werden, nur durch komplettes
+// Entfernen/Neuanlegen des Homescreen-Icons (das erzwingt einen echten Neustart aller Tabs).
+if("serviceWorker" in navigator){
+  window.addEventListener("load",function(){
+    navigator.serviceWorker.register("sw.js").then(function(reg){
+      reg.update(); // bei jedem Start aktiv nach neuer Version fragen
+      reg.addEventListener("updatefound",function(){
+        const nw=reg.installing;
+        if(!nw)return;
+        nw.addEventListener("statechange",function(){
+          if(nw.state==="installed"&&navigator.serviceWorker.controller){
+            // Neue Version ist fertig installiert -> sofort aktivieren lassen
+            nw.postMessage({action:"skipWaiting"});
+          }
+        });
+      });
+    }).catch(function(){/* Service Worker optional, App funktioniert auch ohne */});
+    let refreshing=false;
+    navigator.serviceWorker.addEventListener("controllerchange",function(){
+      if(refreshing)return;
+      refreshing=true;
+      window.location.reload(); // einmalig neu laden, sobald neue Version aktiv ist
+    });
+  });
+}
 </script>
 </body>
 </html>
