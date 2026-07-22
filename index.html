@@ -628,8 +628,12 @@ if(d<minDist){minDist=d;nearest=stop;}
 if(!nearest)return;
 const coords=STOP_COORDS[nearest];
 const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+// WICHTIG: kein "&q=..." mehr zusätzlich zu "daddr=" – diese Kombination verhinderte
+// zuverlässig die eigentliche Routenberechnung bei Apple Maps (Route-Ansicht öffnete
+// sich, blieb aber leer). Der Zielpin heißt dadurch "Markierter Ort" statt Haltestellenname,
+// die Route wird aber jetzt korrekt berechnet.
 const url=isIOS
-?"https://maps.apple.com/?daddr="+coords[0]+","+coords[1]+"&q="+encodeURIComponent(nearest)+"&dirflg=w"
+?"https://maps.apple.com/?daddr="+coords[0]+","+coords[1]+"&dirflg=w"
 :"https://www.google.com/maps/dir/?api=1&destination="+coords[0]+","+coords[1]+"&travelmode=walking";
 window.location.href=url;
 },function(){
@@ -642,7 +646,7 @@ const coords=STOP_COORDS[stop];
 if(!coords)return;
 const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
 const url=isIOS
-?"https://maps.apple.com/?daddr="+coords[0]+","+coords[1]+"&q="+encodeURIComponent(stop)+"&dirflg=w"
+?"https://maps.apple.com/?daddr="+coords[0]+","+coords[1]+"&dirflg=w"
 :"https://www.google.com/maps/dir/?api=1&destination="+coords[0]+","+coords[1]+"&travelmode=walking";
 window.open(url,"_blank");
 }
