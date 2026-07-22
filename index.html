@@ -611,11 +611,12 @@ if(!navigator.geolocation){
 alert("Standort nicht verfügbar.");
 return;
 }
-// WICHTIG: Der Tab muss noch SYNCHRON im Klick-Handler geöffnet werden.
-// Safari/iOS blockiert window.open()-Aufrufe stillschweigend (ohne Fehlermeldung),
-// wenn sie erst asynchron im getCurrentPosition-Callback erfolgen. Deshalb hier
-// zunächst ein leeres Tab öffnen und dessen URL später nachträglich setzen.
-const newTab=window.open('','_blank');
+// Kein window.open()-Popup mehr: das führte in eingebetteten Browsern (z.B. In-App-
+// Browser von GitHub & Co.) dazu, dass der neue Tab dauerhaft auf about:blank hängen
+// blieb, weil solche Kontexte nachträgliche Navigation eines Popups oft nicht erlauben.
+// Stattdessen wird die aktuelle Seite direkt navigiert, sobald die Position vorliegt.
+// maps.apple.com wird auf iOS per Universal Link automatisch an die Maps-App
+// weitergereicht; ein Zurück-Wisch/Tap bringt zur PWA zurück.
 navigator.geolocation.getCurrentPosition(function(pos){
 const lat=pos.coords.latitude, lon=pos.coords.longitude;
 // Nächste Haltestelle finden
@@ -624,15 +625,14 @@ for(const[stop,[slat,slon]] of Object.entries(STOP_COORDS)){
 const d=Math.sqrt(Math.pow((lat-slat)*111320,2)+Math.pow((lon-slon)*111320*Math.cos(lat*Math.PI/180),2));
 if(d<minDist){minDist=d;nearest=stop;}
 }
-if(!nearest){if(newTab)newTab.close();return;}
+if(!nearest)return;
 const coords=STOP_COORDS[nearest];
 const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
 const url=isIOS
 ?"https://maps.apple.com/?daddr="+coords[0]+","+coords[1]+"&q="+encodeURIComponent(nearest)+"&dirflg=w"
 :"https://www.google.com/maps/dir/?api=1&destination="+coords[0]+","+coords[1]+"&travelmode=walking";
-if(newTab){newTab.location.href=url;}else{window.open(url,"_blank");}
+window.location.href=url;
 },function(){
-if(newTab)newTab.close();
 alert("Standort konnte nicht ermittelt werden.");
 },{enableHighAccuracy:true,timeout:10000});
 }
