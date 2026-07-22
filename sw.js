@@ -1,4 +1,4 @@
-const VERSION = "5.0";
+const VERSION = "5.1"
 const CACHE = "amrum-bus-" + VERSION;
 const CORE_ASSETS = [
   "/Amrum-Busverbindungen/",
