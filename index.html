@@ -21,7 +21,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .day-badge{background:rgba(255,255,255,.2);border-radius:8px;padding:4px 10px;font-size:13px;font-weight:700;color:#fff;white-space:nowrap}
 .section{padding:12px 16px 0}
 .section-label{font-size:12px;color:#8e8e93;margin-bottom:4px;padding-left:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
-  .route-card{background:#fff;border-radius:16px;overflow:hidden;padding:4px 0;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.route-card{background:#fff;border-radius:16px;overflow:hidden;padding:4px 0;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 .stop-row{display:flex;align-items:center;padding:12px 16px;gap:8px;cursor:pointer}
 .stop-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
 .stop-icon.von{background:#e8f4fd;color:#0077b6}
@@ -68,132 +68,132 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </head>
 <body>
 <div class="wrap">
-  <div class="header">
-    <div class="header-sub">Amrum Bus</div>
-    <div class="header-title">Verbindungssuche</div>
-    <div class="date-time-row">
-      <input type="date" id="dateinput" oninput="render()"/>
-      <input type="time" id="timeinput" oninput="render()"/>
-      <button onclick="setNow()">Jetzt</button>
-    </div>
-    <div class="date-time-row">
-      <span class="day-badge" id="dayBadge">–</span>
-    </div>
-  </div>
-  <div class="section">
-    <div class="section-label">Route</div>
-    <div class="route-card">
-      <div class="stop-row" onclick="openPicker('von')">
-        <div class="stop-icon von">A</div>
-        <div class="stop-btn-inner">
-          <div class="slabel">Von</div>
-          <div class="sname" id="vonLabel">Wittdün Fähranleger</div>
-        </div>
-        <span class="stop-btn-arrow">›</span>
-      </div>
-      <div class="stop-divider"></div>
-      <div class="swap-row"><button class="swap-btn" onclick="swapStops()">⇅</button></div>
-      <div class="stop-divider"></div>
-      <div class="stop-row" onclick="openPicker('nach')">
-        <div class="stop-icon nach">B</div>
-        <div class="stop-btn-inner">
-          <div class="slabel">Nach</div>
-          <div class="sname" id="nachLabel">Norddorf Mitte</div>
-        </div>
-        <span class="stop-btn-arrow">›</span>
-      </div>
-    </div>
-    <!-- Weg zur nächsten Bushaltestelle -->
-    <button onclick="openNearestStop()" style="
-      width:100%;margin-top:8px;padding:12px 16px;border:none;border-radius:14px;cursor:pointer;
-      background:linear-gradient(135deg,#b22222,#8b0000);color:#fff;
-      font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;
-      box-shadow:0 2px 8px rgba(178,34,34,.3)">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-        <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" fill="white"/>
-      </svg>
-      Weg zur nächsten Bushaltestelle
-    </button>
-  </div>
-  <div id="resultArea"></div>
-  <div id="warnArea"></div>
-  <div class="section" id="nextArea" style="display:none">
-    <div class="section-label">Weitere Verbindungen</div>
-    <div class="next-card" id="nextList"></div>
-  </div>
-  <!-- Schnellzugriff Buttons -->
-  <div class="section">
-    <div style="display:flex;gap:8px;margin-top:4px">
-      <button onclick="openTideOverlay()" style="
-        flex:1;padding:14px;border:none;border-radius:16px;cursor:pointer;
-        background:linear-gradient(135deg,#0077b6,#005f8e);color:#fff;
-        font-size:14px;font-weight:700;box-shadow:0 2px 8px rgba(0,119,182,.3);
-        display:flex;align-items:center;justify-content:center;gap:8px">
-        🌊 Gezeiten
-      </button>
-      <button onclick="openPOIOverlay()" style="
-        flex:1;padding:14px;border:none;border-radius:16px;cursor:pointer;
-        background:linear-gradient(135deg,#b22222,#8b0000);color:#fff;
-        font-size:14px;font-weight:700;box-shadow:0 2px 8px rgba(178,34,34,.3);
-        display:flex;align-items:center;justify-content:center;gap:8px">
-        🛍 Öffnungszeiten
-      </button>
-    </div>
-  </div>
-  <!-- Tagesaktuelle Gezeiten kompakt auf Landingpage -->
-  <div class="section">
-    <div class="section-label">🌊 Gezeiten heute</div>
-    <div id="tideArea"></div>
-  </div>
-    <div id="tideArea"></div>
-  </div>
-  <div class="section">
-    <div class="section-label">⛴ Fährabfahrten</div>
-    <div style="background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.06)">
-      <div class="ferry-times" id="ferryTimes"></div>
-    </div>
-  </div>
-  <div class="footer">Fahrplan 21.3.–1.11.2026 (Vor-/Haupt-/Nachsaison, automatische Umschaltung) · Mo–Fr ohne Feiertage &amp; Ferien</div>
+<div class="header">
+<div class="header-sub">Amrum Bus</div>
+<div class="header-title">Verbindungssuche</div>
+<div class="date-time-row">
+<input type="date" id="dateinput" oninput="render()"/>
+<input type="time" id="timeinput" oninput="render()"/>
+<button onclick="setNow()">Jetzt</button>
+</div>
+<div class="date-time-row">
+<span class="day-badge" id="dayBadge">–</span>
+</div>
+</div>
+<div class="section">
+<div class="section-label">Route</div>
+<div class="route-card">
+<div class="stop-row" onclick="openPicker('von')">
+<div class="stop-icon von">A</div>
+<div class="stop-btn-inner">
+<div class="slabel">Von</div>
+<div class="sname" id="vonLabel">Wittdün Fähranleger</div>
+</div>
+<span class="stop-btn-arrow">›</span>
+</div>
+<div class="stop-divider"></div>
+<div class="swap-row"><button class="swap-btn" onclick="swapStops()">⇅</button></div>
+<div class="stop-divider"></div>
+<div class="stop-row" onclick="openPicker('nach')">
+<div class="stop-icon nach">B</div>
+<div class="stop-btn-inner">
+<div class="slabel">Nach</div>
+<div class="sname" id="nachLabel">Norddorf Mitte</div>
+</div>
+<span class="stop-btn-arrow">›</span>
+</div>
+</div>
+<!-- Weg zur nächsten Bushaltestelle -->
+<button onclick="openNearestStop()" style="
+width:100%;margin-top:8px;padding:12px 16px;border:none;border-radius:14px;cursor:pointer;
+background:linear-gradient(135deg,#b22222,#8b0000);color:#fff;
+font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;
+box-shadow:0 2px 8px rgba(178,34,34,.3)">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+<path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" fill="white"/>
+</svg>
+Weg zur nächsten Bushaltestelle
+</button>
+</div>
+<div id="resultArea"></div>
+<div id="warnArea"></div>
+<div class="section" id="nextArea" style="display:none">
+<div class="section-label">Weitere Verbindungen</div>
+<div class="next-card" id="nextList"></div>
+</div>
+<!-- Schnellzugriff Buttons -->
+<div class="section">
+<div style="display:flex;gap:8px;margin-top:4px">
+<button onclick="openTideOverlay()" style="
+flex:1;padding:14px;border:none;border-radius:16px;cursor:pointer;
+background:linear-gradient(135deg,#0077b6,#005f8e);color:#fff;
+font-size:14px;font-weight:700;box-shadow:0 2px 8px rgba(0,119,182,.3);
+display:flex;align-items:center;justify-content:center;gap:8px">
+🌊 Gezeiten
+</button>
+<button onclick="openPOIOverlay()" style="
+flex:1;padding:14px;border:none;border-radius:16px;cursor:pointer;
+background:linear-gradient(135deg,#b22222,#8b0000);color:#fff;
+font-size:14px;font-weight:700;box-shadow:0 2px 8px rgba(178,34,34,.3);
+display:flex;align-items:center;justify-content:center;gap:8px">
+🛍 Öffnungszeiten
+</button>
+</div>
+</div>
+<!-- Tagesaktuelle Gezeiten kompakt auf Landingpage -->
+<div class="section">
+<div class="section-label">🌊 Gezeiten heute</div>
+<div id="tideArea"></div>
+</div>
+<div id="tideArea"></div>
+</div>
+<div class="section">
+<div class="section-label">⛴ Fährabfahrten</div>
+<div style="background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.06)">
+<div class="ferry-times" id="ferryTimes"></div>
+</div>
+</div>
+<div class="footer">Fahrplan 21.3.–1.11.2026 (Vor-/Haupt-/Nachsaison, automatische Umschaltung) · Mo–Fr ohne Feiertage &amp; Ferien</div>
 </div>
 <!-- Haltestellen Picker -->
 <div class="overlay" id="picker">
-  <div class="overlay-head" style="background:#b22222">
-    <button class="overlay-back" onclick="closePicker()">‹</button>
-    <input style="flex:1;min-width:0;padding:8px 12px;border-radius:20px;border:none;font-size:15px;outline:none;-webkit-appearance:none;appearance:none" type="text" id="pickerSearch" placeholder="Haltestelle suchen…" oninput="filterPicker(this.value)"/>
-  </div>
-  <div class="overlay-body" id="pickerList"></div>
+<div class="overlay-head" style="background:#b22222">
+<button class="overlay-back" onclick="closePicker()">‹</button>
+<input style="flex:1;min-width:0;padding:8px 12px;border-radius:20px;border:none;font-size:15px;outline:none;-webkit-appearance:none;appearance:none" type="text" id="pickerSearch" placeholder="Haltestelle suchen…" oninput="filterPicker(this.value)"/>
+</div>
+<div class="overlay-body" id="pickerList"></div>
 </div>
 <!-- Gezeiten Overlay (vollständig) -->
 <div class="overlay" id="tideOverlay">
-  <div class="overlay-head" style="background:linear-gradient(135deg,#0077b6,#005f8e)">
-    <button class="overlay-back" onclick="document.getElementById('tideOverlay').classList.remove('open')">‹</button>
-    <div style="flex:1">
-      <div style="font-size:12px;opacity:.8;text-transform:uppercase;letter-spacing:1px">Gezeiten</div>
-      <div style="font-size:18px;font-weight:700" id="tideOverlayTitle">Wittdün</div>
-    </div>
-  </div>
-  <div class="overlay-body" id="tideOverlayBody"></div>
+<div class="overlay-head" style="background:linear-gradient(135deg,#0077b6,#005f8e)">
+<button class="overlay-back" onclick="document.getElementById('tideOverlay').classList.remove('open')">‹</button>
+<div style="flex:1">
+<div style="font-size:12px;opacity:.8;text-transform:uppercase;letter-spacing:1px">Gezeiten</div>
+<div style="font-size:18px;font-weight:700" id="tideOverlayTitle">Wittdün</div>
+</div>
+</div>
+<div class="overlay-body" id="tideOverlayBody"></div>
 </div>
 <!-- POI Overlay -->
 <div class="overlay" id="poiOverlay">
-  <div class="overlay-head" style="background:linear-gradient(135deg,#b22222,#8b0000)">
-    <button class="overlay-back" onclick="document.getElementById('poiOverlay').classList.remove('open')">‹</button>
-    <div style="font-size:18px;font-weight:700">🛍 Öffnungszeiten</div>
-  </div>
-  <div class="overlay-body" id="poiOverlayBody"></div>
+<div class="overlay-head" style="background:linear-gradient(135deg,#b22222,#8b0000)">
+<button class="overlay-back" onclick="document.getElementById('poiOverlay').classList.remove('open')">‹</button>
+<div style="font-size:18px;font-weight:700">🛍 Öffnungszeiten</div>
+</div>
+<div class="overlay-body" id="poiOverlayBody"></div>
 </div>
 <!-- Gezeiten Vorhersage -->
 <div class="overlay" id="tideForecast">
-  <div class="overlay-head" style="background:linear-gradient(135deg,#0077b6,#005f8e)">
-    <button class="overlay-back" onclick="document.getElementById('tideForecast').classList.remove('open')">‹</button>
-    <div style="flex:1">
-      <div style="font-size:12px;opacity:.8;text-transform:uppercase;letter-spacing:1px">7-Tage Vorhersage</div>
-      <div style="font-size:18px;font-weight:700" id="forecastTitle">Wittdün</div>
-    </div>
-    <input type="date" id="tideDatePicker" oninput="renderForecast()"
-      style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:8px;padding:6px 8px;font-size:13px;font-weight:600;color-scheme:dark"/>
-  </div>
-  <div class="overlay-body" id="forecastBody"></div>
+<div class="overlay-head" style="background:linear-gradient(135deg,#0077b6,#005f8e)">
+<button class="overlay-back" onclick="document.getElementById('tideForecast').classList.remove('open')">‹</button>
+<div style="flex:1">
+<div style="font-size:12px;opacity:.8;text-transform:uppercase;letter-spacing:1px">7-Tage Vorhersage</div>
+<div style="font-size:18px;font-weight:700" id="forecastTitle">Wittdün</div>
+</div>
+<input type="date" id="tideDatePicker" oninput="renderForecast()"
+style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:8px;padding:6px 8px;font-size:13px;font-weight:600;color-scheme:dark"/>
+</div>
+<div class="overlay-body" id="forecastBody"></div>
 </div>
 <script>
 // ── Fahrplandaten ─────────────────────────────────────────────────────────────
@@ -220,40 +220,40 @@ const NACH_FERRY_ARR={saso:[toMin("9:15"),toMin("11:35"),toMin("14:30"),toMin("1
 // Grenzen laut den drei Fahrplan-PDFs. Vor dem 21.3. bzw. nach dem 1.11.2026 liegt kein
 // Fahrplan vor – es wird dann auf die Nachsaison-Werte zurückgefallen (beste Näherung).
 const SEASONS=[
-  {start:"2026-03-21", end:"2026-06-26", key:"vor"},
-  {start:"2026-06-27", end:"2026-09-13", key:"haupt"},
-  {start:"2026-09-14", end:"2026-11-01", key:"nach"},
+{start:"2026-03-21", end:"2026-06-26", key:"vor"},
+{start:"2026-06-27", end:"2026-09-13", key:"haupt"},
+{start:"2026-09-14", end:"2026-11-01", key:"nach"},
 ];
 const SEASON_LABELS={vor:"Vorsaison",haupt:"Hauptsaison",nach:"Nachsaison"};
 function getSeasonKey(dateStr){
-  for(const s of SEASONS){ if(dateStr>=s.start && dateStr<=s.end) return s.key; }
-  return dateStr<SEASONS[0].start ? "vor" : "nach";
+for(const s of SEASONS){ if(dateStr>=s.start && dateStr<=s.end) return s.key; }
+return dateStr<SEASONS[0].start ? "vor" : "nach";
 }
 const SCHEDULES={
-  vor:  {N:SASO_N,       S:SASO_S,       MN:MOFR_N,       MS:MOFR_S,       FERRY:FERRY,       FERRY_ARR:FERRY_ARR},
-  haupt:{N:HAUPT_SASO_N, S:HAUPT_SASO_S, MN:HAUPT_MOFR_N, MS:HAUPT_MOFR_S, FERRY:HAUPT_FERRY, FERRY_ARR:HAUPT_FERRY_ARR},
-  nach: {N:SASO_N,       S:SASO_S,       MN:MOFR_N,       MS:MOFR_S,       FERRY:NACH_FERRY,  FERRY_ARR:NACH_FERRY_ARR},
+vor: {N:SASO_N, S:SASO_S, MN:MOFR_N, MS:MOFR_S, FERRY:FERRY, FERRY_ARR:FERRY_ARR},
+haupt:{N:HAUPT_SASO_N, S:HAUPT_SASO_S, MN:HAUPT_MOFR_N, MS:HAUPT_MOFR_S, FERRY:HAUPT_FERRY, FERRY_ARR:HAUPT_FERRY_ARR},
+nach: {N:SASO_N, S:SASO_S, MN:MOFR_N, MS:MOFR_S, FERRY:NACH_FERRY, FERRY_ARR:NACH_FERRY_ARR},
 };
 // STOP_COORDS – reale Koordinaten, per uMap/OpenStreetMap manuell erfasst (Juli 2026)
 const STOP_COORDS={
-  "Wittdün Fähranleger":   [54.628944, 8.397739],
-  "Wittdün Mitte":         [54.626854, 8.392562],
-  "Wittdün Köhns Übergang":[54.627422, 8.384542],
-  "Wittdün Badeland":      [54.627826, 8.379731],
-  "Wittdün Blaue Maus":    [54.629757, 8.373079],
-  "Zeltplatz":             [54.630431, 8.367296],
-  "Leuchtturm":            [54.631661, 8.360204],
-  "Süddorf":               [54.641866, 8.355644],
-  "Nebel Mühle":           [54.648381, 8.353885],
-  "Nebel Mitte":           [54.650368, 8.351632],
-  "Nebel Strandweg":       [54.649654, 8.345886],
-  "Nebel Westerheide":     [54.652972, 8.345951],
-  "Vogelkoje":             [54.664099, 8.340758],
-  "Norddorf Onkel Toms Hütte":[54.672596, 8.334728],
-  "Norddorf Sturmmöwe":    [54.676843, 8.335297],
-  "Norddorf Mitte":        [54.679312, 8.334551],
-  "Norddorf Minigolfplatz":[54.677096, 8.331467],
-  "Norddorf Aussichtsdüne":[54.675059, 8.3307],
+"Wittdün Fähranleger": [54.628944, 8.397739],
+"Wittdün Mitte": [54.626854, 8.392562],
+"Wittdün Köhns Übergang":[54.627422, 8.384542],
+"Wittdün Badeland": [54.627826, 8.379731],
+"Wittdün Blaue Maus": [54.629757, 8.373079],
+"Zeltplatz": [54.630431, 8.367296],
+"Leuchtturm": [54.631661, 8.360204],
+"Süddorf": [54.641866, 8.355644],
+"Nebel Mühle": [54.648381, 8.353885],
+"Nebel Mitte": [54.650368, 8.351632],
+"Nebel Strandweg": [54.649654, 8.345886],
+"Nebel Westerheide": [54.652972, 8.345951],
+"Vogelkoje": [54.664099, 8.340758],
+"Norddorf Onkel Toms Hütte":[54.672596, 8.334728],
+"Norddorf Sturmmöwe": [54.676843, 8.335297],
+"Norddorf Mitte": [54.679312, 8.334551],
+"Norddorf Minigolfplatz":[54.677096, 8.331467],
+"Norddorf Aussichtsdüne":[54.675059, 8.3307],
 };
 // ── Hilfsfunktionen ───────────────────────────────────────────────────────────
 function toMin(t){if(!t)return Infinity;const[h,m]=t.split(":").map(Number);return h*60+m;}
@@ -263,23 +263,23 @@ function getNowStr(){const d=new Date();return String(d.getHours()).padStart(2,"
 function getTodayStr(){return new Date().toISOString().slice(0,10);}
 function pad2(n){return String(n).padStart(2,"0");}
 function getDateInfo(){
-  const d=new Date(document.getElementById("dateinput").value+"T12:00:00");
-  const dow=d.getDay();
-  const names=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
-  return{isSaSo:dow===0||dow===6,isFr:dow===5,dayName:names[dow],dow:dow};
+const d=new Date(document.getElementById("dateinput").value+"T12:00:00");
+const dow=d.getDay();
+const names=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
+return{isSaSo:dow===0||dow===6,isFr:dow===5,dayName:names[dow],dow:dow};
 }
 function getDayType(){const{isSaSo,isFr}=getDateInfo();return isSaSo?"saso":isFr?"fr":"mofr";}
 function isFaehrbus(t,dt,season){
-  const sched=SCHEDULES[season]||SCHEDULES.vor;
-  const m=toMin(t);
-  const arr=sched.FERRY_ARR[dt]||sched.FERRY_ARR.mofr;
-  const dep=(sched.FERRY[dt]||sched.FERRY.mofr).map(toMin);
-  return arr.some(fa=>m>=fa&&m<=fa+20)||dep.some(fd=>m<=fd&&fd-m<=30);
+const sched=SCHEDULES[season]||SCHEDULES.vor;
+const m=toMin(t);
+const arr=sched.FERRY_ARR[dt]||sched.FERRY_ARR.mofr;
+const dep=(sched.FERRY[dt]||sched.FERRY.mofr).map(toMin);
+return arr.some(fa=>m>=fa&&m<=fa+20)||dep.some(fd=>m<=fd&&fd-m<=30);
 }
 function getDirection(von,nach){
-  const vi=ROUTE_ORDER.indexOf(von),ni=ROUTE_ORDER.indexOf(nach);
-  if(vi===-1||ni===-1||vi===ni)return null;
-  return ni>vi;
+const vi=ROUTE_ORDER.indexOf(von),ni=ROUTE_ORDER.indexOf(nach);
+if(vi===-1||ni===-1||vi===ni)return null;
+return ni>vi;
 }
 // ── Ausnahme-Spalten "A"/"B" bei frühen Mo-Fr-Fahrten (laut Flyer-Fußnoten) ──────
 // A = Di–Fr (nicht Montag), B = Mo–Fr, beide pausieren in einem Zeitraum je Saison.
@@ -287,385 +287,391 @@ function getDirection(von,nach){
 // Für die Vorsaison ist die genaue Pausenzeit nicht bekannt (PDF lag hier nicht vor) –
 // dort wird daher nicht gefiltert (bisheriges Verhalten bleibt erhalten).
 const SPECIAL_COLS={
-  haupt:{2:"A",3:"B"},
-  nach: {1:"A",2:"B"},
+haupt:{2:"A",3:"B"},
+nach: {1:"A",2:"B"},
 };
 const SPECIAL_RANGES={
-  haupt:{A:["2026-07-06","2026-08-07"],B:["2026-07-06","2026-08-07"]},
-  nach: {A:["2026-10-06","2026-10-23"],B:["2026-10-05","2026-10-23"]},
+haupt:{A:["2026-07-06","2026-08-07"],B:["2026-07-06","2026-08-07"]},
+nach: {A:["2026-10-06","2026-10-23"],B:["2026-10-05","2026-10-23"]},
 };
 function isColumnActive(type,season,dateStr,dow){
-  if(type==="A"&&dow===1)return false; // A läuft nur Di–Fr, nicht Montag
-  const r=(SPECIAL_RANGES[season]||{})[type];
-  if(r&&dateStr>=r[0]&&dateStr<=r[1])return false;
-  return true;
+if(type==="A"&&dow===1)return false; // A läuft nur Di–Fr, nicht Montag
+const r=(SPECIAL_RANGES[season]||{})[type];
+if(r&&dateStr>=r[0]&&dateStr<=r[1])return false;
+return true;
 }
 function getConnections(von,nach,nowMin,dt,season,dateStr,dow){
-  const dir=getDirection(von,nach);
-  if(dir===null)return[];
-  const sched=SCHEDULES[season]||SCHEDULES.vor;
-  const tbl=dir?(dt==="saso"?sched.N:sched.MN):(dt==="saso"?sched.S:sched.MS);
-  const special=dt!=="saso"?(SPECIAL_COLS[season]||{}):{};
-  const res=[];
-  const depT=tbl[von]||[],arrT=tbl[nach]||[];
-  for(let i=0;i<depT.length;i++){
-    if(!depT[i]||!arrT[i])continue;
-    const colType=special[i];
-    if(colType&&!isColumnActive(colType,season,dateStr,dow))continue;
-    if(toMin(depT[i])<nowMin)continue;
-    res.push({dep:depT[i],arr:arrT[i],warn:isFaehrbus(depT[i],dt,season)});
-  }
-  return res.slice(0,5);
+const dir=getDirection(von,nach);
+if(dir===null)return[];
+const sched=SCHEDULES[season]||SCHEDULES.vor;
+const tbl=dir?(dt==="saso"?sched.N:sched.MN):(dt==="saso"?sched.S:sched.MS);
+const special=dt!=="saso"?(SPECIAL_COLS[season]||{}):{};
+const res=[];
+const depT=tbl[von]||[],arrT=tbl[nach]||[];
+for(let i=0;i<depT.length;i++){
+if(!depT[i]||!arrT[i])continue;
+const colType=special[i];
+if(colType&&!isColumnActive(colType,season,dateStr,dow))continue;
+if(toMin(depT[i])<nowMin)continue;
+res.push({dep:depT[i],arr:arrT[i],warn:isFaehrbus(depT[i],dt,season)});
+}
+return res.slice(0,5);
 }
 function getReachable(von){
-  const vi=ROUTE_ORDER.indexOf(von);
-  if(vi===-1)return ROUTE_ORDER.filter(s=>s!==von);
-  return[...ROUTE_ORDER.slice(vi+1),...ROUTE_ORDER.slice(0,vi)];
+const vi=ROUTE_ORDER.indexOf(von);
+if(vi===-1)return ROUTE_ORDER.filter(s=>s!==von);
+return[...ROUTE_ORDER.slice(vi+1),...ROUTE_ORDER.slice(0,vi)];
 }
 // ── Gezeitenrechner ───────────────────────────────────────────────────────────
 const TIDE_CONST=[
-  {amp:145.2,phase:107.3,speed:28.9841},
-  {amp:47.1, phase:136.8,speed:30.0000},
-  {amp:28.4, phase:88.5, speed:28.4397},
-  {amp:12.8, phase:138.2,speed:30.0821},
-  {amp:9.2,  phase:219.4,speed:15.0411},
-  {amp:6.8,  phase:189.2,speed:13.9430},
-  {amp:8.1,  phase:251.6,speed:57.9682},
-  {amp:4.2,  phase:268.4,speed:58.9841},
-  {amp:2.1,  phase:312.5,speed:86.9523},
+{amp:145.2,phase:107.3,speed:28.9841},
+{amp:47.1, phase:136.8,speed:30.0000},
+{amp:28.4, phase:88.5, speed:28.4397},
+{amp:12.8, phase:138.2,speed:30.0821},
+{amp:9.2, phase:219.4,speed:15.0411},
+{amp:6.8, phase:189.2,speed:13.9430},
+{amp:8.1, phase:251.6,speed:57.9682},
+{amp:4.2, phase:268.4,speed:58.9841},
+{amp:2.1, phase:312.5,speed:86.9523},
 ];
 const TIDE_MEAN=148;
 const TIDE_OFFSET={wittduen:0,nebel:8,norddorf:12};
 function tideHeight(ts,offsetMin){
-  const h=(ts+offsetMin*60000)/3600000;
-  let lev=TIDE_MEAN;
-  for(const c of TIDE_CONST) lev+=c.amp*Math.cos((c.speed*h-c.phase)*Math.PI/180);
-  return Math.round(lev);
+const h=(ts+offsetMin*60000)/3600000;
+let lev=TIDE_MEAN;
+for(const c of TIDE_CONST) lev+=c.amp*Math.cos((c.speed*h-c.phase)*Math.PI/180);
+return Math.round(lev);
 }
 function getTidesForDay(date,loc){
-  const off=TIDE_OFFSET[loc]||0;
-  const start=new Date(date);start.setHours(0,0,0,0);
-  const end=new Date(date);end.setHours(23,59,0,0);
-  const res=[];
-  let prev=tideHeight(start.getTime(),off),prevDir=0;
-  for(let t=start.getTime();t<=end.getTime();t+=6*60000){
-    const h=tideHeight(t,off);
-    const dir=h>prev?1:h<prev?-1:prevDir;
-    if(prevDir===1&&dir===-1) res.push(refine(t-6*60000,t+6*60000,off,true));
-    else if(prevDir===-1&&dir===1) res.push(refine(t-6*60000,t+6*60000,off,false));
-    prev=h;if(dir!==0)prevDir=dir;
-  }
-  return res;
+const off=TIDE_OFFSET[loc]||0;
+const start=new Date(date);start.setHours(0,0,0,0);
+const end=new Date(date);end.setHours(23,59,0,0);
+const res=[];
+let prev=tideHeight(start.getTime(),off),prevDir=0;
+for(let t=start.getTime();t<=end.getTime();t+=6*60000){
+const h=tideHeight(t,off);
+const dir=h>prev?1:h<prev?-1:prevDir;
+if(prevDir===1&&dir===-1) res.push(refine(t-6*60000,t+6*60000,off,true));
+else if(prevDir===-1&&dir===1) res.push(refine(t-6*60000,t+6*60000,off,false));
+prev=h;if(dir!==0)prevDir=dir;
+}
+return res;
 }
 function refine(t1,t2,off,findMax){
-  let best={t:t1,h:tideHeight(t1,off),type:findMax?"HW":"NW"};
-  for(let t=t1;t<=t2;t+=60000){
-    const h=tideHeight(t,off);
-    if(findMax?h>best.h:h<best.h) best={t,h,type:findMax?"HW":"NW"};
-  }
-  best.time=new Date(best.t);
-  return best;
+let best={t:t1,h:tideHeight(t1,off),type:findMax?"HW":"NW"};
+for(let t=t1;t<=t2;t+=60000){
+const h=tideHeight(t,off);
+if(findMax?h>best.h:h<best.h) best={t,h,type:findMax?"HW":"NW"};
+}
+best.time=new Date(best.t);
+return best;
 }
 function fmtT(d){return pad2(d.getHours())+":"+pad2(d.getMinutes());}
 let tideLocation="wittduen";
 function renderTides(){
-  const el=document.getElementById("tideArea");
-  if(!el)return;
-  const tides=getTidesForDay(new Date(),tideLocation);
-  const now=Date.now();
-  const next=tides.find(t=>t.time.getTime()>now);
-  const locs={wittduen:"Wittdün",nebel:"Nebel",norddorf:"Norddorf"};
-  const btns=Object.keys(locs).map(function(loc){
-    const active=tideLocation===loc;
-    return '<button onclick="tideLocation=\''+loc+'\';renderTides()" style="flex:1;padding:6px 4px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:700;background:'+(active?'#0077b6':'#f2f2f7')+';color:'+(active?'#fff':'#555')+'">'+locs[loc]+'</button>';
-  }).join("");
-  let nextHtml="";
-  if(next){
-    nextHtml='<div style="background:#e8f4fd;border-radius:10px;padding:10px 12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">'
-      +'<div><div style="font-size:11px;color:#0077b6;font-weight:700;text-transform:uppercase">Nächste '+(next.type==="HW"?"🌊 Flut":"🏝 Ebbe")+'</div>'
-      +'<div style="font-size:24px;font-weight:700;color:#0077b6">'+fmtT(next.time)+'</div></div></div>';
-  }
-  const cards=tides.map(function(t){
-    const isPast=t.time.getTime()<now;
-    const isNext=next&&t.time.getTime()===next.time.getTime();
-    const bg=isNext?'#0077b6':isPast?'#f9f9f9':'#f2f8ff';
-    const col=isNext?'#fff':'#1c1c1e';
-    const sub=isNext?'rgba(255,255,255,.8)':'#8e8e93';
-    return '<div style="background:'+bg+';border-radius:10px;padding:10px;opacity:'+(isPast?'0.45':'1')+'">'
-      +'<div style="font-size:11px;font-weight:700;color:'+sub+';text-transform:uppercase">'+(t.type==="HW"?"🌊 Hochwasser":"🏝 Niedrigwasser")+'</div>'
-      +'<div style="font-size:20px;font-weight:700;color:'+col+'">'+fmtT(t.time)+'</div></div>';
-  }).join("");
-  el.innerHTML='<div style="display:flex;gap:8px;margin-bottom:8px">'+btns+'</div>'
-    +'<div style="background:#fff;border-radius:16px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.06)">'
-    +nextHtml
-    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">'+cards+'</div>'
-    +'<button onclick="openTideForecast()" style="width:100%;margin-top:10px;padding:12px;border:none;border-radius:14px;cursor:pointer;background:#0077b6;color:#fff;font-size:14px;font-weight:700;box-shadow:0 2px 8px rgba(0,119,182,.25)">📅 7-Tage Vorhersage</button>'
-    +'</div>';
+const el=document.getElementById("tideArea");
+if(!el)return;
+const tides=getTidesForDay(new Date(),tideLocation);
+const now=Date.now();
+const next=tides.find(t=>t.time.getTime()>now);
+const locs={wittduen:"Wittdün",nebel:"Nebel",norddorf:"Norddorf"};
+const btns=Object.keys(locs).map(function(loc){
+const active=tideLocation===loc;
+return '<button onclick="tideLocation=\''+loc+'\';renderTides()" style="flex:1;padding:6px 4px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:700;background:'+(active?'#0077b6':'#f2f2f7')+';color:'+(active?'#fff':'#555')+'">'+locs[loc]+'</button>';
+}).join("");
+let nextHtml="";
+if(next){
+nextHtml='<div style="background:#e8f4fd;border-radius:10px;padding:10px 12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">'
++'<div><div style="font-size:11px;color:#0077b6;font-weight:700;text-transform:uppercase">Nächste '+(next.type==="HW"?"🌊 Flut":"🏝 Ebbe")+'</div>'
++'<div style="font-size:24px;font-weight:700;color:#0077b6">'+fmtT(next.time)+'</div></div></div>';
+}
+const cards=tides.map(function(t){
+const isPast=t.time.getTime()<now;
+const isNext=next&&t.time.getTime()===next.time.getTime();
+const bg=isNext?'#0077b6':isPast?'#f9f9f9':'#f2f8ff';
+const col=isNext?'#fff':'#1c1c1e';
+const sub=isNext?'rgba(255,255,255,.8)':'#8e8e93';
+return '<div style="background:'+bg+';border-radius:10px;padding:10px;opacity:'+(isPast?'0.45':'1')+'">'
++'<div style="font-size:11px;font-weight:700;color:'+sub+';text-transform:uppercase">'+(t.type==="HW"?"🌊 Hochwasser":"🏝 Niedrigwasser")+'</div>'
++'<div style="font-size:20px;font-weight:700;color:'+col+'">'+fmtT(t.time)+'</div></div>';
+}).join("");
+el.innerHTML='<div style="display:flex;gap:8px;margin-bottom:8px">'+btns+'</div>'
++'<div style="background:#fff;border-radius:16px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.06)">'
++nextHtml
++'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">'+cards+'</div>'
++'<button onclick="openTideForecast()" style="width:100%;margin-top:10px;padding:12px;border:none;border-radius:14px;cursor:pointer;background:#0077b6;color:#fff;font-size:14px;font-weight:700;box-shadow:0 2px 8px rgba(0,119,182,.25)">📅 7-Tage Vorhersage</button>'
++'</div>';
 }
 function openTideForecast(){
-  const locs={wittduen:"Wittdün",nebel:"Nebel",norddorf:"Norddorf"};
-  document.getElementById("forecastTitle").textContent=locs[tideLocation];
-  document.getElementById("tideDatePicker").value=getTodayStr();
-  document.getElementById("tideForecast").classList.add("open");
-  renderForecast();
+const locs={wittduen:"Wittdün",nebel:"Nebel",norddorf:"Norddorf"};
+document.getElementById("forecastTitle").textContent=locs[tideLocation];
+document.getElementById("tideDatePicker").value=getTodayStr();
+document.getElementById("tideForecast").classList.add("open");
+renderForecast();
 }
 function renderForecast(){
-  const locs={wittduen:"Wittdün",nebel:"Nebel",norddorf:"Norddorf"};
-  document.getElementById("forecastTitle").textContent=locs[tideLocation];
-  const val=document.getElementById("tideDatePicker").value;
-  if(!val)return;
-  const base=new Date(val+"T12:00:00");
-  const days=["So","Mo","Di","Mi","Do","Fr","Sa"];
-  let html="";
-  for(let i=0;i<7;i++){
-    const d=new Date(base);d.setDate(d.getDate()+i);
-    const tides=getTidesForDay(d,tideLocation);
-    const isToday=d.toDateString()===new Date().toDateString();
-    const label=days[d.getDay()]+" "+d.getDate()+"."+(d.getMonth()+1)+".";
-    const todayBadge=isToday?'<span style="background:#0077b6;color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px">Heute</span>':"";
-    const tideCards=tides.map(function(t){
-      const isHW=t.type==="HW";
-      return '<div style="background:'+(isHW?'#e8f4fd':'#fff8e8')+';border-radius:10px;padding:10px">'
-        +'<div style="font-size:11px;font-weight:700;color:'+(isHW?'#0077b6':'#e07b00')+';text-transform:uppercase">'+(isHW?"🌊 Hochwasser":"🏝 Niedrigwasser")+'</div>'
-        +'<div style="font-size:20px;font-weight:700;color:#1c1c1e">'+fmtT(t.time)+'</div></div>';
-    }).join("");
-    html+='<div style="background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.06)">'
-      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">'
-      +'<span style="font-size:15px;font-weight:700;color:'+(isToday?'#0077b6':'#1c1c1e')+'">'+label+'</span>'+todayBadge+'</div>'
-      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">'+tideCards+'</div></div>';
-  }
-  document.getElementById("forecastBody").innerHTML=html;
+const locs={wittduen:"Wittdün",nebel:"Nebel",norddorf:"Norddorf"};
+document.getElementById("forecastTitle").textContent=locs[tideLocation];
+const val=document.getElementById("tideDatePicker").value;
+if(!val)return;
+const base=new Date(val+"T12:00:00");
+const days=["So","Mo","Di","Mi","Do","Fr","Sa"];
+let html="";
+for(let i=0;i<7;i++){
+const d=new Date(base);d.setDate(d.getDate()+i);
+const tides=getTidesForDay(d,tideLocation);
+const isToday=d.toDateString()===new Date().toDateString();
+const label=days[d.getDay()]+" "+d.getDate()+"."+(d.getMonth()+1)+".";
+const todayBadge=isToday?'<span style="background:#0077b6;color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px">Heute</span>':"";
+const tideCards=tides.map(function(t){
+const isHW=t.type==="HW";
+return '<div style="background:'+(isHW?'#e8f4fd':'#fff8e8')+';border-radius:10px;padding:10px">'
++'<div style="font-size:11px;font-weight:700;color:'+(isHW?'#0077b6':'#e07b00')+';text-transform:uppercase">'+(isHW?"🌊 Hochwasser":"🏝 Niedrigwasser")+'</div>'
++'<div style="font-size:20px;font-weight:700;color:#1c1c1e">'+fmtT(t.time)+'</div></div>';
+}).join("");
+html+='<div style="background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.06)">'
++'<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">'
++'<span style="font-size:15px;font-weight:700;color:'+(isToday?'#0077b6':'#1c1c1e')+'">'+label+'</span>'+todayBadge+'</div>'
++'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">'+tideCards+'</div></div>';
+}
+document.getElementById("forecastBody").innerHTML=html;
 }
 // ── Öffnungszeiten (Geschäfte & Gastronomie) ───────────────────────────────────
 // Stand: Juni 2026. Quelle primär amrum.de/gastronomie-auf-amrum, ergänzt um eigenständig
 // bestätigte Betriebe. Öffnungszeiten ohne Bestätigung stammen aus Drittquellen und können abweichen.
 const POI_DATA={
 "Wittdün":{
- shops:[
-  {name:"EDEKA Zentralmarkt",kat:"Supermarkt",zeiten:"Mo–Fr 07:00–18:30 · Sa 07:00–16:00 · So/Ft 11:00–13:00",link:"https://www.edeka.de/eh/nord/frischemarkt-amrumer-zentralmarkt-inh.-m%C3%BCller-inselstra%C3%9Fe-28/index.jsp"},
-  {name:"Pütt un Pann",kat:"Haushaltswaren",zeiten:"Mo–Fr 09:00–18:30 · Sa 09:00–13:00",link:"https://amrumer-zentralmarkt.de/?page_id=187"},
-  {name:"Bio Düne Naturwaren",kat:"Bioladen",zeiten:"saisonal",link:null},
-  {name:"Louisen-Apotheke",kat:"Apotheke",zeiten:"Mo–Fr 08:30–12:30 & 14:30–18:30 · Sa 09:00–13:00",link:"https://louisen-apotheke-amrum.de"},
-  {name:"Quedens (Hauptgeschäft)",kat:"Fotofachgeschäft",zeiten:"Mo–Fr 09:30–13:00 & 14:30–17:00 · Sa 09:30–12:30",link:"https://quedens.de"},
-  {name:"Quedens Strandgut",kat:"Geschenke/Mode",zeiten:"Mo–Fr 09:30–17:00 · Sa 09:30–12:30",link:"https://quedens.de"},
-  {name:"Dünencamping Amrum",kat:"Camping",zeiten:"01.03.–31.10. · Rezeption 08:00–12:30 & 14:30–18:00",link:"https://www.camping-amrum.de"},
-  {name:"Marcs Fahrradverleih",kat:"Fahrradverleih",zeiten:"saisonal",link:"https://www.fahrradverleih-amrum.de"},
-  {name:"Amrumer Radhaus",kat:"Fahrradverleih",zeiten:"saisonal",link:"https://www.camping-amrum.de"}
- ],
- food:[
-  {name:"Bella Ciao",kat:"Restaurant (Pizza/Italienisch)",zeiten:"Do–Mo 17:00–22:00 · Di+Mi Ruhetag",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-bella-ciao"},
-  {name:"Café Auszeit",kat:"Café",zeiten:"Mo–Do 13:00–17:00 · Fr–So Ruhetag",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-cafe-auszeit"},
-  {name:"Bäckerei Claussen, Wittdün",kat:"Café/Bäckerei",zeiten:"Mo–Fr 07:00–18:00 · Sa 07:00–17:00 · So 08:00–17:00",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-baeckerei-claussen-wittduen"},
-  {name:"Klabautermann",kat:"Restaurant (orientalisch)",zeiten:"Mi–Mo 12:00–21:00 · Di Ruhetag",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-klabautermann-6"},
-  {name:"Strandbar Seehund",kat:"Strandbar",zeiten:"ab 20.3.: 12:00–21:00 · Küche bis 20:00 · Mi Ruhetag",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-strandbar-seehund"},
-  {name:"Die Insel-Praline",kat:"Café/Konditorei",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-die-insel-praline"},
-  {name:"Schmaus & Schmunzel",kat:"Bistro",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/wittduen/a-schmaus-schmunzel"},
-  {name:"Seefohrerhus",kat:"Restaurant (Fisch)",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-seefohrerhus"},
-  {name:"Heidekate",kat:"Café/Bistro (am Leuchtturm)",zeiten:"täglich 12:00–14:00 & 17:00–21:00",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-heidekate"},
-  {name:"Café Pustekuchen",kat:"Café/Konditorei",zeiten:"unbekannt",link:"http://cafe-pustekuchen-amrum.de"},
-  {name:"Hafen 31",kat:"Bistro/Restaurant (Fisch)",zeiten:"unbekannt",link:"https://www.hafen31.de"},
-  {name:"Kaffeeflut",kat:"Café",zeiten:"unbekannt",link:null},
-  {name:"Blaue Maus",kat:"Kneipe/Bar",zeiten:"unbekannt",link:null}
- ]
+shops:[
+{name:"EDEKA Zentralmarkt",kat:"Supermarkt",zeiten:"Mo–Fr 07:00–18:30 · Sa 07:00–16:00 · So/Ft 11:00–13:00",link:"https://www.edeka.de/eh/nord/frischemarkt-amrumer-zentralmarkt-inh.-m%C3%BCller-inselstra%C3%9Fe-28/index.jsp"},
+{name:"Pütt un Pann",kat:"Haushaltswaren",zeiten:"Mo–Fr 09:00–18:30 · Sa 09:00–13:00",link:"https://amrumer-zentralmarkt.de/?page_id=187"},
+{name:"Bio Düne Naturwaren",kat:"Bioladen",zeiten:"saisonal",link:null},
+{name:"Louisen-Apotheke",kat:"Apotheke",zeiten:"Mo–Fr 08:30–12:30 & 14:30–18:30 · Sa 09:00–13:00",link:"https://louisen-apotheke-amrum.de"},
+{name:"Quedens (Hauptgeschäft)",kat:"Fotofachgeschäft",zeiten:"Mo–Fr 09:30–13:00 & 14:30–17:00 · Sa 09:30–12:30",link:"https://quedens.de"},
+{name:"Quedens Strandgut",kat:"Geschenke/Mode",zeiten:"Mo–Fr 09:30–17:00 · Sa 09:30–12:30",link:"https://quedens.de"},
+{name:"Dünencamping Amrum",kat:"Camping",zeiten:"01.03.–31.10. · Rezeption 08:00–12:30 & 14:30–18:00",link:"https://www.camping-amrum.de"},
+{name:"Marcs Fahrradverleih",kat:"Fahrradverleih",zeiten:"saisonal",link:"https://www.fahrradverleih-amrum.de"},
+{name:"Amrumer Radhaus",kat:"Fahrradverleih",zeiten:"saisonal",link:"https://www.camping-amrum.de"}
+],
+food:[
+{name:"Bella Ciao",kat:"Restaurant (Pizza/Italienisch)",zeiten:"Do–Mo 17:00–22:00 · Di+Mi Ruhetag",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-bella-ciao"},
+{name:"Café Auszeit",kat:"Café",zeiten:"Mo–Do 13:00–17:00 · Fr–So Ruhetag",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-cafe-auszeit"},
+{name:"Bäckerei Claussen, Wittdün",kat:"Café/Bäckerei",zeiten:"Mo–Fr 07:00–18:00 · Sa 07:00–17:00 · So 08:00–17:00",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-baeckerei-claussen-wittduen"},
+{name:"Klabautermann",kat:"Restaurant (orientalisch)",zeiten:"Mi–Mo 12:00–21:00 · Di Ruhetag",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-klabautermann-6"},
+{name:"Strandbar Seehund",kat:"Strandbar",zeiten:"ab 20.3.: 12:00–21:00 · Küche bis 20:00 · Mi Ruhetag",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-strandbar-seehund"},
+{name:"Die Insel-Praline",kat:"Café/Konditorei",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-die-insel-praline"},
+{name:"Schmaus & Schmunzel",kat:"Bistro",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/wittduen/a-schmaus-schmunzel"},
+{name:"Seefohrerhus",kat:"Restaurant (Fisch)",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-seefohrerhus"},
+{name:"Heidekate",kat:"Café/Bistro (am Leuchtturm)",zeiten:"täglich 12:00–14:00 & 17:00–21:00",link:"https://www.amrum.de/freizeitangebote/wittduen-auf-amrum/a-heidekate"},
+{name:"Café Pustekuchen",kat:"Café/Konditorei",zeiten:"unbekannt",link:"http://cafe-pustekuchen-amrum.de"},
+{name:"Hafen 31",kat:"Bistro/Restaurant (Fisch)",zeiten:"unbekannt",link:"https://www.hafen31.de"},
+{name:"Kaffeeflut",kat:"Café",zeiten:"unbekannt",link:null},
+{name:"Blaue Maus",kat:"Kneipe/Bar",zeiten:"unbekannt",link:null}
+]
 },
 "Süddorf":{
- shops:[
-  {name:"Hofladen Familie Martinen",kat:"Hofladen",zeiten:"saisonal",link:null},
-  {name:"Süddorfer Fahrradverleih",kat:"Fahrradverleih",zeiten:"saisonal",link:null}
- ],
- food:[
-  {name:"Strandhäuschen Süddorf",kat:"Strandrestaurant",zeiten:"Mo–Do & Sa–So 12:00–20:00 · Fr geschl.",link:"https://www.amrum.de/gastronomie-am-sueddorfer-strand"}
- ]
+shops:[
+{name:"Hofladen Familie Martinen",kat:"Hofladen",zeiten:"saisonal",link:null},
+{name:"Süddorfer Fahrradverleih",kat:"Fahrradverleih",zeiten:"saisonal",link:null}
+],
+food:[
+{name:"Strandhäuschen Süddorf",kat:"Strandrestaurant",zeiten:"Mo–Do & Sa–So 12:00–20:00 · Fr geschl.",link:"https://www.amrum.de/gastronomie-am-sueddorfer-strand"}
+]
 },
 "Nebel":{
- shops:[
-  {name:"EDEKA Frischemarkt Bendixen",kat:"Supermarkt",zeiten:"Mo–Sa 07:00–18:00 · Pause 12:30–14:30 · So/Ft geschl.",link:null},
-  {name:"Wein und Meehr in der Post",kat:"Post/Weinhandlung",zeiten:"Mo–Fr 09:00–12:00 & 15:00–18:00 · Sa 09:00–12:00 · So geschl.",link:null},
-  {name:"Töpferei Nebel",kat:"Töpferei",zeiten:"unbekannt",link:null},
-  {name:"Stefans Fahrradverleih",kat:"Fahrradverleih",zeiten:"saisonal",link:"https://www.fahrradverleih-amrum.de"},
-  {name:"NordZeit Fahrradverleih",kat:"Fahrradverleih",zeiten:"saisonal",link:"https://nordzeit-amrum.de"}
- ],
- food:[
-  {name:"Seekiste",kat:"Restaurant",zeiten:"Di–So 17:00–22:00 · Mo Ruhetag",link:"https://www.amrum.de/freizeitangebote/nebel/a-seekiste"},
-  {name:"Fisch & Meer",kat:"Bistro/Imbiss",zeiten:"Mo–Fr 11:00–18:00 · So 12:00–18:00",link:"https://www.amrum.de/freizeitangebote/nebel/a-fisch-meer"},
-  {name:"Dörnsk an Köögem",kat:"Café/Pizza/Kneipe",zeiten:"Mo–So 13:00–19:00",link:"https://www.amrum.de/freizeitangebote/nebel/a-doernsk-an-koeoegem"},
-  {name:"54°NORD",kat:"Eventlocation/Imbiss",zeiten:"saisonal, Wochenenden",link:"https://www.amrum.de/freizeitangebote/nebel/a-54nord"},
-  {name:"Bistro Martin's",kat:"Bistro (vegan-freundlich)",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/nebel/a-bistro-martins"},
-  {name:"Bäckerei Claussen, Nebel (Stammsitz)",kat:"Café/Bäckerei",zeiten:"Mo–Fr 06:30–12:00 & 14:00–18:00 · Sa 06:30–12:00 · So 08:00–18:00",link:"https://www.amrum.de/freizeitangebote/nebel/a-baeckerei-claussen-nebel"},
-  {name:"Strandpirat",kat:"Restaurant/Imbiss",zeiten:"Mi–So 11:00–21:00 (saisonal)",link:"https://strandpirat-amrum.de"},
-  {name:"Klar Kimming",kat:"Weinkajüte/Flammkuchen",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/nebel/a-klar-kimming"},
-  {name:"Café Claussen",kat:"Café/Konditorei",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/nebel/a-cafe-claussen"},
-  {name:"Blaufeuer",kat:"Bar/Bistro",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/nebel/a-blaufeuer"},
-  {name:"Preesters Hüs",kat:"Restaurant",zeiten:"Mo–So 17:00–21:00",link:"https://www.amrum.de/freizeitangebote/nebel/a-preesters-hues"},
-  {name:"Friesen-Café",kat:"Café/Konditorei",zeiten:"Mo–So 11:00–18:00 (saisonal)",link:"http://friesen-cafe.de"}
- ]
+shops:[
+{name:"EDEKA Frischemarkt Bendixen",kat:"Supermarkt",zeiten:"Mo–Sa 07:00–18:00 · Pause 12:30–14:30 · So/Ft geschl.",link:null},
+{name:"Wein und Meehr in der Post",kat:"Post/Weinhandlung",zeiten:"Mo–Fr 09:00–12:00 & 15:00–18:00 · Sa 09:00–12:00 · So geschl.",link:null},
+{name:"Töpferei Nebel",kat:"Töpferei",zeiten:"unbekannt",link:null},
+{name:"Stefans Fahrradverleih",kat:"Fahrradverleih",zeiten:"saisonal",link:"https://www.fahrradverleih-amrum.de"},
+{name:"NordZeit Fahrradverleih",kat:"Fahrradverleih",zeiten:"saisonal",link:"https://nordzeit-amrum.de"}
+],
+food:[
+{name:"Seekiste",kat:"Restaurant",zeiten:"Di–So 17:00–22:00 · Mo Ruhetag",link:"https://www.amrum.de/freizeitangebote/nebel/a-seekiste"},
+{name:"Fisch & Meer",kat:"Bistro/Imbiss",zeiten:"Mo–Fr 11:00–18:00 · So 12:00–18:00",link:"https://www.amrum.de/freizeitangebote/nebel/a-fisch-meer"},
+{name:"Dörnsk an Köögem",kat:"Café/Pizza/Kneipe",zeiten:"Mo–So 13:00–19:00",link:"https://www.amrum.de/freizeitangebote/nebel/a-doernsk-an-koeoegem"},
+{name:"54°NORD",kat:"Eventlocation/Imbiss",zeiten:"saisonal, Wochenenden",link:"https://www.amrum.de/freizeitangebote/nebel/a-54nord"},
+{name:"Bistro Martin's",kat:"Bistro (vegan-freundlich)",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/nebel/a-bistro-martins"},
+{name:"Bäckerei Claussen, Nebel (Stammsitz)",kat:"Café/Bäckerei",zeiten:"Mo–Fr 06:30–12:00 & 14:00–18:00 · Sa 06:30–12:00 · So 08:00–18:00",link:"https://www.amrum.de/freizeitangebote/nebel/a-baeckerei-claussen-nebel"},
+{name:"Strandpirat",kat:"Restaurant/Imbiss",zeiten:"Mi–So 11:00–21:00 (saisonal)",link:"https://strandpirat-amrum.de"},
+{name:"Klar Kimming",kat:"Weinkajüte/Flammkuchen",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/nebel/a-klar-kimming"},
+{name:"Café Claussen",kat:"Café/Konditorei",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/nebel/a-cafe-claussen"},
+{name:"Blaufeuer",kat:"Bar/Bistro",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/nebel/a-blaufeuer"},
+{name:"Preesters Hüs",kat:"Restaurant",zeiten:"Mo–So 17:00–21:00",link:"https://www.amrum.de/freizeitangebote/nebel/a-preesters-hues"},
+{name:"Friesen-Café",kat:"Café/Konditorei",zeiten:"Mo–So 11:00–18:00 (saisonal)",link:"http://friesen-cafe.de"}
+]
 },
 "Norddorf":{
- shops:[
-  {name:"EDEKA Frischemarkt",kat:"Supermarkt",zeiten:"Mo–Sa 07:00–18:00 · Pause 12:30–14:30 · So/Ft 11:00–13:00",link:null},
-  {name:"Quedens Norddorf",kat:"Fotofachgeschäft",zeiten:"Mo–Fr 09:30–17:00 · Sa 09:30–12:30",link:"https://quedens.de"},
-  {name:"Möwen-Apotheke",kat:"Apotheke",zeiten:"Notdienst in geraden Wochen",link:null},
-  {name:"Amrumer Fahrradcenter",kat:"Fahrradverleih",zeiten:"saisonal",link:"https://norddorfer-fahrradverleih.de"},
-  {name:"Norddorfer Fahrradverleih",kat:"Fahrradverleih",zeiten:"saisonal",link:"https://norddorfer-fahrradverleih.de"}
- ],
- food:[
-  {name:"Seeblicker EssZimmer",kat:"Restaurant (Hotel)",zeiten:"tagsüber 12:00–17:30, Abendkarte",link:"https://www.amrum.de/freizeitangebote/norddorf-auf-amrum/a-seeblick-genuss-und-spa-resort-amrum-4"},
-  {name:"Lass",kat:"Restaurant/Weinbar (Neueröffn. 2024)",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/norddorf-auf-amrum/a-lass"},
-  {name:"Ual Öömrang Wiartshüs",kat:"Restaurant/Hotel",zeiten:"ab 13:00, saisonal",link:"https://www.amrum.de/freizeitangebote/norddorf-auf-amrum/a-ual-oeoemrang-wiartshues"},
-  {name:"Hotel Hüttmann",kat:"Restaurant (gehoben)",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/norddorf-auf-amrum/a-hotel-huettmann"},
-  {name:"Giovanni L. im Rialto",kat:"Eis/Pizza/Restaurant",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/norddorf/a-rialto"},
-  {name:"Die Muschelsucher",kat:"Café & Restaurant",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/norddorf-auf-amrum/a-die-muschelsucher"},
-  {name:"Café Schult",kat:"Café/Bäckerei",zeiten:"Hauptsaison: Mo–So 11:00–18:00 · Nebensaison (Nov–Dez): Mo–Sa 14:00–18:00",link:"https://cafe-schult.com"},
-  {name:"Burger Pier",kat:"Burger-Restaurant",zeiten:"Fr–Di 17:30–20:00 · Mi+Do Ruhetag (saisonal)",link:"https://www.burgerpier.de"}
- ]
+shops:[
+{name:"EDEKA Frischemarkt",kat:"Supermarkt",zeiten:"Mo–Sa 07:00–18:00 · Pause 12:30–14:30 · So/Ft 11:00–13:00",link:null},
+{name:"Quedens Norddorf",kat:"Fotofachgeschäft",zeiten:"Mo–Fr 09:30–17:00 · Sa 09:30–12:30",link:"https://quedens.de"},
+{name:"Möwen-Apotheke",kat:"Apotheke",zeiten:"Notdienst in geraden Wochen",link:null},
+{name:"Amrumer Fahrradcenter",kat:"Fahrradverleih",zeiten:"saisonal",link:"https://norddorfer-fahrradverleih.de"},
+{name:"Norddorfer Fahrradverleih",kat:"Fahrradverleih",zeiten:"saisonal",link:"https://norddorfer-fahrradverleih.de"}
+],
+food:[
+{name:"Seeblicker EssZimmer",kat:"Restaurant (Hotel)",zeiten:"tagsüber 12:00–17:30, Abendkarte",link:"https://www.amrum.de/freizeitangebote/norddorf-auf-amrum/a-seeblick-genuss-und-spa-resort-amrum-4"},
+{name:"Lass",kat:"Restaurant/Weinbar (Neueröffn. 2024)",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/norddorf-auf-amrum/a-lass"},
+{name:"Ual Öömrang Wiartshüs",kat:"Restaurant/Hotel",zeiten:"ab 13:00, saisonal",link:"https://www.amrum.de/freizeitangebote/norddorf-auf-amrum/a-ual-oeoemrang-wiartshues"},
+{name:"Hotel Hüttmann",kat:"Restaurant (gehoben)",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/norddorf-auf-amrum/a-hotel-huettmann"},
+{name:"Giovanni L. im Rialto",kat:"Eis/Pizza/Restaurant",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/norddorf/a-rialto"},
+{name:"Die Muschelsucher",kat:"Café & Restaurant",zeiten:"unbekannt",link:"https://www.amrum.de/freizeitangebote/norddorf-auf-amrum/a-die-muschelsucher"},
+{name:"Café Schult",kat:"Café/Bäckerei",zeiten:"Hauptsaison: Mo–So 11:00–18:00 · Nebensaison (Nov–Dez): Mo–Sa 14:00–18:00",link:"https://cafe-schult.com"},
+{name:"Burger Pier",kat:"Burger-Restaurant",zeiten:"Fr–Di 17:30–20:00 · Mi+Do Ruhetag (saisonal)",link:"https://www.burgerpier.de"}
+]
 }
 };
 let poiOrt="Wittdün",poiCategory="shops";
 function openPOIOverlay(){
-  document.getElementById("poiOverlay").classList.add("open");
-  renderPOI();
+document.getElementById("poiOverlay").classList.add("open");
+renderPOI();
 }
 function selectPoiOrt(o){poiOrt=o;renderPOI();}
 function selectPoiCategory(c){poiCategory=c;renderPOI();}
 function renderPOI(){
-  const orte=["Wittdün","Süddorf","Nebel","Norddorf"];
-  const ortBtns=orte.map(function(o){
-    const active=poiOrt===o;
-    return '<button onclick="selectPoiOrt(\''+o+'\')" style="flex:1;padding:8px 4px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:700;background:'+(active?'#b22222':'#f2f2f7')+';color:'+(active?'#fff':'#555')+'">'+o+'</button>';
-  }).join("");
-  const cats=[{k:"shops",label:"🛍 Geschäfte"},{k:"food",label:"🍽 Gastronomie"}];
-  const catBtns=cats.map(function(c){
-    const active=poiCategory===c.k;
-    return '<button onclick="selectPoiCategory(\''+c.k+'\')" style="flex:1;padding:8px 4px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:700;background:'+(active?'#8b0000':'#f2f2f7')+';color:'+(active?'#fff':'#555')+'">'+c.label+'</button>';
-  }).join("");
-  const entries=(POI_DATA[poiOrt]&&POI_DATA[poiOrt][poiCategory])||[];
-  const cards=entries.length?entries.map(function(e){
-    const linkHtml=e.link?'<a href="'+e.link+'" target="_blank" style="font-size:12px;color:#0077b6;font-weight:600;text-decoration:none;white-space:nowrap">Website ↗</a>':'';
-    return '<div style="background:#fff;border-radius:12px;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.06)">'
-      +'<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">'
-      +'<div style="font-size:15px;font-weight:700;color:#1c1c1e">'+e.name+'</div>'
-      +linkHtml
-      +'</div>'
-      +'<div style="font-size:12px;color:#8e8e93;font-weight:600;text-transform:uppercase;margin-top:2px">'+e.kat+'</div>'
-      +'<div style="font-size:14px;color:#1c1c1e;margin-top:4px">'+e.zeiten+'</div>'
-      +'</div>';
-  }).join(""):'<div style="text-align:center;color:#8e8e93;padding:24px 12px;font-size:14px">Keine Einträge für diese Auswahl.</div>';
-  document.getElementById("poiOverlayBody").innerHTML=
-    '<div style="display:flex;gap:6px;margin-bottom:8px">'+ortBtns+'</div>'
-    +'<div style="display:flex;gap:6px;margin-bottom:12px">'+catBtns+'</div>'
-    +cards
-    +'<div style="text-align:center;font-size:11px;color:#c7c7cc;margin-top:12px;padding:0 8px;line-height:1.5">Stand: Juni 2026 · Quelle primär amrum.de/gastronomie-auf-amrum, ergänzt um eigenständig bestätigte Betriebe. Öffnungszeiten ohne Bestätigung stammen aus Drittquellen und können abweichen – bitte vor Besuch prüfen.</div>';
+const orte=["Wittdün","Süddorf","Nebel","Norddorf"];
+const ortBtns=orte.map(function(o){
+const active=poiOrt===o;
+return '<button onclick="selectPoiOrt(\''+o+'\')" style="flex:1;padding:8px 4px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:700;background:'+(active?'#b22222':'#f2f2f7')+';color:'+(active?'#fff':'#555')+'">'+o+'</button>';
+}).join("");
+const cats=[{k:"shops",label:"🛍 Geschäfte"},{k:"food",label:"🍽 Gastronomie"}];
+const catBtns=cats.map(function(c){
+const active=poiCategory===c.k;
+return '<button onclick="selectPoiCategory(\''+c.k+'\')" style="flex:1;padding:8px 4px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:700;background:'+(active?'#8b0000':'#f2f2f7')+';color:'+(active?'#fff':'#555')+'">'+c.label+'</button>';
+}).join("");
+const entries=(POI_DATA[poiOrt]&&POI_DATA[poiOrt][poiCategory])||[];
+const cards=entries.length?entries.map(function(e){
+const linkHtml=e.link?'<a href="'+e.link+'" target="_blank" style="font-size:12px;color:#0077b6;font-weight:600;text-decoration:none;white-space:nowrap">Website ↗</a>':'';
+return '<div style="background:#fff;border-radius:12px;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.06)">'
++'<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">'
++'<div style="font-size:15px;font-weight:700;color:#1c1c1e">'+e.name+'</div>'
++linkHtml
++'</div>'
++'<div style="font-size:12px;color:#8e8e93;font-weight:600;text-transform:uppercase;margin-top:2px">'+e.kat+'</div>'
++'<div style="font-size:14px;color:#1c1c1e;margin-top:4px">'+e.zeiten+'</div>'
++'</div>';
+}).join(""):'<div style="text-align:center;color:#8e8e93;padding:24px 12px;font-size:14px">Keine Einträge für diese Auswahl.</div>';
+document.getElementById("poiOverlayBody").innerHTML=
+'<div style="display:flex;gap:6px;margin-bottom:8px">'+ortBtns+'</div>'
++'<div style="display:flex;gap:6px;margin-bottom:12px">'+catBtns+'</div>'
++cards
++'<div style="text-align:center;font-size:11px;color:#c7c7cc;margin-top:12px;padding:0 8px;line-height:1.5">Stand: Juni 2026 · Quelle primär amrum.de/gastronomie-auf-amrum, ergänzt um eigenständig bestätigte Betriebe. Öffnungszeiten ohne Bestätigung stammen aus Drittquellen und können abweichen – bitte vor Besuch prüfen.</div>';
 }
 // ── Bus-Render ────────────────────────────────────────────────────────────────
 function render(){
-  const timeStr=document.getElementById("timeinput").value;
-  const dateStr=document.getElementById("dateinput").value;
-  const nowMin=toMin(timeStr);
-  const dt=getDayType();
-  const season=getSeasonKey(dateStr);
-  const{dayName,isSaSo,isFr,dow}=getDateInfo();
-  document.getElementById("dayBadge").textContent=dayName+" · "+(isSaSo?"Sa/So":isFr?"Freitag":"Mo–Fr")+" · "+SEASON_LABELS[season];
-  document.getElementById("vonLabel").textContent=curVon;
-  document.getElementById("nachLabel").textContent=curNach;
-  const conns=getConnections(curVon,curNach,nowMin,dt,season,dateStr,dow);
-  const ra=document.getElementById("resultArea");
-  const wa=document.getElementById("warnArea");
-  const na=document.getElementById("nextArea");
-  const nl=document.getElementById("nextList");
-  wa.innerHTML="";
-  if(curVon===curNach){ra.innerHTML='<div class="empty">Bitte verschiedene Haltestellen wählen.</div>';na.style.display="none";return;}
-  if(!conns.length){ra.innerHTML='<div class="empty">Keine weiteren Verbindungen heute. 🌙</div>';na.style.display="none";return;}
-  const first=conns[0];
-  const diff=toMin(first.dep)-nowMin;
-  const dir=getDirection(curVon,curNach);
-  ra.innerHTML='<div class="result-card"><div class="result-sub">Nächste Verbindung · '+(dir?"→ Norddorf":"→ Wittdün")+'</div>'
-    +'<div class="result-times"><div class="result-time">'+first.dep+'</div><div class="result-arrow">→</div><div class="result-arr">'+first.arr+'</div></div>'
-    +'<div class="result-detail"><div class="result-dur">'+durLabel(first.dep,first.arr)+'</div>'
-    +'<div><div class="result-mins">'+minsLabel(diff)+'</div><div class="result-minslabel">bis Abfahrt</div></div></div></div>';
-  if(first.warn) wa.innerHTML='<div class="warning">🚨 Achtung Fährbus – könnte voll sein!</div>';
-  if(conns.length>1){
-    na.style.display="block";
-    nl.innerHTML=conns.slice(1).map(function(c,i,arr){
-      return '<div class="dep-row" style="'+(i===arr.length-1?'border-bottom:none':'')+'">'
-        +'<div class="dep-bar"></div><div class="dep-info">'
-        +'<div class="dep-times"><span class="dep-t">'+c.dep+'</span><span class="dep-arr">→ '+c.arr+'</span></div>'
-        +'<div style="font-size:12px;color:#8e8e93">'+durLabel(c.dep,c.arr)+'</div>'
-        +(c.warn?'<div class="dep-warn">🚨 Achtung Fährbus – könnte voll sein!</div>':'')
-        +'</div><div class="dep-mins">'+minsLabel(toMin(c.dep)-nowMin)+'</div></div>';
-    }).join("");
-  } else {na.style.display="none";}
-  const ft=document.getElementById("ferryTimes");
-  const seasonFerry=(SCHEDULES[season]||SCHEDULES.vor).FERRY;
-  ft.innerHTML=(seasonFerry[dt]||seasonFerry.mofr).map(function(t){
-    return '<span class="ferry-pill" style="background:'+(toMin(t)>=nowMin?'#fff3e0':'#f2f2f7')+';color:'+(toMin(t)>=nowMin?'#e07b00':'#aaa')+'">'+t+'</span>';
-  }).join("");
+const timeStr=document.getElementById("timeinput").value;
+const dateStr=document.getElementById("dateinput").value;
+const nowMin=toMin(timeStr);
+const dt=getDayType();
+const season=getSeasonKey(dateStr);
+const{dayName,isSaSo,isFr,dow}=getDateInfo();
+document.getElementById("dayBadge").textContent=dayName+" · "+(isSaSo?"Sa/So":isFr?"Freitag":"Mo–Fr")+" · "+SEASON_LABELS[season];
+document.getElementById("vonLabel").textContent=curVon;
+document.getElementById("nachLabel").textContent=curNach;
+const conns=getConnections(curVon,curNach,nowMin,dt,season,dateStr,dow);
+const ra=document.getElementById("resultArea");
+const wa=document.getElementById("warnArea");
+const na=document.getElementById("nextArea");
+const nl=document.getElementById("nextList");
+wa.innerHTML="";
+if(curVon===curNach){ra.innerHTML='<div class="empty">Bitte verschiedene Haltestellen wählen.</div>';na.style.display="none";return;}
+if(!conns.length){ra.innerHTML='<div class="empty">Keine weiteren Verbindungen heute. 🌙</div>';na.style.display="none";return;}
+const first=conns[0];
+const diff=toMin(first.dep)-nowMin;
+const dir=getDirection(curVon,curNach);
+ra.innerHTML='<div class="result-card"><div class="result-sub">Nächste Verbindung · '+(dir?"→ Norddorf":"→ Wittdün")+'</div>'
++'<div class="result-times"><div class="result-time">'+first.dep+'</div><div class="result-arrow">→</div><div class="result-arr">'+first.arr+'</div></div>'
++'<div class="result-detail"><div class="result-dur">'+durLabel(first.dep,first.arr)+'</div>'
++'<div><div class="result-mins">'+minsLabel(diff)+'</div><div class="result-minslabel">bis Abfahrt</div></div></div></div>';
+if(first.warn) wa.innerHTML='<div class="warning">🚨 Achtung Fährbus – könnte voll sein!</div>';
+if(conns.length>1){
+na.style.display="block";
+nl.innerHTML=conns.slice(1).map(function(c,i,arr){
+return '<div class="dep-row" style="'+(i===arr.length-1?'border-bottom:none':'')+'">'
++'<div class="dep-bar"></div><div class="dep-info">'
++'<div class="dep-times"><span class="dep-t">'+c.dep+'</span><span class="dep-arr">→ '+c.arr+'</span></div>'
++'<div style="font-size:12px;color:#8e8e93">'+durLabel(c.dep,c.arr)+'</div>'
++(c.warn?'<div class="dep-warn">🚨 Achtung Fährbus – könnte voll sein!</div>':'')
++'</div><div class="dep-mins">'+minsLabel(toMin(c.dep)-nowMin)+'</div></div>';
+}).join("");
+} else {na.style.display="none";}
+const ft=document.getElementById("ferryTimes");
+const seasonFerry=(SCHEDULES[season]||SCHEDULES.vor).FERRY;
+ft.innerHTML=(seasonFerry[dt]||seasonFerry.mofr).map(function(t){
+return '<span class="ferry-pill" style="background:'+(toMin(t)>=nowMin?'#fff3e0':'#f2f2f7')+';color:'+(toMin(t)>=nowMin?'#e07b00':'#aaa')+'">'+t+'</span>';
+}).join("");
 }
 function setNow(){
-  document.getElementById("dateinput").value=getTodayStr();
-  document.getElementById("timeinput").value=getNowStr();
-  window._manualTime=false;render();
+document.getElementById("dateinput").value=getTodayStr();
+document.getElementById("timeinput").value=getNowStr();
+window._manualTime=false;render();
 }
 function swapStops(){var t=curVon;curVon=curNach;curNach=t;render();}
 function openNearestStop(){
-  if(!navigator.geolocation){
-    alert("Standort nicht verfügbar.");
-    return;
-  }
-  navigator.geolocation.getCurrentPosition(function(pos){
-    const lat=pos.coords.latitude, lon=pos.coords.longitude;
-    // Nächste Haltestelle finden
-    let nearest=null, minDist=Infinity;
-    for(const[stop,[slat,slon]] of Object.entries(STOP_COORDS)){
-      const d=Math.sqrt(Math.pow((lat-slat)*111320,2)+Math.pow((lon-slon)*111320*Math.cos(lat*Math.PI/180),2));
-      if(d<minDist){minDist=d;nearest=stop;}
-    }
-    if(!nearest)return;
-    const coords=STOP_COORDS[nearest];
-    const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
-    const url=isIOS
-      ?"https://maps.apple.com/?daddr="+coords[0]+","+coords[1]+"&q="+encodeURIComponent(nearest)+"&dirflg=w"
-      :"https://www.google.com/maps/dir/?api=1&destination="+coords[0]+","+coords[1]+"&travelmode=walking";
-    window.open(url,"_blank");
-  },function(){
-    alert("Standort konnte nicht ermittelt werden.");
-  },{enableHighAccuracy:true,timeout:10000});
+if(!navigator.geolocation){
+alert("Standort nicht verfügbar.");
+return;
+}
+// WICHTIG: Der Tab muss noch SYNCHRON im Klick-Handler geöffnet werden.
+// Safari/iOS blockiert window.open()-Aufrufe stillschweigend (ohne Fehlermeldung),
+// wenn sie erst asynchron im getCurrentPosition-Callback erfolgen. Deshalb hier
+// zunächst ein leeres Tab öffnen und dessen URL später nachträglich setzen.
+const newTab=window.open('','_blank');
+navigator.geolocation.getCurrentPosition(function(pos){
+const lat=pos.coords.latitude, lon=pos.coords.longitude;
+// Nächste Haltestelle finden
+let nearest=null, minDist=Infinity;
+for(const[stop,[slat,slon]] of Object.entries(STOP_COORDS)){
+const d=Math.sqrt(Math.pow((lat-slat)*111320,2)+Math.pow((lon-slon)*111320*Math.cos(lat*Math.PI/180),2));
+if(d<minDist){minDist=d;nearest=stop;}
+}
+if(!nearest){if(newTab)newTab.close();return;}
+const coords=STOP_COORDS[nearest];
+const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+const url=isIOS
+?"https://maps.apple.com/?daddr="+coords[0]+","+coords[1]+"&q="+encodeURIComponent(nearest)+"&dirflg=w"
+:"https://www.google.com/maps/dir/?api=1&destination="+coords[0]+","+coords[1]+"&travelmode=walking";
+if(newTab){newTab.location.href=url;}else{window.open(url,"_blank");}
+},function(){
+if(newTab)newTab.close();
+alert("Standort konnte nicht ermittelt werden.");
+},{enableHighAccuracy:true,timeout:10000});
 }
 function openMap(target){
-  const stop=target==="von"?curVon:curNach;
-  const coords=STOP_COORDS[stop];
-  if(!coords)return;
-  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
-  const url=isIOS
-    ?"https://maps.apple.com/?daddr="+coords[0]+","+coords[1]+"&q="+encodeURIComponent(stop)+"&dirflg=w"
-    :"https://www.google.com/maps/dir/?api=1&destination="+coords[0]+","+coords[1]+"&travelmode=walking";
-  window.open(url,"_blank");
+const stop=target==="von"?curVon:curNach;
+const coords=STOP_COORDS[stop];
+if(!coords)return;
+const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+const url=isIOS
+?"https://maps.apple.com/?daddr="+coords[0]+","+coords[1]+"&q="+encodeURIComponent(stop)+"&dirflg=w"
+:"https://www.google.com/maps/dir/?api=1&destination="+coords[0]+","+coords[1]+"&travelmode=walking";
+window.open(url,"_blank");
 }
 let curVon="Wittdün Fähranleger",curNach="Norddorf Mitte",pickerTarget="von";
 function openPicker(target){
-  pickerTarget=target;
-  document.getElementById("picker").classList.add("open");
-  document.getElementById("pickerSearch").value="";
-  filterPicker("");
-  // Kein automatisches .focus() mehr: das öffnet sofort die iOS-Tastatur, was in
-  // Kombination mit position:fixed-Overlays bekanntermaßen zu Anzeigefehlern führen kann
-  // (vermuteter Grund für den verschwindenden Zurück-Button). Nutzer tippt bei Bedarf selbst ins Feld.
+pickerTarget=target;
+document.getElementById("picker").classList.add("open");
+document.getElementById("pickerSearch").value="";
+filterPicker("");
+// Kein automatisches .focus() mehr: das öffnet sofort die iOS-Tastatur, was in
+// Kombination mit position:fixed-Overlays bekanntermaßen zu Anzeigefehlern führen kann
+// (vermuteter Grund für den verschwindenden Zurück-Button). Nutzer tippt bei Bedarf selbst ins Feld.
 }
 function closePicker(){document.getElementById("picker").classList.remove("open");}
 function filterPicker(q){
-  const reach=pickerTarget==="nach"?getReachable(curVon):ROUTE_ORDER;
-  const sel=pickerTarget==="von"?curVon:curNach;
-  document.getElementById("pickerList").innerHTML=ROUTE_ORDER
-    .filter(function(s){return s.toLowerCase().includes(q.toLowerCase());})
-    .map(function(s){
-      const ok=pickerTarget==="von"||reach.includes(s);
-      return '<div class="picker-item '+(s===sel?'selected':'')+(ok?'':' disabled')+'" '
-        +(ok?'onclick="selectStop(\''+s.replace(/'/g,"\\'")+'\')"':'')+'>'+s+(s===sel?' <span>✓</span>':'')+'</div>';
-    }).join("");
+const reach=pickerTarget==="nach"?getReachable(curVon):ROUTE_ORDER;
+const sel=pickerTarget==="von"?curVon:curNach;
+document.getElementById("pickerList").innerHTML=ROUTE_ORDER
+.filter(function(s){return s.toLowerCase().includes(q.toLowerCase());})
+.map(function(s){
+const ok=pickerTarget==="von"||reach.includes(s);
+return '<div class="picker-item '+(s===sel?'selected':'')+(ok?'':' disabled')+'" '
++(ok?'onclick="selectStop(\''+s.replace(/'/g,"\\'")+'\')"':'')+'>'+s+(s===sel?' <span>✓</span>':'')+'</div>';
+}).join("");
 }
 function selectStop(s){
-  if(pickerTarget==="von"){curVon=s;if(curNach===s){curNach=getReachable(s)[0]||s;}}
-  else{curNach=s;}
-  closePicker();render();
+if(pickerTarget==="von"){curVon=s;if(curNach===s){curNach=getReachable(s)[0]||s;}}
+else{curNach=s;}
+closePicker();render();
 }
 // ── Init ──────────────────────────────────────────────────────────────────────
 document.getElementById("dateinput").value=getTodayStr();
@@ -673,8 +679,8 @@ document.getElementById("timeinput").value=getNowStr();
 render();
 renderTides();
 setInterval(function(){
-  if(!window._manualTime){document.getElementById("timeinput").value=getNowStr();render();}
-  renderTides();
+if(!window._manualTime){document.getElementById("timeinput").value=getNowStr();render();}
+renderTides();
 },3600000); // Gezeiten stündlich neu laden
 document.getElementById("timeinput").addEventListener("change",function(){window._manualTime=true;render();});
 // ── Service Worker: Registrierung + automatische Update-Erkennung ─────────────
@@ -682,27 +688,27 @@ document.getElementById("timeinput").addEventListener("change",function(){window
 // dadurch konnte eine neue sw.js-Version nie automatisch aktiv werden, nur durch komplettes
 // Entfernen/Neuanlegen des Homescreen-Icons (das erzwingt einen echten Neustart aller Tabs).
 if("serviceWorker" in navigator){
-  window.addEventListener("load",function(){
-    navigator.serviceWorker.register("sw.js").then(function(reg){
-      reg.update(); // bei jedem Start aktiv nach neuer Version fragen
-      reg.addEventListener("updatefound",function(){
-        const nw=reg.installing;
-        if(!nw)return;
-        nw.addEventListener("statechange",function(){
-          if(nw.state==="installed"&&navigator.serviceWorker.controller){
-            // Neue Version ist fertig installiert -> sofort aktivieren lassen
-            nw.postMessage({action:"skipWaiting"});
-          }
-        });
-      });
-    }).catch(function(){/* Service Worker optional, App funktioniert auch ohne */});
-    let refreshing=false;
-    navigator.serviceWorker.addEventListener("controllerchange",function(){
-      if(refreshing)return;
-      refreshing=true;
-      window.location.reload(); // einmalig neu laden, sobald neue Version aktiv ist
-    });
-  });
+window.addEventListener("load",function(){
+navigator.serviceWorker.register("sw.js").then(function(reg){
+reg.update(); // bei jedem Start aktiv nach neuer Version fragen
+reg.addEventListener("updatefound",function(){
+const nw=reg.installing;
+if(!nw)return;
+nw.addEventListener("statechange",function(){
+if(nw.state==="installed"&&navigator.serviceWorker.controller){
+// Neue Version ist fertig installiert -> sofort aktivieren lassen
+nw.postMessage({action:"skipWaiting"});
+}
+});
+});
+}).catch(function(){/* Service Worker optional, App funktioniert auch ohne */});
+let refreshing=false;
+navigator.serviceWorker.addEventListener("controllerchange",function(){
+if(refreshing)return;
+refreshing=true;
+window.location.reload(); // einmalig neu laden, sobald neue Version aktiv ist
+});
+});
 }
 </script>
 </body>
